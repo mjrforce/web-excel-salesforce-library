@@ -49,7 +49,7 @@ function callback(url){
 }
 function openDialog() {
 	         console.log(Office.context.requirements.isSetSupported('DialogAPI', '1.1'));
-			 window.open('/oauth2/auth');
+			 window.location.href = '/oauth2/auth';
 }
 
 function processMessage(arg) {

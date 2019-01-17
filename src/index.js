@@ -44,7 +44,7 @@ function createTable() {
 }
 
 function openDialog() {
-			 Office.UI.displayDialogAsync('/oauth2/auth');
+			 Office.context.ui.displayDialogAsync('/oauth2/auth');
 }
 
 function processMessage(arg) {

@@ -14,8 +14,10 @@
   "dependencies": {
     "@microsoft/office-js-helpers": "^1.0.1",
     "babel-polyfill": "^6.26.0",
+    "basic-auth": "^2.0.1",
     "express": "^4.16.4",
     "jquery": "^3.1.1",
+    "jsforce": "^1.9.1",
     "office-ui-fabric-js": "^1.3.0"
   },
   "devDependencies": {

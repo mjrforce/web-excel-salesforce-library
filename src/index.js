@@ -21,6 +21,7 @@ Office.initialize = (reason) => {
 };
 
 function createTable() {
+	console.log('creating table');
    Excel.run(function (context) {
 
         var currentWorksheet = context.workbook.worksheets.getActiveWorksheet();

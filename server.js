@@ -31,7 +31,7 @@ app.get('/oauth2/callback', function(req, res) {
     console.log("User ID: " + userInfo.id);
     console.log("Org ID: " + userInfo.organizationId);
     // ...
-    res.sendFile('/callback.html');
+    res.sendFile('/dist/callback.html');
   });
 });
 

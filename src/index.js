@@ -45,7 +45,7 @@ function createTable() {
 
 function openDialog() {
 	         console.log(Office.context.requirements.isSetSupported('DialogAPI', '1.1'));
-			 window.open('/oauth2/auth', '_self');
+			 window.open('/oauth2/auth');
 }
 
 function processMessage(arg) {

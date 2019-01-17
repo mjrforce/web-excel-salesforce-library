@@ -31,7 +31,7 @@ function createTable() {
        expensesTable.getHeaderRowRange().values =
 	   [["Date", "Merchant", "Category", "Amount"]];
 
-	expensesTable.rows.add(null /*add at the end*/, [
+	expensesTable.rows.add(null, [
 	   ["1/1/2017", "The Phone Company", "Communications", "120"],
 	   ["1/2/2017", "Northwind Electric Cars", "Transportation", "142.33"],
 	   ["1/5/2017", "Best For You Organics Company", "Groceries", "27.9"],

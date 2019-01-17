@@ -3,9 +3,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: {
-        'polyfill': 'babel-polyfill',
-        'app': './src/index.js',
-        'function-file': './function-file/function-file.js'
+        
     },
 	output: { publicPath: '/' },
     module: {
@@ -27,17 +25,6 @@ module.exports = {
         ]
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            template: './index.html',
-            chunks: ['polyfill', 'app']
-        }),
-        new HtmlWebpackPlugin({
-            template: './function-file/function-file.html',
-            filename: 'function-file/function-file.html',
-            chunks: ['function-file']
-        }),
-		new CopyWebpackPlugin([
-			{ from: './src/app/app.css' }
-		])
+        
 		
 ]};

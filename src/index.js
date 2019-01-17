@@ -44,15 +44,7 @@ function createTable() {
 }
 
 function openDialog() {
-			 Office.context.ui.displayDialogAsync(
-			   '/oauth2/auth',
-			   {height: 45, width: 55},
-
-			   function (result) {
-				   dialog = result.value;
-				   dialog.addEventHandler(Microsoft.Office.WebExtension.EventType.DialogMessageReceived, processMessage);
-			   }
-			);
+			 Office.UI.displayDialogAsync('/oauth2/auth');
 }
 
 function processMessage(arg) {

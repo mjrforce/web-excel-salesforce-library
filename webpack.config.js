@@ -38,6 +38,9 @@ module.exports = {
         }),
 		new CopyWebpackPlugin([
 			{ from: './src/app.css' }
+		]),
+		new CopyWebpackPlugin([
+			{ from: './src/callback.html' }
 		])
     ]
 };

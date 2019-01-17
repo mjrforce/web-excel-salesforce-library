@@ -8,9 +8,10 @@ app.use(express.static('node_modules'))
 
 
 var oauth2 = new jsforce.OAuth2({
+  loginUrl: process.env.LOGIN_URL,
   clientId : process.env.CLIENT_ID,
   clientSecret : process.env.CLIENT_SECRET,
-  redirectUri : process.env.LOGIN_URL
+  redirectUri : process.env.REDIRECT_URI
 });
 
 app.get('/oauth2/auth', function(req, res) {

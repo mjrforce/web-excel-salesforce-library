@@ -42,8 +42,7 @@ function createTable() {
 	]);
 
     expensesTable.columns.getItemAt(3).getRange().numberFormat = [['€#,##0.00']];
-	expensesTable.getRange().format.autofitColumns();
-	expensesTable.getRange().format.autofitRows();
+
 
        return context.sync();
    })

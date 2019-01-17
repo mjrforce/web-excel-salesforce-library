@@ -37,12 +37,6 @@ module.exports = {
             chunks: ['function-file']
         }),
 		new CopyWebpackPlugin([
-			{ from: './src/assets',
-		      to: '/assets',
-			  toType: 'dir'
-			}
-		]),
-		new CopyWebpackPlugin([
 			{ from: './src/app/app.css' }
 		])
 		

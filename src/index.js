@@ -7,12 +7,18 @@ import * as OfficeHelpers from '@microsoft/office-js-helpers';
 
 var dialog = null;
 // The initialize function must be run each time a new page is loaded
-Office.onReady()
-       .then(function() {
-           $(document).ready(function () {  
+
+$(document).ready(function () {  
 		     $('#run').click(run);
-			 $('#sideload-msg').hide();
-             $('#app-body').show();
+});
+		   
+Office.initialize = (reason) => {
+    $('#sideload-msg').hide();
+    $('#app-body').show();
+	$('#open-dialog').click(openDialog);
+};
+
+function openDialog() {
 			 Office.context.ui.displayDialogAsync(
 			   '/oauth2/auth',
 			   {height: 45, width: 55},
@@ -22,12 +28,7 @@ Office.onReady()
 				   dialog.addEventHandler(Microsoft.Office.WebExtension.EventType.DialogMessageReceived, processMessage);
 			   }
 			);
-               
-
-           });
-       });
-
-   // TODO2: Create the OK button handler
+}
 
 function processMessage(arg) {
     $('#user-name').text(arg.message);

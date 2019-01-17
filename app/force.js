@@ -12,14 +12,14 @@ System.register([], function(exports_1, context_1) {
         execute: function() {
             window = this.window;
             // To override default, pass loginURL in init(props)
-            loginURL = 'https://login.salesforce.com', 
+            loginURL = process.env.LOGIN_URL, 
             // The Connected App client Id. Default app id provided - Not for production use.
             // This application supports http://localhost:8200/oauthcallback.html as a valid callback URL
             // To override default, pass appId in init(props)
-            appId = '3MVG9fMtCkV6eLheIEZplMqWfnGlf3Y.BcWdOf1qytXo9zxgbsrUbS.ExHTgUPJeb3jZeT8NYhc.hMyznKU92', 
+            appId = process.env.CLIENT_ID, 
             // The force.com API version to use.
             // To override default, pass apiVersion in init(props)
-            apiVersion = 'v35.0', 
+            apiVersion = process.env.API_VERSION, 
             // By default we store fbtoken in sessionStorage. This can be overridden in init()
             tokenStore = {}, 
             // if page URL is http://localhost:3000/myapp/index.html, context is /myapp

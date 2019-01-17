@@ -10,12 +10,13 @@ var dialog = null;
 
 $(document).ready(function () {  
 		     $('#run').click(run);
+			 $('#open-dialog').click(openDialog);
 });
 		   
 Office.initialize = (reason) => {
     $('#sideload-msg').hide();
     $('#app-body').show();
-	$('#open-dialog').click(openDialog);
+	
 };
 
 function openDialog() {

@@ -66,17 +66,13 @@ function createTable() {
 					arraydata.push([data.records[i].Id, data.records[i].Name]);
 				}
 				
-				var rangeString = "A1:B" + data.records.length;
+				var rangeString = "A1:B" + (data.records.length + 1);
 				console.log('Range String: ' + rangeString);
 				
 				var range = sheet.getRange(rangeString);
 				
 				console.log('arraydata: ' + JSON.stringify(arraydata));
-				range.values = [
-                ["Key", "Value"],
-                ["A", 1],
-                ["B", 2]
-            ];
+				range.values = arraydata;
 				
 				// Create the table over the range
 				var table = sheet.tables.add(rangeString, true);

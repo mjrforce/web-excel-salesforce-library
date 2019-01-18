@@ -21,7 +21,9 @@ $(document).ready(function () {
 			 $('#open-dialog').click(openDialog);
 			 $('#create-table').click(createTable);
 });
-		   
+
+var dlg;
+	   
 Office.initialize = (reason) => {
     $('#sideload-msg').hide();
     $('#app-body').show();

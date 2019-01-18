@@ -71,7 +71,7 @@ function createTable() {
 				
 				var range = sheet.getRange(rangeString);
 				
-				console.log('arrayData: ' + JSON.stringify(arrayData));
+				console.log('arraydata: ' + JSON.stringify(arraydata));
 				range.values = arraydata;
 				
 				// Create the table over the range

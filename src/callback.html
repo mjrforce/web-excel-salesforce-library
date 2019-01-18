@@ -7,9 +7,7 @@ Close this window
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.debug.js"></script>
     <script type="text/javascript" src="/office-ui-fabric-js/dist/js/fabric.js"></script>
 	<script>
-Office.onReady()
-        .then(function() {
-            $(document).ready(function() {
+				Office.initialize = (reason) => {
 			         var messageObject = {
 					     accessToken = '<%= accessToken %>',
 						 refreshToken = '<%= refreshToken %>',
@@ -21,9 +19,7 @@ Office.onReady()
 					 console.log(jsonMessage);
 					 Office.context.ui.messageParent(jsonMessage);
 					 
-                });
-            });
-        });
+                }
 </script>		
 </body>
 </html>

@@ -1,7 +1,29 @@
 <html>
 <head>
+
 </head>
 <body>
-Close this window		
+Close this window
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.debug.js"></script>
+    <script type="text/javascript" src="/office-ui-fabric-js/dist/js/fabric.js"></script>
+	<script>
+Office.onReady()
+        .then(function() {
+            $(document).ready(function() {
+			         var messageObject = {
+					     accessToken = '<%= accessToken %>',
+						 refreshToken = '<%= refreshToken %>',
+						 instanceUrl = '<%= instanceUrl %>',
+						 orgId = '<%= orgId %>',
+						 userId = '<%= userId %>',
+						 name = '<%= name %>						 
+					 };
+                     var jsonMessage = JSON.stringify(messageObject);
+					 Office.context.ui.messageParent(jsonMessage);
+					 
+                });
+            });
+        });
+</script>		
 </body>
 </html>

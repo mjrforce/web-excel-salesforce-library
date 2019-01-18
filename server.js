@@ -1,8 +1,8 @@
-var bodyParser = require('body-parser');
 var express = require('express');
-var app = express();
+var bodyParser = require('body-parser');
 var path = require('path');
 var jsforce = require('jsforce');
+var app = express();
 
 app.set('port', (process.env.PORT || 5000));
 app.engine('html', require('ejs').renderFile);

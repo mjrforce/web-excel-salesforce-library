@@ -3,16 +3,9 @@
  * See LICENSE in the project root for license information.
  */
 import * as OfficeHelpers from '@microsoft/office-js-helpers';
-var jsforce = require('jsforce');
 var dialog = null;
 // The initialize function must be run each time a new page is loaded
-
-var oauth2 = new jsforce.OAuth2({
-    loginUrl: process.env.LOGIN_URL,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    redirectUri: process.env.REDIRECT_URI
-});
+var signInUrl = require('../servr.js').signInUrl;
 
 $(document).ready(function() {
     $('#run').click(run);
@@ -29,10 +22,8 @@ Office.initialize = (reason) => {
 
 function openDialog() {
 
-    var signInUrl = oauth2.getAuthorizationUrl({
-        scope: 'api id web'
-    });
-    console.log(signInUrl);
+
+    console.log('signInUrl: ' + signInUrl);
     Office.context.ui.displayDialogAsync(signInUrl, {
             height: 70,
             width: 40

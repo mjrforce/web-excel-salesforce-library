@@ -56,9 +56,22 @@ function callback(url){
 	
 }
 function openDialog() {
-	         console.log(Office.context.requirements.isSetSupported('DialogAPI', '1.1'));
-			 window.open('/oauth2/auth');
-}
+
+	    var signInUrl = '/oauth2/auth';
+        Office.context.ui.displayDialogAsync(signInUrl,
+            { height: 70, width: 40},
+            function (result) {
+                dlg = result.value;
+                dlg.addEventHandler("dialogMessageReceived", processMessage);
+            });
+    }
+
+    function processMessage(arg) {
+		console.log('event handled');
+	}
+			 
+			 
+			 
 
 function processMessage(arg) {
     $('#user-name').text(arg.message);

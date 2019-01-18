@@ -25,7 +25,12 @@ app.get('/', function(req, res) {
 app.get('', function(req, res) {
 	res.render(__dirname + '/dist/index.html', settings);
 });
-  
+
+app.get('/oauth2/auth', function(req, res) {
+	var loginUrl = oauth2.getAuthorizationUrl({ scope : 'api id web' });
+	res.sendFile(loginUrl);
+});
+
 app.get('/oauth2/callback', function(req, res) {
   var conn = new jsforce.Connection({ oauth2 : oauth2 });
   var code = req.param('code');

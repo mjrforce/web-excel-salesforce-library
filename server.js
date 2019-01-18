@@ -9,6 +9,7 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname + '/dist'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 var settings = {
     loginUrl: process.env.LOGIN_URL,

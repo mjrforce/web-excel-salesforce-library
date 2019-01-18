@@ -9,9 +9,11 @@ Close this window
     <script type="text/javascript" src="/office-ui-fabric-js/dist/js/fabric.js"></script>
 	<script>
 	
-	var messageObject;
-	Office.initialize = (reason) => {
-         messageObject = {
+	
+	Office.initialize = function () {
+    // Office is ready
+    $(document).ready(function () {
+      var messageObject = {
 					     accessToken = '<%= accessToken %>',
 						 refreshToken = '<%= refreshToken %>',
 						 instanceUrl = '<%= instanceUrl %>',
@@ -20,13 +22,10 @@ Close this window
 					 };
                      var jsonMessage = JSON.stringify(messageObject);
 					 console.log(jsonMessage);
-	};
-	 Office.onReady()
-       .then(function() {
-           $(document).ready(function () {  
-               Office.context.ui.messageParent(jsonMessage);
-           });
-       });
+					 Office.context.ui.messageParent(jsonMessage);
+    });
+  };
+ 
 </script>		
 </body>
 </html>

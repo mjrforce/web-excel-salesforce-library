@@ -19,7 +19,7 @@ var oauth2 = new jsforce.OAuth2(settings);
 
 
 app.get('/', function(req, res) {
-	
+	console.log(JSON.stringify(req.params));
 	var conn = new jsforce.Connection({
 	  instanceUrl : req.param.instanceUrl,
 	  accessToken : req.param.accessToken

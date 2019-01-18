@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.debug.js"></script>
+    <script type="text/javascript" src="/office-ui-fabric-js/dist/js/fabric.js"></script>
+	<script>
+	Office.initialize = function () {
+    // Office is ready
+      var messageObject = {
+					     accessToken :'<%= accessToken %>',
+						 refreshToken : '<%= refreshToken %>',
+						 instanceUrl : '<%= instanceUrl %>',
+						 orgId : '<%= orgId %>',
+						 userId : '<%= userId %>'						 
+					 };
+                     var jsonMessage = JSON.stringify(messageObject);
+					 console.log(jsonMessage);
+					 Office.context.ui.messageParent(jsonMessage);
+  };
+</script>		
+</body>
+</html>

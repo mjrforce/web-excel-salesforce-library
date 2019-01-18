@@ -46,9 +46,10 @@ function processMessage(arg) {
 
 function createTable() {
     console.log('creating table');
-	
+	console.log(oauthresult);
 	if(oauthresult != null)
 	$.getJSON( '/data/accounts', oauthresult).done(function(data){
+		console.log(data);
     //data is the JSON string
 	  if (err) { return console.error(err); }
 		console.log("total : " + result.totalSize);

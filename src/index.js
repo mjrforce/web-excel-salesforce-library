@@ -5,7 +5,7 @@
 
 import * as OfficeHelpers from '@microsoft/office-js-helpers';
 var path = require('path');
-var eventManager = require('/eventManager.js');
+var eventManager = require('eventManager.js');
 
 var listner1 = function listner1() {
    $('#result').html('<b>Event Fired</b>');

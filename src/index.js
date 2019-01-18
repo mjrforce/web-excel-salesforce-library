@@ -47,12 +47,8 @@ function processMessage(arg) {
 function createTable() {
     console.log('creating table');
 	
-	var conn = new jsforce.Connection({
-	  instanceUrl : oauthresult.instanceUrl,
-	  accessToken : oauthresult.accessToken
-	});
-	
-	conn.query("SELECT Id, Name FROM Account limit 10", function(err, result) {
+	$.getJSON( '/data/accounts', oauthresult).done(function(data){
+    //data is the JSON string
 	  if (err) { return console.error(err); }
 		console.log("total : " + result.totalSize);
 		console.log("fetched : " + result.records.length);
@@ -62,14 +58,14 @@ function createTable() {
 				var sheet = context.workbook.worksheets.getActiveWorksheet();
 				// Write the data into the range first 
 				
-				var data = [
+				var arraydata = [
 					["Id", "Name"]
 				];
-				for(var i = 0; i<result.records.length; i++){
-					data.push([result.records[i].Id, result.records[i].Name]);
+				for(var i = 0; i<data.records.length; i++){
+					arraydata.push([result.records[i].Id, result.records[i].Name]);
 				}
 				var range = sheet.getRange("A1:B3");
-				range.values = data;
+				range.values = arraydata;
 				
 				// Create the table over the range
 				var table = sheet.tables.add('A1:B3', true);

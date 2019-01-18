@@ -17,6 +17,24 @@ var settings = {
 };
 var oauth2 = new jsforce.OAuth2(settings);
 
+
+app.get('/', function(req, res) {
+	
+	var conn = new jsforce.Connection({
+	  instanceUrl : req.param.instanceUrl,
+	  accessToken : req.param.accessToken
+	});
+	
+	conn.query("SELECT Id, Name FROM Account limit 10", function(err, result) {
+	  if (err) { return console.error(err); }
+	  console.log("total : " + result.totalSize);
+	  console.log("fetched : " + result.records.length);
+	  res.json(result);
+	});
+
+	
+});
+
 app.get('/', function(req, res) {
 	var loginUrl = oauth2.getAuthorizationUrl({ scope : 'api id web' });
 	res.render(__dirname + '/dist/index.html', {loginUrl: loginUrl });

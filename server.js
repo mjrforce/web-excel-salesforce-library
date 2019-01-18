@@ -8,8 +8,6 @@ app.set('port', (process.env.PORT || 5000));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname + '/dist'));
-app.use(express.static('dist'));
-app.use(express.static('node_modules'));
 
 var settings = {
     loginUrl: process.env.LOGIN_URL,
@@ -38,6 +36,9 @@ app.get('/oauth2/callback', function(req, res) {
 	res.render(__dirname + '/dist/callback.html', conn);
   });   
 });
+
+app.use(express.static('dist'));
+app.use(express.static('node_modules'));
 
 app.listen(app.get('port'), function() {
   console.log("Node app running at localhost:" + app.get('port'));

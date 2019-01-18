@@ -8,6 +8,7 @@ app.set('port', (process.env.PORT || 5000));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname + '/dist'));
+app.use(bodyParser.json());
 
 var settings = {
     loginUrl: process.env.LOGIN_URL,
@@ -19,10 +20,11 @@ var oauth2 = new jsforce.OAuth2(settings);
 
 
 app.get('/', function(req, res) {
-	console.log(JSON.stringify(req.params));
+	console.log(JSON.stringify(req.body));
+	var data = req.body;
 	var conn = new jsforce.Connection({
-	  instanceUrl : req.param.instanceUrl,
-	  accessToken : req.param.accessToken
+	  instanceUrl : data.instanceUrl,
+	  accessToken : data.accessToken
 	});
 	
 	conn.query("SELECT Id, Name FROM Account limit 10", function(err, result) {

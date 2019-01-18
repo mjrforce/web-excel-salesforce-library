@@ -1,3 +1,4 @@
+var bodyParser = require('body-parser');
 var express = require('express');
 var app = express();
 var path = require('path');
@@ -7,8 +8,8 @@ app.set('port', (process.env.PORT || 5000));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname + '/dist'));
-app.use(express.bodyParser());
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 var settings = {
     loginUrl: process.env.LOGIN_URL,
@@ -20,7 +21,7 @@ var oauth2 = new jsforce.OAuth2(settings);
 
 
 app.get('/data/accounts', function(req, res) {
-	console.log(JSON.stringify(req.body));
+	console.log('Request body: ' + JSON.stringify(req.body));
 	var data = req.body;
 	var conn = new jsforce.Connection({
 	  instanceUrl : data.instanceUrl,

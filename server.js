@@ -27,8 +27,7 @@ app.get('', function(req, res) {
 });
 
 app.get('/oauth2/auth', function(req, res) {
-	var loginUrl = oauth2.getAuthorizationUrl({ scope : 'api id web' });
-	res.sendFile(loginUrl);
+	res.redirect(oauth2.getAuthorizationUrl({ scope : 'api id web' }));
 });
 
 app.get('/oauth2/callback', function(req, res) {

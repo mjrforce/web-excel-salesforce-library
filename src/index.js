@@ -9,6 +9,7 @@ var dialog = null;
 $(document).ready(function() {
     $('#run').click(run);
     $('#create-table').click(createTable);
+	$('#open-dialog').click(openDialog);
 });
 
 var dlg;
@@ -18,8 +19,8 @@ Office.initialize = (reason) => {
     $('#app-body').show();
 };
 
-function openDialog(signInUrl) {
-
+function openDialog() {
+    var signInUrl = $('#logInUrl').val();
     console.log('signInUrl: ' + signInUrl);
     Office.context.ui.displayDialogAsync(signInUrl, {
             height: 70,

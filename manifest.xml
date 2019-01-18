@@ -24,13 +24,11 @@
   <HighResolutionIconUrl DefaultValue="https://appirioxls.herokuapp.com/assets/hi-res-icon.png"/>
 
   <!--If you plan to submit this add-in to the Office Store, uncomment the SupportUrl element below-->
-  <!--<SupportUrl DefaultValue="[Insert the URL of a page that provides support information for the app]">-->
+  <SupportUrl DefaultValue="https://appirioxls.herokuapp.com/support">
 
   <!-- Domains that will be allowed when navigating. For example, if you use ShowTaskpane and then have an href link, navigation will only be allowed if the domain is on this list. -->
   <AppDomains>
-    <AppDomain>AppDomain1</AppDomain>
-    <AppDomain>AppDomain2</AppDomain>
-    <AppDomain>AppDomain3</AppDomain>
+    <AppDomain>https://login.salesforce.com</AppDomain>
   </AppDomains>
   <!--End Basic Settings. -->
 
@@ -39,7 +37,7 @@
     <Host Name="Workbook" />
   </Hosts>
   <DefaultSettings>
-    <SourceLocation DefaultValue="https://appirioxls.herokuapp.com/index.html" />
+    <SourceLocation DefaultValue="https://appirioxls.herokuapp.com" />
   </DefaultSettings>
   <!-- End TaskPane Mode integration.  -->
 
@@ -124,7 +122,7 @@
         <bt:Image id="Contoso.tpicon_80x80" DefaultValue="https://appirioxls.herokuapp.com/assets/icon-80.png" />
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Contoso.Taskpane.Url" DefaultValue="https://appirioxls.herokuapp.com/index.html" />
+        <bt:Url id="Contoso.Taskpane.Url" DefaultValue="https://appirioxls.herokuapp.com" />
         <bt:Url id="Contoso.GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812" />
         <bt:Url id="Contoso.DesktopFunctionFile.Url" DefaultValue="https://appirioxls.herokuapp.com/function-file/function-file.html" />
       </bt:Urls>

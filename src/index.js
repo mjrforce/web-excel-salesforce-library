@@ -5,11 +5,9 @@
 import * as OfficeHelpers from '@microsoft/office-js-helpers';
 var dialog = null;
 // The initialize function must be run each time a new page is loaded
-var signInUrl = '<%= loginUrl %>';
 
 $(document).ready(function() {
     $('#run').click(run);
-    $('#open-dialog').click(openDialog);
     $('#create-table').click(createTable);
 });
 
@@ -20,8 +18,7 @@ Office.initialize = (reason) => {
     $('#app-body').show();
 };
 
-function openDialog() {
-
+function openDialog(signInUrl) {
 
     console.log('signInUrl: ' + signInUrl);
     Office.context.ui.displayDialogAsync(signInUrl, {

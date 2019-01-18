@@ -65,12 +65,19 @@ function createTable() {
 					console.log(data.records[i]);
 					arraydata.push([data.records[i].Id, data.records[i].Name]);
 				}
-				var range = sheet.getRange("A1:B" + data.records.length);
+				
+				var rangeString = "A1:B" + data.records.length;
+				console.log('Range String: ' + rangeString);
+				
+				var range = sheet.getRange(rangeString);
+				
+				console.log('arrayData: ' + JSON.stringify(arrayData));
 				range.values = arraydata;
 				
 				// Create the table over the range
-				var table = sheet.tables.add('A1:B' + data.records.length, true);
+				var table = sheet.tables.add(rangeString, true);
 				table.name = "Example";
+				console.log('start sync');
 
 				return context.sync();
 			})

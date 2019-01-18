@@ -51,7 +51,7 @@ function processMessage(arg) {
 function createTable() {
     console.log('creating table');
 	
-	$.getJSON( '/data/query', {q : 'select Id, Name from Account limit 10', connection : connection).done(function(data){
+	$.getJSON( '/data/query', {q : 'select Id, Name from Account limit 10', connection : connection}).done(function(data){
 		console.log(data);	
 		Excel.run(function(context) {
 

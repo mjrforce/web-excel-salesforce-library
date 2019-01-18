@@ -4,14 +4,6 @@
  */
 
 import * as OfficeHelpers from '@microsoft/office-js-helpers';
-var path = require('path');
-var eventManager = require('../server.js');
-
-var listner1 = function listner1() {
-   $('#result').html('<b>Event Fired</b>');
-}
-
-eventManager.eventEmitter.addListener('authorized', listner1);
 
 var dialog = null;
 // The initialize function must be run each time a new page is loaded

@@ -1,7 +1,8 @@
 var express = require('express');
 var app = express();
 var jsforce = require('jsforce');
-var path = require('path');   
+var path = require('path');
+var eventManager = require(path.join(__dirname + '/dist/eventManager.js));
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static('dist'));
@@ -30,6 +31,7 @@ app.get('/oauth2/callback', function(req, res) {
     console.log(conn.instanceUrl);
     console.log("User ID: " + userInfo.id);
     console.log("Org ID: " + userInfo.organizationId);
+	eventManager.emit('authorized');
     // ...
     res.sendFile(path.join(__dirname + '/dist/callback.html'));
   });

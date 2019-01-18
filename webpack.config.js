@@ -41,6 +41,9 @@ module.exports = {
 		]),
 		new CopyWebpackPlugin([
 			{ from: './src/callback.html' }
+		]),
+		new CopyWebpackPlugin([
+			{ from: './src/eventManager.js' }
 		])
     ]
 };

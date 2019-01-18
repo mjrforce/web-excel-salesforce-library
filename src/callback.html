@@ -15,10 +15,10 @@ Office.onReady()
 						 refreshToken = '<%= refreshToken %>',
 						 instanceUrl = '<%= instanceUrl %>',
 						 orgId = '<%= orgId %>',
-						 userId = '<%= userId %>',
-						 name = '<%= name %>						 
+						 userId = '<%= userId %>'						 
 					 };
                      var jsonMessage = JSON.stringify(messageObject);
+					 console.log(jsonMessage);
 					 Office.context.ui.messageParent(jsonMessage);
 					 
                 });

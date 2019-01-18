@@ -42,8 +42,7 @@ app.get('/oauth2/callback', function(req, res) {
     console.log(conn.instanceUrl);
 	console.log(JSON.stringify(userInfo));
 	conn.userId = userInfo.id;
-	conn.orgId = userInfo.organizatoinId;
-	conn.name = userInfo.name;
+	conn.orgId = userInfo.organizationId;
     console.log("User ID: " + userInfo.id);
     console.log("Org ID: " + userInfo.organizationId);
 	res.render(__dirname + '/dist/callback.html', conn);

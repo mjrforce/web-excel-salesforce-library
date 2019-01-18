@@ -35,7 +35,7 @@ function openDialog() {
 
 function processMessage(arg) {
     console.log(arg.message);
-    dialog.close();
+    dlg.close();
 }
 
 function createTable() {

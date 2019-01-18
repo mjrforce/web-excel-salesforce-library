@@ -55,10 +55,10 @@
         <p class="ms-font-l">Modify the source files, then click <b>Run</b>.</p>
 
 		<div class="padding">
-			<button class="ms-Button" id="open-dialog" onclick="openDialog('<%= loginUrl %>');">Open Dialog</button>
+			<button class="ms-Button" id="open-dialog">Open Dialog</button>
 			<button class="ms-Button" id="create-table">Create Table</button>
         </div>
-		  <input id="loginUrl" value="<%= loginUrl %>"/>
+		  <input id="loginUrl" type="hidden" value="<%= loginUrl %>"/>
     </main>
 
     <script type="text/javascript" src="/jquery/dist/jquery.js"></script>

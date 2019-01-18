@@ -11,7 +11,7 @@ var settings = {
     redirectUri: process.env.REDIRECT_URI
 };
 var dlg;
-var oauthresult;
+var oauthresult = null;
 
 $(document).ready(function() {
     $('#run').click(run);
@@ -47,6 +47,7 @@ function processMessage(arg) {
 function createTable() {
     console.log('creating table');
 	
+	if(oauthresult != null)
 	$.getJSON( '/data/accounts', oauthresult).done(function(data){
     //data is the JSON string
 	  if (err) { return console.error(err); }

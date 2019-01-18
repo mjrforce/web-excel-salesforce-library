@@ -72,7 +72,11 @@ function createTable() {
 				var range = sheet.getRange(rangeString);
 				
 				console.log('arraydata: ' + JSON.stringify(arraydata));
-				range.values = arraydata;
+				range.values = [
+                ["Key", "Value"],
+                ["A", 1],
+                ["B", 2]
+            ];
 				
 				// Create the table over the range
 				var table = sheet.tables.add(rangeString, true);

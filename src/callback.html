@@ -1,12 +1,27 @@
 <html>
-<script type="text/javascript" src="/dist/callback.js"></script>
+
 <body>
 Close this window
-<input id="accessToken"  value="<%= accessToken %>"/>
-<input id="refreshToken"  value="<%= refreshToken %>"/>
-<input id="instanceUrl"  value="<%= instanceUrl %>"/>
-<input id="orgId"  value="<%= orgId %>"/>
-<input id="userId"  value="<%= userId %>"/>
-<input id="name"  value="<%= name %>"/>
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.debug.js"></script>
+    <script type="text/javascript" src="/office-ui-fabric-js/dist/js/fabric.js"></script>
+	<script>
+Office.onReady()
+        .then(function() {
+            $(document).ready(function() {
+			         var messageObject = {
+					     accessToken = '<%= accessToken %>',
+						 refreshToken = '<%= refreshToken %>',
+						 instanceUrl = '<%= instanceUrl %>',
+						 orgId = '<%= orgId %>',
+						 userId = '<%= userId %>',
+						 name = '<%= name %>						 
+					 };
+                     var jsonMessage = JSON.stringify(messageObject);
+					 Office.context.ui.messageParent(jsonMessage);
+					 window.close();
+                });
+            });
+        });
+</script>		
 </body>
 </html>

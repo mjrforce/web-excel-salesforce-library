@@ -20,7 +20,7 @@ Office.initialize = (reason) => {
 };
 
 function openDialog() {
-    var signInUrl = $('#logInUrl').val();
+    var signInUrl = $('#loginUrl').val();
     console.log('signInUrl: ' + signInUrl);
     Office.context.ui.displayDialogAsync(signInUrl, {
             height: 70,

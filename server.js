@@ -40,7 +40,7 @@ app.get('/oauth2/callback', function(req, res) {
     console.log(conn.accessToken);
     console.log(conn.refreshToken);
     console.log(conn.instanceUrl);
-	console.log(JSON.stringify(userInfo);
+	console.log(JSON.stringify(userInfo));
 	conn.userId = userInfo.id;
 	conn.orgId = userInfo.organizatoinId;
 	conn.name = userInfo.name;

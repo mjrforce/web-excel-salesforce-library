@@ -11,7 +11,7 @@ var settings = {
     redirectUri: process.env.REDIRECT_URI
 };
 var dlg;
-var oauthresult = null;
+var connection = null;
 
 $(document).ready(function() {
     $('#run').click(run);
@@ -40,21 +40,19 @@ function openDialog() {
 
 function processMessage(arg) {
     console.log(arg.message);
-	oauthresult = JSON.parse(arg.message);
+	var oauthresult = JSON.parse(arg.message);
+	connection = {
+	  instanceUrl : oauthresult.instanceUrl,
+	  accessToken : oauthresult.accessToken
+	};
     dlg.close();
 }
 
 function createTable() {
     console.log('creating table');
-	console.log(oauthresult);
 	
-	$.getJSON( '/data/accounts?token=' + oauthresult.accessToken + '&url=' + encodeURI(oauthresult.instanceUrl), oauthresult).done(function(data){
-		console.log(data);
-    //data is the JSON string
-	  if (err) { return console.error(err); }
-		console.log("total : " + result.totalSize);
-		console.log("fetched : " + result.records.length);
-	
+	$.getJSON( '/data/query', {q : 'select Id, Name from Account limit 10', connection : connection).done(function(data){
+		console.log(data);	
 		Excel.run(function(context) {
 
 				var sheet = context.workbook.worksheets.getActiveWorksheet();
@@ -66,7 +64,7 @@ function createTable() {
 				for(var i = 0; i<data.records.length; i++){
 					arraydata.push([result.records[i].Id, result.records[i].Name]);
 				}
-				var range = sheet.getRange("A1:B3");
+				var range = sheet.getRange("A1:B" + data.records.length);
 				range.values = arraydata;
 				
 				// Create the table over the range

@@ -20,18 +20,12 @@ var settings = {
 var oauth2 = new jsforce.OAuth2(settings);
 
 
-app.get('/data/accounts', function(req, res) {
-	console.log('Request body: ' + JSON.stringify(req.body));
-	console.log('Parameters: ' + JSON.stringify(req.params));
-		console.log('Parameters: ' + JSON.stringify(req.param));
-	console.log('Query: ' + JSON.stringify(req.query));
-	var data = req.body;
-	var conn = new jsforce.Connection({
-	  instanceUrl : req.query.url,
-	  accessToken : req.query.token
-	});
+app.get('/data/query', function(req, res) {
+
+	var data = req.query;
+	var conn = new jsforce.Connection(data.connection);
 	
-	conn.query("SELECT Id, Name FROM Account limit 10", function(err, result) {
+	conn.query(data.q, function(err, result) {
 	  if (err) { return console.error(err); }
 	  console.log("total : " + result.totalSize);
 	  console.log("fetched : " + result.records.length);

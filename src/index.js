@@ -62,6 +62,7 @@ function createTable() {
 					["Id", "Name"]
 				];
 				for(var i = 0; i<data.records.length; i++){
+					console.log(data.records[i]);
 					arraydata.push([data.records[i].Id, data.records[i].Name]);
 				}
 				var range = sheet.getRange("A1:B" + data.records.length);

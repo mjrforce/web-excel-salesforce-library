@@ -48,7 +48,7 @@ function createTable() {
     console.log('creating table');
 	console.log(oauthresult);
 	
-	$.getJSON( '/data/accounts', oauthresult).done(function(data){
+	$.getJSON( '/data/accounts?token=' + oauthresult.accessToken + '&url=' + encodeURI(oauthresult.instanceUrl), oauthresult).done(function(data){
 		console.log(data);
     //data is the JSON string
 	  if (err) { return console.error(err); }

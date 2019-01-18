@@ -22,6 +22,7 @@ var oauth2 = new jsforce.OAuth2(settings);
 
 app.get('/data/accounts', function(req, res) {
 	console.log('Request body: ' + JSON.stringify(req.body));
+	console.log('Parameters: ' + JSON.stringify(req.params));
 	var data = req.body;
 	var conn = new jsforce.Connection({
 	  instanceUrl : data.instanceUrl,

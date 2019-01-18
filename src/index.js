@@ -62,13 +62,13 @@ function createTable() {
 					["Id", "Name"]
 				];
 				for(var i = 0; i<data.records.length; i++){
-					arraydata.push([result.records[i].Id, result.records[i].Name]);
+					arraydata.push([data.records[i].Id, data.records[i].Name]);
 				}
 				var range = sheet.getRange("A1:B" + data.records.length);
 				range.values = arraydata;
 				
 				// Create the table over the range
-				var table = sheet.tables.add('A1:B3', true);
+				var table = sheet.tables.add('A1:B' + data.records.length, true);
 				table.name = "Example";
 
 				return context.sync();

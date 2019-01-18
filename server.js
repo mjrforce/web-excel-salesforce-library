@@ -20,7 +20,7 @@ var settings = {
 var oauth2 = new jsforce.OAuth2(settings);
 
 
-app.get('/', function(req, res) {
+app.get('/data/accounts', function(req, res) {
 	console.log(JSON.stringify(req.body));
 	var data = req.body;
 	var conn = new jsforce.Connection({

@@ -38,7 +38,7 @@ function openDialog() {
             width: 40
         },
         function(result) {
-			console.log('result: ' + JSON.serialize(result));
+			console.log('result: ' + JSON.stringify(result));
             dlg = result.value;
             dlg.addEventHandler("dialogMessageReceived", processMessage);
         });

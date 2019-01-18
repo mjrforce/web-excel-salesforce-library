@@ -12,7 +12,6 @@ Close this window
 	
 	Office.initialize = function () {
     // Office is ready
-    $(document).ready(function () {
       var messageObject = {
 					     accessToken :'<%= accessToken %>',
 						 refreshToken : '<%= refreshToken %>',
@@ -23,7 +22,6 @@ Close this window
                      var jsonMessage = JSON.stringify(messageObject);
 					 console.log(jsonMessage);
 					 Office.context.ui.messageParent(jsonMessage);
-    });
   };
  
 </script>		

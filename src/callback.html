@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 
@@ -7,8 +8,10 @@ Close this window
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.debug.js"></script>
     <script type="text/javascript" src="/office-ui-fabric-js/dist/js/fabric.js"></script>
 	<script>
-				Office.initialize = (reason) => {
-			         var messageObject = {
+	
+	var messageObject;
+	Office.initialize = (reason) => {
+         messageObject = {
 					     accessToken = '<%= accessToken %>',
 						 refreshToken = '<%= refreshToken %>',
 						 instanceUrl = '<%= instanceUrl %>',
@@ -17,9 +20,13 @@ Close this window
 					 };
                      var jsonMessage = JSON.stringify(messageObject);
 					 console.log(jsonMessage);
-					 Office.context.ui.messageParent(jsonMessage);
-					 
-                }
+	};
+	 Office.onReady()
+       .then(function() {
+           $(document).ready(function () {  
+               Office.context.ui.messageParent(jsonMessage);
+           });
+       });
 </script>		
 </body>
 </html>

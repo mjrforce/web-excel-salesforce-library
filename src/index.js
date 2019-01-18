@@ -3,16 +3,21 @@
  * See LICENSE in the project root for license information.
  */
 import * as OfficeHelpers from '@microsoft/office-js-helpers';
-var dialog = null;
-// The initialize function must be run each time a new page is loaded
+var jsforce = require('jsforce');
+var settings = {
+    loginUrl: process.env.LOGIN_URL,
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    redirectUri: process.env.REDIRECT_URI
+};
+var dlg;
+var oauthresult;
 
 $(document).ready(function() {
     $('#run').click(run);
     $('#create-table').click(createTable);
 	$('#open-dialog').click(openDialog);
 });
-
-var dlg;
 
 Office.initialize = (reason) => {
     $('#sideload-msg').hide();
@@ -35,34 +40,50 @@ function openDialog() {
 
 function processMessage(arg) {
     console.log(arg.message);
+	oauthresult = JSON.parse(arg.message);
     dlg.close();
 }
 
 function createTable() {
     console.log('creating table');
-    Excel.run(function(context) {
+	
+	var conn = new jsforce.Connection({
+	  instanceUrl : oauthresult.instanceUrl,
+	  accessToken : oauthresult.accessToken
+	});
+	
+	conn.query("SELECT Id, Name FROM Account limit 10", function(err, result) {
+	  if (err) { return console.error(err); }
+		console.log("total : " + result.totalSize);
+		console.log("fetched : " + result.records.length);
+	
+		Excel.run(function(context) {
 
-            var sheet = context.workbook.worksheets.getActiveWorksheet();
-            // Write the data into the range first 
-            var range = sheet.getRange("A1:B3");
-            range.values = [
-                ["Key", "Value"],
-                ["A", 1],
-                ["B", 2]
-            ];
+				var sheet = context.workbook.worksheets.getActiveWorksheet();
+				// Write the data into the range first 
+				
+				var data = [
+					["Id", "Name"]
+				];
+				for(var i = 0; i<result.records.length; i++){
+					data.push([result.records[i].Id, result.records[i].Name]);
+				}
+				var range = sheet.getRange("A1:B3");
+				range.values = data;
+				
+				// Create the table over the range
+				var table = sheet.tables.add('A1:B3', true);
+				table.name = "Example";
 
-            // Create the table over the range
-            var table = sheet.tables.add('A1:B3', true);
-            table.name = "Example";
-
-            return context.sync();
-        })
-        .catch(function(error) {
-            console.log("Error: " + error);
-            if (error instanceof OfficeExtension.Error) {
-                console.log("Debug info: " + JSON.stringify(error.debugInfo));
-            }
-        });
+				return context.sync();
+			})
+			.catch(function(error) {
+				console.log("Error: " + error);
+				if (error instanceof OfficeExtension.Error) {
+					console.log("Debug info: " + JSON.stringify(error.debugInfo));
+				}
+			});
+		});
 }
 
 async function run() {

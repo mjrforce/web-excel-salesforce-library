@@ -46,7 +46,7 @@ function processMessage(arg) {
 
 function createTable() {
     console.log('creating table');
-	console.log(oauthresult != null);
+	console.log(oauthresult);
 	
 	$.getJSON( '/data/accounts', oauthresult).done(function(data){
 		console.log(data);

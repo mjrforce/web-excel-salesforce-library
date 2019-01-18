@@ -1,4 +1,3 @@
-var bodyParser = require('body-parser');
 var express = require('express');
 var app = express();
 var path = require('path');
@@ -8,8 +7,8 @@ app.set('port', (process.env.PORT || 5000));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname + '/dist'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(express.bodyParser());
+
 
 var settings = {
     loginUrl: process.env.LOGIN_URL,

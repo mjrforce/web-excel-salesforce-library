@@ -5,7 +5,7 @@
 import * as OfficeHelpers from '@microsoft/office-js-helpers';
 var dialog = null;
 // The initialize function must be run each time a new page is loaded
-var signInUrl = require('../server.js').signInUrl;
+var signInUrl = '<%= loginUrl %>';
 
 $(document).ready(function() {
     $('#run').click(run);

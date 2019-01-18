@@ -1,31 +1,46 @@
+var bodyParser = require('body-parser');
 var express = require('express');
 var app = express();
 var path = require('path');
 var jsforce = require('jsforce');
 
 app.set('port', (process.env.PORT || 5000));
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+app.set('views', path.join(__dirname + '/dist'));
 app.use(express.static('dist'));
 app.use(express.static('node_modules'));
 
-var oauth2 = new jsforce.OAuth2({
+var settings = {
     loginUrl: process.env.LOGIN_URL,
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: process.env.REDIRECT_URI
-});
+};
+var oauth2 = new jsforce.OAuth2(settings);
 
-var signInUrl = oauth2.getAuthorizationUrl({
-        scope: 'api id web'
-});
-
-module.exports.signInUrl = signInUrl;
-
+app.get('/', function(req, res) {
+	res.render(__dirname + '/dist/index.html', settings);
+}); 
+  
 app.get('/oauth2/callback', function(req, res) {
-    res.sendFile(path.join(__dirname + '/dist/callback.html'));
+  var conn = new jsforce.Connection({ oauth2 : oauth2 });
+  var code = req.param('code');
+  conn.authorize(code, function(err, userInfo) {
+    if (err) { return console.error(err); }
+    // Now you can get the access token, refresh token, and instance URL information.
+    // Save them to establish connection next time.
+    console.log(conn.accessToken);
+    console.log(conn.refreshToken);
+    console.log(conn.instanceUrl);
+    console.log("User ID: " + userInfo.id);
+    console.log("Org ID: " + userInfo.organizationId);
+	res.render(__dirname + '/dist/callback.html', conn);
+  });   
 });
 
 app.listen(app.get('port'), function() {
   console.log("Node app running at localhost:" + app.get('port'));
 });
 
-module.exports,app = app;
+module.exports = app;

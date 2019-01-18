@@ -14,11 +14,11 @@ Close this window
     // Office is ready
     $(document).ready(function () {
       var messageObject = {
-					     accessToken = '<%= accessToken %>',
-						 refreshToken = '<%= refreshToken %>',
-						 instanceUrl = '<%= instanceUrl %>',
-						 orgId = '<%= orgId %>',
-						 userId = '<%= userId %>'						 
+					     accessToken :'<%= accessToken %>',
+						 refreshToken : '<%= refreshToken %>',
+						 instanceUrl : '<%= instanceUrl %>',
+						 orgId : '<%= orgId %>',
+						 userId : '<%= userId %>'						 
 					 };
                      var jsonMessage = JSON.stringify(messageObject);
 					 console.log(jsonMessage);

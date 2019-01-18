@@ -18,8 +18,13 @@ var settings = {
 var oauth2 = new jsforce.OAuth2(settings);
 
 app.get('/', function(req, res) {
-	res.render(__dirname + '/dist/index.html', settings);
+	var loginUrl = oauth2.getAuthorizationUrl({ scope : 'api id web' });
+	res.render(__dirname + '/dist/index.html', {loginUrl: loginUrl });
 }); 
+
+app.get('', function(req, res) {
+	res.render(__dirname + '/dist/index.html', settings);
+});
   
 app.get('/oauth2/callback', function(req, res) {
   var conn = new jsforce.Connection({ oauth2 : oauth2 });

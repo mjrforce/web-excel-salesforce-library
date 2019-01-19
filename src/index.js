@@ -46,6 +46,7 @@ function processMessage(arg) {
 	  accessToken : oauthresult.accessToken
 	};
     dlg.close();
+	eventListener();
 }
 
 function eventListener(){

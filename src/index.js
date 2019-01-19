@@ -53,7 +53,7 @@ function eventListener(){
 	
 var conn = new jsforce.Connection({ oauth2: connection});
 console.log('js force connection established');
-var channel = "/event/Excel_Event__e";
+var channel = "/event/AccountEvent";
 var replayId = -2; // -2 is all retained events
 var replayExt = new jsforce.StreamingExtension.Replay(channel, replayId);
 var fayeClient = conn.streaming.createClient([ replayExt ]);

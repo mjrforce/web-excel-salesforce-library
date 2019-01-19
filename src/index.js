@@ -52,8 +52,12 @@ function processMessage(arg) {
 function eventListener(){
 	
 var conn = new jsforce.Connection({ oauth2: connection});
-conn.streaming.topic("/event/Excel_Event__e").subscribe(function(message) {
-    console.dir(message);
+var channel = "/event/Excel_Event__e";
+var replayId = -2; // -2 is all retained events
+var replayExt = new jsforce.StreamingExtension.Replay(channel, replayId);
+var fayeClient = conn.streaming.createClient([ replayExt ]);
+var subscription = fayeClient.subscribe(channel, data => {
+  console.log('Message: ', data);
 });
 }
 function createTable(q) {

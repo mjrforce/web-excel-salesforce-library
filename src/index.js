@@ -15,7 +15,7 @@ var connection = null;
 
 $(document).ready(function() {
     $('#run').click(run);
-    $('#create-table').click(createTable);
+    $('#create-table').click(createTable('select Id, Name from Account limit 10'));
 	$('#open-dialog').click(openDialog);
 });
 
@@ -48,10 +48,17 @@ function processMessage(arg) {
     dlg.close();
 }
 
-function createTable() {
+function eventListener(){
+	
+var conn = new jsforce.Connection({ oauth2: connection});
+conn.streaming.topic("/event/Excel_Event__e").subscribe(function(message) {
+    console.dir(message);
+});
+}
+function createTable(q) {
     console.log('creating table');
 	
-	$.getJSON( '/data/query', {q : 'select Id, Name from Account limit 10', connection : connection}).done(function(data){
+	$.getJSON( '/data/query', {q : q, connection : connection}).done(function(data){
 		console.log(data);	
 		Excel.run(function(context) {
 

@@ -52,10 +52,12 @@ function processMessage(arg) {
 function eventListener(){
 	
 var conn = new jsforce.Connection({ oauth2: connection});
+console.log('js force connection established');
 var channel = "/event/Excel_Event__e";
 var replayId = -2; // -2 is all retained events
 var replayExt = new jsforce.StreamingExtension.Replay(channel, replayId);
 var fayeClient = conn.streaming.createClient([ replayExt ]);
+console.log('starting subscription');
 var subscription = fayeClient.subscribe(channel, data => {
   console.log('Message: ', data);
 });

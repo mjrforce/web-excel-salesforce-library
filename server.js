@@ -1,80 +1,20 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var path = require('path');
-var jsforce = require('jsforce');
-var app = express();
+//Install express server
+const express = require('express');
+const path = require('path');
+const app = express();
+const oauth2 = require('./server/routes/oauth.js');
+const data = require('./server/routes/data.js');
+var server = require('http').Server(express);
+var io = require('socket.io')(server);
 
-app.set('port', (process.env.PORT || 5000));
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
-app.set('views', path.join(__dirname + '/dist'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
 
-var settings = {
-    loginUrl: process.env.LOGIN_URL,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    redirectUri: process.env.REDIRECT_URI
-};
-var oauth2 = new jsforce.OAuth2(settings);
+app.use(express.static(__dirname + '/dist'));
+app.use('/api/outh2', oauth2);
+app.use('/api/data', data);
 
-app.get('/data/query', function(req, res) {
-
-    var data = req.query;
-    var conn = new jsforce.Connection(data.connection);
-
-    conn.query(data.q, function(err, result) {
-        if (err) {
-            return console.error(err);
-        }
-        console.log("total : " + result.totalSize);
-        console.log("fetched : " + result.records.length);
-        res.json(result);
-    });
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname + root + '/index.html'));
 });
 
-app.get('/', function(req, res) {
-    var loginUrl = oauth2.getAuthorizationUrl({
-        scope: 'api id web'
-    });
-    res.render(__dirname + '/dist/index.html', {
-        loginUrl: loginUrl
-    });
-});
-
-app.get('', function(req, res) {
-    res.render(__dirname + '/dist/index.html', settings);
-});
-
-app.get('/oauth2/auth', function(req, res) {
-    res.redirect(oauth2.getAuthorizationUrl({
-        scope: 'api id web'
-    }));
-});
-
-app.get('/oauth2/callback', function(req, res) {
-    var conn = new jsforce.Connection({
-        oauth2: oauth2
-    });
-    var code = req.param('code');
-    conn.authorize(code, function(err, userInfo) {
-        if (err) {
-            return console.error(err);
-        }
-        conn.userId = userInfo.id;
-        conn.orgId = userInfo.organizationId;
-        res.render(__dirname + '/dist/callback.html', conn);
-    });
-});
-
-app.use(express.static('dist'));
-app.use(express.static('node_modules'));
-
-app.listen(app.get('port'), function() {
-    console.log("Node app running at localhost:" + app.get('port'));
-});
-
-module.exports = app;
+// Start the app by listening on the default Heroku port
+app.listen(process.env.PORT || 3100);

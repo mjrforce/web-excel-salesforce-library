@@ -1,0 +1,7 @@
+<div *ngIf="eventService.events.length">
+
+  <h2>Events</h2>
+  <button class="clear" (click)="eventService.clear()">clear</button>
+  <div *ngFor='let event of eventService.event'> {{event}} </div>
+
+</div>

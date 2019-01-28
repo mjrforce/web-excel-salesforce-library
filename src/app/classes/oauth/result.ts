@@ -1,5 +1,5 @@
 export class Result {
   accessToken: string;
-  instanceURL: string;
+  instanceUrl: string;
   refreshToken: string;
 }

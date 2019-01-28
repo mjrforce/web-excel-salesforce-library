@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { OfficeDataService } from './office-data-service'
+import { APP_BASE_HREF } from '@angular/common';
 import { Result } from '../classes/oauth/result';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -13,7 +14,7 @@ const httpOptions = {
 
 @Injectable({ providedIn: 'root' })
 export class OAuthService {
-  constructor(private http: HttpClient, private officeService: OfficeDataService) { }
+  constructor(private http: HttpClient, private officeService: OfficeDataService, @Inject(APP_BASE_HREF) private baseHref: string) { }
   dlg = null;
   connection = null;
 
@@ -21,7 +22,8 @@ export class OAuthService {
   login(callback: Function) {
     var service = this;
     Office.onReady(function () {
-      Office.context.ui.displayDialogAsync('https://localhost:4200/api/oauth/auth', {
+      console.log('Base: ' + service.baseHref);
+      Office.context.ui.displayDialogAsync(service.baseHref + '/api/oauth/auth', {
         height: 70,
         width: 40
       },

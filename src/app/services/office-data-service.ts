@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
+import { APP_BASE_HREF } from '@angular/common';
 declare const Office: any;
 
 @Injectable({ providedIn: 'root' })
 export class OfficeDataService {
 
-  constructor() { }
+  constructor(@Inject(APP_BASE_HREF) private baseHref: string) { }
 
 
   // Stores the settings in the JavaScript APIs for Office property bag.

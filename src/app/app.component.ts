@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { OAuthService } from './services/salesforce-oauth-service';
+import { DataService } from './services/salesforce-data-service';
+
 import { NgZone } from '@angular/core';
 declare const Excel: any;
 //
@@ -11,7 +13,7 @@ declare const Excel: any;
 export class AppComponent {
   welcomeMessage = 'Welcome';
 
-  constructor(private authService: OAuthService, private ngZone: NgZone) {
+  constructor(private authService: OAuthService, private ngZone: NgZone, private dataService: DataService) {
     var component = this;
     this.ngZone.run(() => {
       component.welcomeMessage = 'Please Log In';
@@ -24,9 +26,10 @@ export class AppComponent {
       console.log('From Component: ' + message);
       component.ngZone.run(() => {
         component.welcomeMessage = 'Logged In';
+        component.dataService.subscribe();
       });
     });
-
+    //
   }
   async run() {
     this.login();

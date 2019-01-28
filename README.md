@@ -1,54 +1,27 @@
-# Web Excel Salesforce Library (WESLI)
+# web-excel-salesforce-library
 
-WESLI is 	
-This is an Excel Add In, not a VBA macro. It lives on Heroku, so you can send a workbook created with it to anyone. 
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.2.
 
-This is a starter project with the following features: 
-- **Manifest XML** to sideload into Excel
-- **OAuth** into Salesforce
-- **Create a table in Excel** from an Account query
+## Development server
 
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Install Locally
+## Code scaffolding
 
-TODO: Confirm still works locally
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-Open a command prompt and type:
+## Build
 
-```
-npm run dev
-```
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-## Deploy to Heroku
+## Running unit tests
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Side Load Manifest.XML into Excel
+## Running end-to-end tests
 
-[Click here for instructions](https://docs.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins).
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-## Tips
+## Further help
 
-Every page in the app needs to initalize Office JavaScript API.
-
-```
-<!DOCTYPE html>
-<html>
-<body>
-    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.debug.js"></script>
-    <script type="text/javascript" src="/office-ui-fabric-js/dist/js/fabric.js"></script>
-	<script>
-	Office.initialize = function () {
-    // Office is ready           
-		Office.context.ui.messageParent('Message from Dialog');
-  };
-</script>		
-</body>
-</html>
-```
-
-Code Highlights:
-
-1. Each page should include the office js file.
-1. Each page should initialize Office, inside of which you can call $(document).ready() if you are using JQuery.
-
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

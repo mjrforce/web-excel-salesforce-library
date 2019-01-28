@@ -17,7 +17,7 @@ export class OAuthService {
   constructor(private http: HttpClient, private officeService: OfficeDataService, @Inject(APP_BASE_HREF) private baseHref: string) { }
   dlg = null;
   connection = null;
-
+  //
 
   login(callback: Function) {
     var service = this;

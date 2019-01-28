@@ -20,14 +20,16 @@ router.get('/config', function (req, res, next) {
 });
 
 router.post('/subscribe', function (req, res, next) {
-	var data = req.query;
-	console.log(req.query);
+	var data = req.body;
+	console.log(req.body);
 	var conn = new jsforce.Connection(data);
 	console.log(config.PLATFORM_EVENT);
-	conn.streaming.topic(config.PLATFORM_EVENT).subscribe(function (message) {
-		req.io.emit('callback-processed', { message: message });
+	conn.streaming.topic(config.PLATFORM_EVENT).subscribe(function (data) {
+		console.log(JSON.stringify(data));
+
+		req.io.emit('excel-event', { message: data['payload'] });
 	});
-	res.send(200);
+	res.json({});
 });
 
 router.get('/query', function (req, res) {

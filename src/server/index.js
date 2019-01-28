@@ -1,12 +1,10 @@
-//Install express server
-var config = require('./config');
 var express = require('express');
-var bodyParser = require('body-parser');
-var app = express();
-
-var io = require('socket.io')(server);
-io.path('/io/socket.io');
 var path = require('path');
+var app = express();
+var bodyParser = require('body-parser');
+var server = require('http').Server(app);
+var io = require('socket.io')(server, { path: '/io/socket.io' });
+var config = require('./config');
 const api = require('./routes/api');
 
 app.engine('html', require('ejs').renderFile);
@@ -24,12 +22,24 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static(__dirname + '/dist'));
 app.use('/api', api);
-var server = require('http').Server(app);
-server.listen(config.PORT);
 
+io.use((socket, next) => {
+  let token = socket.handshake.query.token;
+  if (isValid(token)) {
+    return next();
+  }
+  return next(new Error('authentication error'));
+});
 io.on('connection', function (socket) {
   console.log('someone connected');
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
 });
 
+server.listen(config.PORT, () => {
+  console.log("Listening on port " + config.PORT);
+});
 
 

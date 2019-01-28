@@ -29,19 +29,25 @@ export class AppComponent {
     //
   }
 
-  events: Event[];
+  events: Event[] = [];
+
+  addEvent = (event: Event): void => {
+    console.log(event);
+    var component = this;
+    this.ngZone.run(() => {
+      component.events.push(event);
+    });
+  }
 
   ngOnInit() {
     var component = this;
     this.ngZone.run(() => {
       component.welcomeMessage = 'Please Log In';
     });
-    this.socket.on('excel-event', (data: any) => {
-      component.ngZone.run(() => {
-        component.events.push(data);
-      });
-    });
+    this.socket.on('excel-event', this.addEvent);
   }
+
+
 
   login() {
     var component = this;

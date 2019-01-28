@@ -31,14 +31,6 @@ export class AppComponent {
 
   events: Event[] = [];
 
-  addEvent = (event: Event): void => {
-    console.log(event);
-    var component = this;
-    this.ngZone.run(() => {
-      component.events.push(event);
-    });
-  }
-
   ngOnInit() {
     var component = this;
     this.ngZone.run(() => {
@@ -47,12 +39,17 @@ export class AppComponent {
     this.socket.on('excel-event', this.addEvent);
   }
 
-
+  addEvent = (event: Event): void => {
+    console.log(event);
+    var component = this;
+    this.ngZone.run(() => {
+      component.events.push(event);
+    });
+  }
 
   login() {
     var component = this;
     component.authService.login(function (message: any) {
-      console.log('From Component: ' + message);
       component.ngZone.run(() => {
         component.welcomeMessage = 'Logged In';
         component.dataService.subscribe();
@@ -60,6 +57,7 @@ export class AppComponent {
     });
     //
   }
+
   async run() {
     this.login();
     try {

@@ -1,30 +1,27 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-
-
-import { AppRoutingModule } from './app-routing.module';
-
+import { NgModule } from '@angular/core';
+import { NgZone } from '@angular/core';
 import { AppComponent } from './app.component';
-import { MessagesComponent } from './modules/messages/messages.component';
-import { EventsComponent } from './modules/events/events.component';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-
-const config: SocketIoConfig = { url: '/io', options: {} };
+import { DataService } from './services/salesforce-data-service';
+import { OfficeDataService } from './services/office-data-service';
+import { OAuthService } from './services/salesforce-oauth-service';
+import { HttpClientModule } from '@angular/common/http';
+import { APP_BASE_HREF } from '@angular/common';
+//
 
 @NgModule({
+  declarations: [
+    AppComponent
+  ],
   imports: [
     BrowserModule,
-    FormsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    SocketIoModule.forRoot(config)
+    HttpClientModule
   ],
-  declarations: [
-    AppComponent,
-    MessagesComponent,
-    EventsComponent
+  providers: [
+    DataService,
+    OfficeDataService,
+    OAuthService,
+    [{ provide: APP_BASE_HREF, useValue: '/dist' }]
   ],
   bootstrap: [AppComponent]
 })

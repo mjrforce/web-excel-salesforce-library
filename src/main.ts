@@ -1,3 +1,4 @@
+import 'zone.js'; // Required for Angular
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
@@ -8,4 +9,11 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+declare const Office: any;
+Office.initialize = reason => {
+  document.getElementById('sideload-msg').style.display = 'none';
+
+  // Bootstrap the app//
+  platformBrowserDynamic().bootstrapModule(AppModule).catch(error => console.error(error));
+};
+

@@ -11,7 +11,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon src/server/index.js",
     "client": "ng serve --proxy-config proxy.config.json",
-    "preinstall": "npm install -g angular-cli"
+    "preinstall": "npm install -g @angular/cli"
   },
   "private": true,
   "dependencies": {

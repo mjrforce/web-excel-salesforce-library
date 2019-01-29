@@ -3,7 +3,6 @@ import { Inject } from '@angular/core';
 import { OAuthService } from './services/salesforce-oauth-service';
 import { DataService } from './services/salesforce-data-service';
 import * as io from 'socket.io-client';
-import { Event } from './classes/event';
 import { environment } from '../environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
 
@@ -29,7 +28,7 @@ export class AppComponent {
     //
   }
 
-  events: Event[] = [];
+  events: any[] = [];
 
   ngOnInit() {
     var component = this;
@@ -39,11 +38,14 @@ export class AppComponent {
     this.socket.on('excel-event', this.addEvent);
   }
 
-  addEvent = (event: Event): void => {
+  addEvent = (event: any): void => {
     console.log(event);
     var component = this;
     this.ngZone.run(() => {
       component.events.push(event);
+      var message = JSON.parse(event.Message__c);
+      component.changeColor(message.color);
+
     });
   }
 
@@ -58,8 +60,7 @@ export class AppComponent {
     //
   }
 
-  async run() {
-    this.login();
+  async changeColor(color: string) {
     try {
       await Excel.run(async context => {
         /**
@@ -71,7 +72,7 @@ export class AppComponent {
         range.load('address');
 
         // Update the fill color
-        range.format.fill.color = 'yellow';
+        range.format.fill.color = color;
 
         await context.sync();
         console.log(`The range address was ${range.address}.`);
@@ -79,5 +80,9 @@ export class AppComponent {
     } catch (error) {
 
     }
+  }
+
+  run() {
+    this.login();
   }
 }

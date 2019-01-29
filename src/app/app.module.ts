@@ -9,7 +9,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { APP_BASE_HREF } from '@angular/common';
 import { Result } from './classes/oauth/result';
 import { environment } from '../environments/environment';
-import { Event } from './classes/event'
 
 ///
 
@@ -26,7 +25,6 @@ import { Event } from './classes/event'
     OfficeDataService,
     OAuthService,
     Result,
-    Event,
     [{ provide: APP_BASE_HREF, useValue: environment.baseURL }]
   ],
   bootstrap: [AppComponent]

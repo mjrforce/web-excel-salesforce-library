@@ -26,10 +26,7 @@ import { Event } from './classes/event'
     OfficeDataService,
     OAuthService,
     Result,
-<<<<<<< HEAD
     Event,
-=======
->>>>>>> 6cc122133a9bc035d1dd31e718524898ba6fe357
     [{ provide: APP_BASE_HREF, useValue: environment.baseURL }]
   ],
   bootstrap: [AppComponent]

@@ -10,8 +10,7 @@
     "start": "npm run build && node src/server/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon src/server/index.js",
-    "client": "ng serve --proxy-config proxy.config.json",
-    "postinstall": "ng build --prod"
+    "client": "ng serve --proxy-config proxy.config.json"
   },
   "private": true,
   "dependencies": {

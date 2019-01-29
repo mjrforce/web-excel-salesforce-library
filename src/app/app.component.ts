@@ -43,7 +43,10 @@ export class AppComponent {
     var component = this;
     this.ngZone.run(() => {
       component.events.push(event);
+      console.log(event);
+
       var message = JSON.parse(event.Message__c);
+      console.log(message);
       component.changeColor(message.color);
 
     });

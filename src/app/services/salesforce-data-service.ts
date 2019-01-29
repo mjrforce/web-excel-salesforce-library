@@ -27,10 +27,6 @@ export class DataService {
   }
   subscribe() {
     this.http.post<string>(this.baseHref + '/api/data/subscribe', this.getconfig(), httpOptions).subscribe(function () { console.log('subscribed'); });//
-    console.log('config: ' + JSON.stringify(configobj));
-    console.log('result: ' + JSON.stringify(this.result));
-    ////
-    this.http.post<string>(this.baseHref + '/api/data/subscribe', this.result, httpOptions).subscribe(function () { console.log('subscribed'); });//
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, SystemJsNgModuleLoader } from '@angular/core';
 import { Inject } from '@angular/core';
 import { OAuthService } from './services/salesforce-oauth-service';
 import { DataService } from './services/salesforce-data-service';
@@ -44,14 +44,17 @@ export class AppComponent {
     this.ngZone.run(() => {
       component.events.push(event);
       console.log(event);
+      var messagestr: string;
+      messagestr = event['message']['Message__c'];
+      console.log(messagestr);
 
-      var message = JSON.parse(event.Message__c);
-      console.log(message);
+
+      var message = JSON.parse(messagestr);
       component.changeColor(message.color);
 
     });
   }
-
+  //
   login() {
     var component = this;
     component.authService.login(function (message: any) {

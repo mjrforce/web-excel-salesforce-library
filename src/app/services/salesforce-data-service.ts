@@ -18,6 +18,7 @@ export class DataService {
     private officeService: OfficeDataService,
     private result: Result) { }
 
+
   getconfig() {
     var config = this.officeService.getFromPropertyBag('oauthresult');
     var configobj = JSON.parse(config);

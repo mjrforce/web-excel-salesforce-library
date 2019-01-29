@@ -9,10 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { APP_BASE_HREF } from '@angular/common';
 import { Result } from './classes/oauth/result';
 import { environment } from '../environments/environment';
-<<<<<<< HEAD
 import { Event } from './classes/event'
-=======
->>>>>>> 6cc122133a9bc035d1dd31e718524898ba6fe357
 
 ///
 

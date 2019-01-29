@@ -7,9 +7,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start": "node src/server/index.js",
+    "start": "node index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "nodemon src/server/index.js",
+    "server": "nodemon index.js",
     "client": "ng serve --proxy-config proxy.config.json",
     "preinstall": "npm install -g @angular/cli @angular-devkit/build-angular @angular/compiler typescript"
   },

@@ -34,6 +34,7 @@ router.get('/callback', function (req, res, next) {
         conn.orgId = userInfo.organizationId;
         conn.layout = 'blank';
         conn.title = 'Callback';
+        console.log(conn);
         res.render(path.join(__dirname, '../oauth/callback'), conn);
     });
 });

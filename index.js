@@ -5,8 +5,8 @@ var debug = require('debug')('node-streaming-socketio:server');
 var bodyParser = require('body-parser');
 var server = require('http').Server(app);
 var io = require('socket.io')(server, { path: '/io/socket.io' });
-var config = require('./config');
-const api = require('./routes/api');
+var config = require('./src/server/config');
+const api = require('./src/server/routes/api');
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');

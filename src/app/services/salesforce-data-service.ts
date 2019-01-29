@@ -18,17 +18,15 @@ export class DataService {
     private officeService: OfficeDataService,
     private result: Result) { }
 
-
   getconfig() {
     var config = this.officeService.getFromPropertyBag('oauthresult');
     var configobj = JSON.parse(config);
     this.result.accessToken = configobj.accessToken;
     this.result.instanceUrl = configobj.instanceUrl;
+
     return this.result;
   }
   subscribe() {
-    this.http.post<string>(this.baseHref + '/api/data/subscribe', this.getconfig(), httpOptions).subscribe(function () { console.log('subscribed'); });//
+    this.http.post<string>(this.baseHref + '/api/data/subscribe', this.getconfig(), httpOptions).subscribe(function () { console.log('subscribed'); });
   }
-
 }
-

@@ -22,6 +22,9 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(express.static(__dirname + '/dist'));
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname + '/dist/index.html'));
+});
 app.use('/api', api);
 
 app.use(function (req, res, next) {

@@ -1,10 +1,6 @@
 {
   "name": "web-excel-salesforce-library",
   "version": "0.0.0",
-  "engines": {
-    "node": "6.11.0",
-    "npm": "3.10.10"
-  },
   "scripts": {
     "ng": "ng",
     "build": "ng build",
@@ -16,7 +12,7 @@
     "server": "nodemon index.js",
     "client": "ng serve --proxy-config proxy.config.json",
     "preinstall": "npm install -g @angular/cli @angular-devkit/build-angular @angular/compiler typescript",
-    "postinstall": "ng build --prod"
+    "postinstall": "ng build --aot --prod"
   },
   "private": true,
   "dependencies": {

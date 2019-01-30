@@ -21,9 +21,9 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.use(express.static(__dirname + '/dist/salesforce-heroku-excel-addin'));
+app.use(express.static(__dirname + '/dist'));
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname + '/dist/salesforce-heroku-excel-addin/index.html'));
+  res.sendFile(path.join(__dirname + '/dist/index.html'));
 });
 app.use('/api', api);
 

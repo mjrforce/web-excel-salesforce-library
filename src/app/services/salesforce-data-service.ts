@@ -23,7 +23,6 @@ export class DataService {
     var configobj = JSON.parse(config);
     this.result.accessToken = configobj.accessToken;
     this.result.instanceUrl = configobj.instanceUrl;
-
     return this.result;
   }
   subscribe() {

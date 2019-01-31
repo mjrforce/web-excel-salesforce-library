@@ -14,10 +14,17 @@ const httpOptions = {
 
 @Injectable({ providedIn: 'root' })
 export class OAuthService {
-  constructor(private http: HttpClient, private officeService: OfficeDataService, @Inject(APP_BASE_HREF) private baseHref: string) { }
+  constructor(private http: HttpClient,
+    private officeService: OfficeDataService,
+    @Inject(APP_BASE_HREF) private baseHref: string,
+    private result: Result) { }
   dlg = null;
   connection = null;
-  //
+
+  ngOnInit() {
+    this.result = new Result();
+  }
+
 
   login(callback: Function) {
     var service = this;
@@ -33,11 +40,32 @@ export class OAuthService {
           service.dlg.addEventHandler("dialogMessageReceived", function (arg: any) {
             console.log(arg);
             service.dlg.close();
-            service.officeService.saveToPropertyBag('oauthresult', arg.message)
+            service.officeService.saveToPropertyBag('oauthresult', arg.message);
             callback(arg.message as any);
           });
         });
     });
   }
 
+  getconfig() {
+    var config = this.officeService.getFromPropertyBag('oauthresult');
+    var configobj = JSON.parse(config);
+    this.result.accessToken = configobj.accessToken;
+    this.result.instanceUrl = configobj.instanceUrl;
+    return this.result;
+  }
+
+  logout(callback: Function) {
+    var service = this;
+    this.http.post<string>(this.baseHref + '/api/oauth/logout', this.getconfig(), httpOptions).subscribe(function (data) {
+      console.log(data);
+      service.officeService.saveToPropertyBag('oauthresult', null);
+      callback(data as any);
+    });
+  }
+
+  isLoggedIn() {
+    var settings = this.officeService.getFromPropertyBag('oauthresult');
+    return settings != null;
+  }
 }

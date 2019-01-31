@@ -2,12 +2,12 @@
 <html>
 
 <body>
-	This is the callback
 	<script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.debug.js"></script>
 	<script type="text/javascript" src="/office-ui-fabric-js/dist/js/fabric.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../../node_modules/@salesforce-ux/design-system/assets/styles/salesforce-lightning-design-system.min.css" />
 	<script>
 		Office.initialize = function () {
-			// Office is ready
+
 			var messageObject = {
 				accessToken: '<%= accessToken %>',
 				refreshToken: '<%= refreshToken %>',
@@ -20,6 +20,13 @@
 			Office.context.ui.messageParent(jsonMessage);
 		};
 	</script>
+	<div class="demo-only" style="height: 6rem;">
+		<div role="status" class="slds-spinner slds-spinner_brand slds-spinner_large">
+			<span class="slds-assistive-text">Loading</span>
+			<div class="slds-spinner__dot-a"></div>
+			<div class="slds-spinner__dot-b"></div>
+		</div>
+	</div>
 </body>
 
 </html>

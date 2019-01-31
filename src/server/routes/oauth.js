@@ -15,6 +15,16 @@ router.get('/auth', function (req, res, next) {
     res.redirect(oauth2.getAuthorizationUrl({ scope: 'api id web' }));
 });
 
+router.post('/logout', function (req, res, next) {
+    var data = req.body;
+    var conn = new jsforce.Connection(data);
+    conn.logout(function (err) {
+        if (err) { return console.error(err); }
+        res.json({ success: true });
+    });
+
+});
+
 router.get('/authurl', function (req, res, next) {
     var resjson = {};
     resjson.URL = oauth2.getAuthorizationUrl({ scope: 'api id web' });

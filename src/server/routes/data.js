@@ -19,6 +19,19 @@ router.get('/config', function (req, res, next) {
 	res.json(config);
 });
 
+router.post('/unsubscribe', function (req, res, next) {
+	var data = req.body;
+	console.log(req.body);
+	var conn = new jsforce.Connection(data);
+	console.log(config.PLATFORM_EVENT);
+	conn.streaming.topic(config.PLATFORM_EVENT).unsubscribe(function (data) {
+		console.log(JSON.stringify(data));
+
+		req.io.emit('excel-event', { message: data['payload'] });
+	});
+	res.json({});
+});
+
 router.post('/subscribe', function (req, res, next) {
 	var data = req.body;
 	console.log(req.body);

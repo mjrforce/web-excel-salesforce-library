@@ -5,17 +5,17 @@ import { DataService } from './services/salesforce-data-service';
 import * as io from 'socket.io-client';
 import { environment } from '../environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
-
 import { NgZone } from '@angular/core';
+
 declare const Excel: any;
+
 //
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
-  welcomeMessage = 'Welcome';
+  isLoggedIn = false;
   socket: SocketIOClient.Socket;
 
   constructor(private authService: OAuthService,
@@ -25,7 +25,7 @@ export class AppComponent {
     this.socket = io(baseHref, {
       path: '/io/socket.io'
     });
-    //
+
   }
 
   events: any[] = [];
@@ -33,9 +33,10 @@ export class AppComponent {
   ngOnInit() {
     var component = this;
     this.ngZone.run(() => {
-      component.welcomeMessage = 'Please Log In';
+      component.isLoggedIn = component.authService.isLoggedIn();
     });
     this.socket.on('excel-event', this.addEvent);
+
   }
 
   addEvent = (event: any): void => {
@@ -43,15 +44,10 @@ export class AppComponent {
     var component = this;
     this.ngZone.run(() => {
       component.events.push(event);
-      console.log(event);
       var messagestr: string;
       messagestr = event['message']['Message__c'];
-      console.log(messagestr);
-
-
       var message = JSON.parse(messagestr);
       component.changeColor(message.color);
-
     });
   }
   //
@@ -59,11 +55,27 @@ export class AppComponent {
     var component = this;
     component.authService.login(function (message: any) {
       component.ngZone.run(() => {
-        component.welcomeMessage = 'Logged In';
-        component.dataService.subscribe();
+        component.isLoggedIn = true;
+        component.dataService.subscribe(function () {
+
+        });
       });
     });
-    //
+  }
+
+  logout() {
+    var component = this;
+    this.dataService.unsubscribe(function () {
+      component.authService.logout(function (result: any) {
+        component.ngZone.run(() => {
+          if (result.success) {
+            component.isLoggedIn = false;
+          }
+        });
+
+      });
+    });
+
   }
 
   async changeColor(color: string) {

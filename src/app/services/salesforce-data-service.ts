@@ -25,7 +25,17 @@ export class DataService {
     this.result.instanceUrl = configobj.instanceUrl;
     return this.result;
   }
-  subscribe() {
-    this.http.post<string>(this.baseHref + '/api/data/subscribe', this.getconfig(), httpOptions).subscribe(function () { console.log('subscribed'); });
+  subscribe(callback: Function) {
+    this.http.post<string>(this.baseHref + '/api/data/subscribe', this.getconfig(), httpOptions).subscribe(function () {
+      console.log('subscribed');
+      callback();
+    });
+  }
+
+  unsubscribe(callback: Function) {
+    this.http.post<string>(this.baseHref + '/api/data/unsubscribe', this.getconfig(), httpOptions).subscribe(function () {
+      console.log('unsubscribed');
+      callback();
+    });
   }
 }

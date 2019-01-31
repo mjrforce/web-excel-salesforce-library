@@ -27,7 +27,7 @@ router.post('/unsubscribe', function (req, res, next) {
 	conn.streaming.topic(config.PLATFORM_EVENT).unsubscribe(function (data) {
 		console.log(JSON.stringify(data));
 
-		req.io.emit('excel-event', { message: data['payload'] });
+
 	});
 	res.json({});
 });

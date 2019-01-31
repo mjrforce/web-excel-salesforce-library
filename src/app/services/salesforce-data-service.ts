@@ -38,4 +38,16 @@ export class DataService {
       callback();
     });
   }
+
+  publish(template: string, callback: Function) {
+
+    console.log({ connection: JSON.parse(this.officeService.getFromPropertyBag('oauthresult')), template: template });
+    this.http.post<string>(
+      this.baseHref + '/api/data/publish',
+      { connection: JSON.parse(this.officeService.getFromPropertyBag('oauthresult')), template: template },
+      httpOptions).subscribe(function (res: any) {
+        console.log(res);
+        callback();
+      });
+  }
 }

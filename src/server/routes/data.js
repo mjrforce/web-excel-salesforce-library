@@ -38,11 +38,25 @@ router.post('/subscribe', function (req, res, next) {
 	var conn = new jsforce.Connection(data);
 	console.log(config.PLATFORM_EVENT);
 	conn.streaming.topic(config.PLATFORM_EVENT).subscribe(function (data) {
-		console.log(JSON.stringify(data));
+		var message = JSON.parse(data['payload']['Message__c']);
+		console.log(message);
+		for (var i = 0; i < message.length; i++) {
+			req.io.emit(message[i].name, { message: message[i] });
+		}
 
-		req.io.emit('excel-event', { message: data['payload'] });
 	});
 	res.json({});
+});
+
+router.post('/publish', function (req, res, next) {
+	var data = req.body;
+	console.log(data);
+	var conn = new jsforce.Connection(data.connection);
+	conn.sobject("Excel_Template_Event__e").create({ Template_Name__c: data.template }, function (err, ret) {
+		if (err || !ret.success) { return console.error(err, ret); }
+		console.log("Created record id : " + ret.id);
+		res.json(ret);
+	});
 });
 
 router.get('/query', function (req, res) {

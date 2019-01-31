@@ -29,43 +29,40 @@ export class OAuthService {
   login(callback: Function) {
     var service = this;
     Office.onReady(function () {
-      console.log('Base: ' + service.baseHref);
       Office.context.ui.displayDialogAsync(service.baseHref + '/api/oauth/auth', {
         height: 70,
         width: 40
       },
         function (result: any) {
-          console.log('result: ' + JSON.stringify(result));
           service.dlg = result.value;
           service.dlg.addEventHandler("dialogMessageReceived", function (arg: any) {
-            console.log(arg);
             service.dlg.close();
-            service.officeService.saveToPropertyBag('oauthresult', arg.message);
+            service.officeService.saveToLocalStorage('oauthresult', arg.message);
             callback(arg.message as any);
           });
         });
     });
   }
 
-  getconfig() {
-    var config = this.officeService.getFromPropertyBag('oauthresult');
-    var configobj = JSON.parse(config);
-    this.result.accessToken = configobj.accessToken;
-    this.result.instanceUrl = configobj.instanceUrl;
-    return this.result;
+  getconfig(): any {
+    var config = JSON.parse(this.officeService.getFromLocalStorage('oauthresult'));
+    return config.connection;
   }
 
+
   logout(callback: Function) {
-    var service = this;
+
     this.http.post<string>(this.baseHref + '/api/oauth/logout', this.getconfig(), httpOptions).subscribe(function (data) {
+      console.log('Logout callback');
       console.log(data);
-      service.officeService.saveToPropertyBag('oauthresult', null);
+      this.officeService.clearLocalStorage('oauthresult');
       callback(data as any);
-    });
+    }.bind(this));
   }
 
   isLoggedIn() {
-    var settings = this.officeService.getFromPropertyBag('oauthresult');
-    return settings != null;
+    var settings = this.getconfig();
+    console.log(settings);
+    return settings != null;//
   }
 }

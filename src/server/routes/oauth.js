@@ -17,7 +17,9 @@ router.get('/auth', function (req, res, next) {
 
 router.post('/logout', function (req, res, next) {
     var data = req.body;
+    console.log(data);
     var conn = new jsforce.Connection(data);
+
     conn.logout(function (err) {
         if (err) { return console.error(err); }
         res.json({ success: true });
@@ -40,12 +42,7 @@ router.get('/callback', function (req, res, next) {
             res.send(err.message);
             return console.error(err);
         }
-        conn.userId = userInfo.id;
-        conn.orgId = userInfo.organizationId;
-        conn.layout = 'blank';
-        conn.title = 'Callback';
-        console.log(conn);
-        res.render(path.join(__dirname, '../oauth/callback'), conn);
+        res.render(path.join(__dirname, '../oauth/callback'), { connection: conn, userInfo: userInfo });
     });
 });
 

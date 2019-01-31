@@ -9,11 +9,14 @@
 		Office.initialize = function () {
 
 			var messageObject = {
-				accessToken: '<%= accessToken %>',
-				refreshToken: '<%= refreshToken %>',
-				instanceUrl: '<%= instanceUrl %>',
-				orgId: '<%= orgId %>',
-				userId: '<%= userId %>'
+				connection: {
+					accessToken: '<%= connection.accessToken %>',
+					instanceUrl: '<%= connection.instanceUrl %>'
+				},
+				userInfo: {
+					orgId: '<%= userInfo.orgId %>',
+					userId: '<%= userInfo.userId %>'
+				}
 			};
 			var jsonMessage = JSON.stringify(messageObject);
 			console.log(jsonMessage);

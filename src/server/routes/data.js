@@ -38,6 +38,7 @@ router.post('/subscribe', function (req, res, next) {
 	var conn = new jsforce.Connection(data);
 	console.log(config.PLATFORM_EVENT);
 	conn.streaming.topic(config.PLATFORM_EVENT).subscribe(function (data) {
+		console.log('heres the data');
 		var message = JSON.parse(data['payload']['Message__c']);
 		console.log(message);
 		for (var i = 0; i < message.length; i++) {
@@ -71,6 +72,32 @@ router.get('/query', function (req, res) {
 		console.log("total : " + result.totalSize);
 		console.log("fetched : " + result.records.length);
 		res.json(result);
+	});
+});
+
+router.post('/start', function (req, res) {
+
+	var data = req.body;
+	console.log(data);
+	var conn = new jsforce.Connection(data.connection);
+
+	conn.query("SELECT Id, Name from Excel_Template__c WHERE Name = '" + data.q + "'", function (err, result) {
+		if (err) {
+			return console.error(err);
+		}
+		console.log('query result');
+		console.log(result);
+
+		var records = []
+		for (var i = 0; i < result.records.length; i++) {
+			records.add({ Template_Name__c: result.records[i].Id });
+		}
+		conn.sobject("Excel_Template_Event__e").create(records, function (err, ret) {
+			if (err || !ret.success) { return console.error(err, ret); }
+			console.log(ret);
+			res.json(ret);
+		});
+
 	});
 });
 

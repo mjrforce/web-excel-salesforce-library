@@ -13,13 +13,11 @@ import { SFTable } from '../../classes/Excel/SFTable';
 declare const Excel: any;
 //
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html'
+  selector: 'app-query',
+  templateUrl: './query.component.html'
 })
 
-export class AppComponent {
-
-  //socket: SocketIOClient.Socket;//
+export class QueryComponent {
 
   constructor(private authService: OAuthService,
     private ngZone: NgZone,
@@ -27,13 +25,23 @@ export class AppComponent {
     private excelService: ExcelService,
     private officeService: OfficeDataService,
     @Inject(APP_BASE_HREF) private baseHref: string) {
-    //this.socket = io(baseHref, {
-    //  path: '/io/socket.io'
-    //});
+
   }
 
+
+  model: SFTable = new SFTable();
+  submitted: boolean = false;
+  isLive: boolean = false;
+  onSubmit() { this.submitted = true; }
+  onLiveChange(option: boolean) {
+    this.ngZone.run(() => {
+      this.isLive = option;
+    })
+  }
+  //
+
   ngOnInit() {
-    //this.socket.on('excel-event', this.addEvent);//
+
   }
 
 

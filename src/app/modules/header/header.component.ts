@@ -15,5 +15,33 @@ import { NgZone } from '@angular/core';
 
 export class HeaderComponent {
 
+  isLoggedIn = false;
+  constructor(private authService: OAuthService, private ngZone: NgZone) { }
+  ngOnInit() {
+    this.ngZone.run(() => {
+      this.isLoggedIn = this.authService.isLoggedIn();
+    });
+  }
+
+  login() {
+    this.authService.login(function (success: Boolean) {
+      this.ngZone.run(() => {
+        this.isLoggedIn = success;
+      })
+    }.bind(this));
+  }
+
+  unsubscribeall() {
+
+  }
+
+  logout() {
+    this.authService.logout(function (data: any) {
+      this.unsubscribeall();
+      this.ngZone.run(() => {
+        this.isLoggedIn = false;
+      }).bind(this);
+    }.bind(this));
+  }
 
 }

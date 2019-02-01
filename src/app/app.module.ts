@@ -12,20 +12,26 @@ import { Result } from './classes/oauth/result';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { TableBuilderComponent } from './modules/builder/table/builder.table.component';
-import { HeaderComponent } from './modules/header/header.component'
-
+import { HeaderComponent } from './modules/header/header.component';
+import { QueryComponent } from './modules/query/query.component';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+//
 @NgModule({
   declarations: [
     AppComponent,
     TableBuilderComponent,
-    HeaderComponent
+    HeaderComponent,
+    QueryComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
     DataService,
     OfficeDataService,
     OAuthService,

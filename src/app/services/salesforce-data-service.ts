@@ -22,6 +22,7 @@ export class DataService {
 
   getconfig(): any {
     return this.oauthService.getconfig();
+
   }
   subscribe(callback: Function) {
 

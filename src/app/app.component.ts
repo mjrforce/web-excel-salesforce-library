@@ -2,93 +2,75 @@ import { Component, SystemJsNgModuleLoader } from '@angular/core';
 import { Inject } from '@angular/core';
 import { OAuthService } from './services/salesforce-oauth-service';
 import { DataService } from './services/salesforce-data-service';
+import { ExcelService } from './services/excel-services';
+import { OfficeDataService } from './services/office-data-service'
 import * as io from 'socket.io-client';
 import { environment } from '../environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
-
 import { NgZone } from '@angular/core';
+
 declare const Excel: any;
-//
+
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './app.component.html'
 })
+
 export class AppComponent {
-  welcomeMessage = 'Welcome';
+  isLoggedIn = false;
   socket: SocketIOClient.Socket;
 
   constructor(private authService: OAuthService,
     private ngZone: NgZone,
     private dataService: DataService,
+    private excelService: ExcelService,
+    private officeService: OfficeDataService,
     @Inject(APP_BASE_HREF) private baseHref: string) {
     this.socket = io(baseHref, {
       path: '/io/socket.io'
     });
-    //
   }
 
-  events: any[] = [];
+  events: any[] = this.excelService.getEvents();
 
   ngOnInit() {
-    var component = this;
     this.ngZone.run(() => {
-      component.welcomeMessage = 'Please Log In';
+      this.isLoggedIn = this.authService.isLoggedIn();
     });
-    this.socket.on('excel-event', this.addEvent);
+    //this.socket.on('excel-event', this.addEvent);//
+    this.socket.on('create-table', this.socketEventHandler);
   }
 
-  addEvent = (event: any): void => {
-    console.log(event);
-    var component = this;
-    this.ngZone.run(() => {
-      component.events.push(event);
-      console.log(event);
-      var messagestr: string;
-      messagestr = event['message']['Message__c'];
-      console.log(messagestr);
-
-
-      var message = JSON.parse(messagestr);
-      component.changeColor(message.color);
-
+  socketEventHandler = (event: any): void => {
+    this.excelService.socketEventHandler(event);
+  }
+  start() {
+    this.dataService.start('query accounts', function () {
+      console.log('starting query accounts');
     });
   }
-  //
+
   login() {
-    var component = this;
-    component.authService.login(function (message: any) {
-      component.ngZone.run(() => {
-        component.welcomeMessage = 'Logged In';
-        component.dataService.subscribe();
-      });
-    });
-    //
+
+    this.authService.login(function (message: any) {
+      this.ngZone.run(() => {
+        this.isLoggedIn = true;
+        this.dataService.subscribe(function () {
+        });
+      })
+    }.bind(this));
   }
 
-  async changeColor(color: string) {
-    try {
-      await Excel.run(async context => {
-        /**
-         * Insert your Excel code here
-         */
-        const range = context.workbook.getSelectedRange();
+  logout() {
 
-        // Read the range address
-        range.load('address');
+    var service = this;
+    this.dataService.unsubscribe(function () {
+      this.authService.logout(function (result: any) {
+        this.ngZone.run(() => {
+          this.isLoggedIn = false;
 
-        // Update the fill color
-        range.format.fill.color = color;
-
-        await context.sync();
-        console.log(`The range address was ${range.address}.`);
-      });
-    } catch (error) {
-
-    }
-  }
-
-  run() {
-    this.login();
+        });
+      }.bind(this));
+    }.bind(this));
   }
 }

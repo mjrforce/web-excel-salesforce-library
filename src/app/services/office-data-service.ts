@@ -89,6 +89,13 @@ export class OfficeDataService {
     return value;
   }
 
+  clearLocalStorage(_key) {
+
+    localStorage.removeItem(_key);
+
+
+  }
+
   // Stores the settings using session storage (Web Storage limited to the lifetime of the browser window).
   saveToSessionStorage(_key, _value) {
 

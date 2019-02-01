@@ -2,12 +2,14 @@
 <!-- See LICENSE in the project root for license information -->
 
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="../../../node_modules/@salesforce-ux/design-system/assets/styles/salesforce-lightning-design-system.min.css" />
   <title>web-excel-salesforce-library</title>
 
   <!-- Office JavaScript API -->
@@ -18,9 +20,15 @@
   <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.2.0/css/fabric.components.min.css" />
 </head>
 
-<body class="ms-font-m ms-welcome">
-  <h2 id="sideload-msg" className='ms-fontSize-su ms-fontColor-neutralPrimary'>Please sideload your addin to see app
-    body.</h2>
+<body>
+
+  <div id="sideload-msg" style="height: 6rem;">
+    <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_large">
+      <span class="slds-assistive-text">Loading</span>
+      <div class="slds-spinner__dot-a"></div>
+      <div class="slds-spinner__dot-b"></div>
+    </div>
+  </div>
   <app-root></app-root>
 </body>
 

@@ -15,6 +15,21 @@ router.get('/auth', function (req, res, next) {
     res.redirect(oauth2.getAuthorizationUrl({ scope: 'api id web' }));
 });
 
+router.post('/logout', function (req, res, next) {
+    var data = req.body;
+    console.log(data);
+    var conn = new jsforce.Connection(data);
+
+    conn.logout(function (err) {
+        if (err) {
+            console.error(err);
+            res.json({ success: true, err: err });
+        }
+        res.json({ success: true });
+    });
+
+});
+
 router.get('/authurl', function (req, res, next) {
     var resjson = {};
     resjson.URL = oauth2.getAuthorizationUrl({ scope: 'api id web' });
@@ -30,12 +45,7 @@ router.get('/callback', function (req, res, next) {
             res.send(err.message);
             return console.error(err);
         }
-        conn.userId = userInfo.id;
-        conn.orgId = userInfo.organizationId;
-        conn.layout = 'blank';
-        conn.title = 'Callback';
-        console.log(conn);
-        res.render(path.join(__dirname, '../oauth/callback'), conn);
+        res.render(path.join(__dirname, '../oauth/callback'), { connection: conn, userInfo: userInfo });
     });
 });
 

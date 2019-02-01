@@ -25,8 +25,10 @@
     "@angular/platform-browser-dynamic": "^7.2.0",
     "@angular/router": "~7.2.0",
     "@microsoft/office-js-helpers": "^1.0.2",
+    "@salesforce-ux/design-system": "^2.8.1",
     "@types/socket.io": "^2.1.2",
     "angular-webstorage-service": "^1.0.2",
+    "classlist.js": "^1.1.20150312",
     "core-js": "^2.5.4",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
@@ -37,7 +39,9 @@
     "rxjs": "~6.3.3",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
+    "svg4everybody": "^2.1.9",
     "tslib": "^1.9.0",
+    "web-animations-js": "^2.3.1",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

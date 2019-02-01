@@ -6,7 +6,9 @@ import { Result } from '../classes/oauth/result';
 import { APP_BASE_HREF } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-//////
+
+declare const jsforce: any;
+
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-type': 'application/json' })
 };
@@ -21,45 +23,41 @@ export class DataService {
     private result: Result) { }
 
   getconfig(): any {
+
     return this.oauthService.getconfig();
   }
-  subscribe(callback: Function) {
-
-    this.http.post<string>(this.baseHref + '/api/data/subscribe', this.getconfig(), httpOptions).subscribe(function () {
-      console.log('subscribed');
-      callback();
-    });
+  subscribe(event: String, callback: Function) {
+    var conn = new jsforce.Connection(this.getconfig());
+    conn.streaming.topic('/event/' + event).subscribe(callback);
   }
 
-  unsubscribe(callback: Function) {
-    this.http.post<string>(this.baseHref + '/api/data/unsubscribe', this.getconfig(), httpOptions).subscribe(function () {
-      console.log('unsubscribed');
-      callback();
-    });
+  unsubscribe(event: String, callback: Function) {
+    var conn = new jsforce.Connection(this.getconfig());
+    conn.streaming.topic('/event/' + event).unsubscribe(callback);
   }
 
-  publish(template: string, callback: Function) {
-    this.http.post<string>(
-      this.baseHref + '/api/data/publish',
-      {
-        connection: JSON.parse(this.officeService.getFromPropertyBag('oauthresult')),
-        template: template
-      },
-      httpOptions).subscribe(function (res: any) {
-        callback();
-      });
+  publish(event: string, data: any, callback: Function) {
+    var conn = new jsforce.Connection(this.getconfig());
+    conn.sobject('/event/' + event).create(data, callback);
+  }
+
+  query(q: string, callback: Function) {
+    var conn = new jsforce.Connection(this.getconfig());
+    conn.query(q, callback);
   }
 
   start(template: string, callback: Function) {
-
-    this.http.post<string>(
-      this.baseHref + '/api/data/start',
-      {
-        connection: this.getconfig(),
-        q: template
-      },
-      httpOptions).subscribe(function (res: any) {
-        callback();
-      });
+    var conn = new jsforce.Connection(this.getconfig());
+    conn.query("SELECT Id, Name from Excel_Template__c WHERE Name = '" + template + "'", function (err, result) {
+      if (err) {
+        console.error(err);
+      } else {
+        var records = [];
+        for (var i = 0; i < result.records.length; i++) {
+          records.push({ Template_Name__c: result.records[i].Id });
+        }
+        conn.sobject("Excel_Template_Event__e").create(records, callback);
+      }
+    });
   }
 }

@@ -38,7 +38,7 @@ export class OAuthService {
           service.dlg.addEventHandler("dialogMessageReceived", function (arg: any) {
             service.dlg.close();
             service.officeService.saveToLocalStorage('oauthresult', arg.message);
-            callback(arg.message as any);
+            callback(true);
           });
         });
     });

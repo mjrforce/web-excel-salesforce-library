@@ -1,4 +1,3 @@
-import { Component, SystemJsNgModuleLoader } from '@angular/core';
 import { Inject } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import { DataService } from '../services/salesforce-data-service';
@@ -10,6 +9,7 @@ export class ExcelService {
 
   events: any[] = [];
 
+
   constructor(
     @Inject(APP_BASE_HREF) private baseHref: string,
     private dataService: DataService,
@@ -17,6 +17,7 @@ export class ExcelService {
   }
 
   ngOnInit() {
+
   }
 
   getEvents(): any[] {
@@ -28,14 +29,6 @@ export class ExcelService {
     this.ngZone.run(() => {
       service.events.push(event);
     });
-  }
-
-  socketEventHandler = (event: any): void => {
-    console.log('socket event: ' + JSON.stringify(event));
-
-    if (event['message'].name == 'create-table')
-      this.asynccreateTable(event['message']);
-
   }
 
   /**
@@ -50,8 +43,6 @@ export class ExcelService {
   /**
    * Get Data from Excel_Event__e
    */
-
-
 
   async asynccreateTable(data: any) {
     console.log('create-table');
@@ -99,6 +90,14 @@ export class ExcelService {
 
     }
   }
+
+  //   socketEventHandler = (event: any): void => {
+  //    console.log('socket event: ' + JSON.stringify(event));
+  //
+  //    if (event['message'].name == 'create-table')
+  //      this.asynccreateTable(event['message']);
+  //
+  //  }
 
 
 }

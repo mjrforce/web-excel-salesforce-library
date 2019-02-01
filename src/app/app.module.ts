@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgZone } from '@angular/core';
-import { AppComponent } from './app.component';
+import { AppComponent } from './modules/app/app.component';
 import { DataService } from './services/salesforce-data-service';
 import { OfficeDataService } from './services/office-data-service';
 import { ExcelService } from './services/excel-services';
@@ -10,14 +10,20 @@ import { HttpClientModule } from '@angular/common/http';
 import { APP_BASE_HREF } from '@angular/common';
 import { Result } from './classes/oauth/result';
 import { environment } from '../environments/environment';
+import { AppRoutingModule } from './app-routing.module';
+import { TableBuilderComponent } from './modules/builder/table/builder.table.component';
+import { HeaderComponent } from './modules/header/header.component'
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TableBuilderComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    AppRoutingModule
   ],
   providers: [
     DataService,

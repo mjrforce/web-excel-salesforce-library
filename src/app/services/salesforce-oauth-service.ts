@@ -53,8 +53,6 @@ export class OAuthService {
   logout(callback: Function) {
 
     this.http.post<string>(this.baseHref + '/api/oauth/logout', this.getconfig(), httpOptions).subscribe(function (data) {
-      console.log('Logout callback');
-      console.log(data);
       this.officeService.clearLocalStorage('oauthresult');
       callback(data as any);
     }.bind(this));
@@ -62,7 +60,6 @@ export class OAuthService {
 
   isLoggedIn() {
     var settings = this.getconfig();
-    console.log(settings);
     return settings != null;//
   }
 }

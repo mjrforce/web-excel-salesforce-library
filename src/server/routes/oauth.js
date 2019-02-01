@@ -21,7 +21,10 @@ router.post('/logout', function (req, res, next) {
     var conn = new jsforce.Connection(data);
 
     conn.logout(function (err) {
-        if (err) { return console.error(err); }
+        if (err) {
+            console.error(err);
+            res.json({ success: true, err: err });
+        }
         res.json({ success: true });
     });
 

@@ -29,7 +29,6 @@ export class AppComponent {
     this.socket = io(baseHref, {
       path: '/io/socket.io'
     });
-    //
   }
 
   events: any[] = this.excelService.getEvents();
@@ -39,22 +38,21 @@ export class AppComponent {
       this.isLoggedIn = this.authService.isLoggedIn();
     });
     //this.socket.on('excel-event', this.addEvent);//
-    this.socket.on('create-table', this.excelService.createTable);
+    this.socket.on('create-table', this.socketEventHandler);
   }
 
-  checklogin() {
-    console.log(this.authService.isLoggedIn());
+  socketEventHandler = (event: any): void => {
+    this.excelService.socketEventHandler(event);
   }
-
-  createtable() {
-    console.log(this.officeService.getFromLocalStorage('authresult'));
-    this.excelService.start('query accounts');
+  start() {
+    this.dataService.start('query accounts', function () {
+      console.log('starting query accounts');
+    });
   }
 
   login() {
 
     this.authService.login(function (message: any) {
-
       this.ngZone.run(() => {
         this.isLoggedIn = true;
         this.dataService.subscribe(function () {
@@ -69,9 +67,8 @@ export class AppComponent {
     this.dataService.unsubscribe(function () {
       this.authService.logout(function (result: any) {
         this.ngZone.run(() => {
-          if (result.success) {
-            this.isLoggedIn = false;
-          }
+          this.isLoggedIn = false;
+
         });
       }.bind(this));
     }.bind(this));

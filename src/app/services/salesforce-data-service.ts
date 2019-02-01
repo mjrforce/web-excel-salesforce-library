@@ -21,8 +21,6 @@ export class DataService {
     private result: Result) { }
 
   getconfig(): any {
-    console.log('from oauth service: ' + JSON.stringify(this.oauthService.getconfig()));
-    console.log(this.oauthService.getconfig());
     return this.oauthService.getconfig();
   }
   subscribe(callback: Function) {
@@ -34,8 +32,6 @@ export class DataService {
   }
 
   unsubscribe(callback: Function) {
-    console.log(this.getconfig());
-    console.log(this.baseHref);
     this.http.post<string>(this.baseHref + '/api/data/unsubscribe', this.getconfig(), httpOptions).subscribe(function () {
       console.log('unsubscribed');
       callback();
@@ -43,8 +39,6 @@ export class DataService {
   }
 
   publish(template: string, callback: Function) {
-
-    console.log({ connection: JSON.parse(this.officeService.getFromPropertyBag('oauthresult')), template: template });
     this.http.post<string>(
       this.baseHref + '/api/data/publish',
       {
@@ -52,7 +46,6 @@ export class DataService {
         template: template
       },
       httpOptions).subscribe(function (res: any) {
-        console.log(res);
         callback();
       });
   }

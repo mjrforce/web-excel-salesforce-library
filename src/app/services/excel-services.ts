@@ -30,6 +30,14 @@ export class ExcelService {
     });
   }
 
+  socketEventHandler = (event: any): void => {
+    console.log('socket event: ' + JSON.stringify(event));
+
+    if (event['message'].name == 'create-table')
+      this.asynccreateTable(event['message']);
+
+  }
+
   /**
  * Init Process by name
  */
@@ -43,28 +51,29 @@ export class ExcelService {
    * Get Data from Excel_Event__e
    */
 
-  getData = (event: any): any => {
-    var datastr: string;
-    datastr = event['message']['data'];
-    var data = JSON.parse(datastr);
-    return data;
-  }
 
-  async createTable(event: any) {
-    console.log(event);
+
+  async asynccreateTable(data: any) {
+    console.log('create-table');
     try {
       await Excel.run(async context => {
 
-        var data = this.getData(event);
+
         var sheet = context.workbook.worksheets.getActiveWorksheet();
-        var rangeString = "A1:C" + (data.length);
+        var sheetdata = JSON.parse(data.data);
+        console.log(sheetdata.length);
+        var rangeString = "A1:C" + (sheetdata.length);
+        console.log(rangeString);
         var range = sheet.getRange(rangeString);
-        range.values = data;
+        console.log(sheetdata);
+        range.values = sheetdata;
+        console.log(range.values);
+
 
         var table = sheet.tables.add(rangeString, true);
         table.getRange().format.autofitColumns();
         table.getRange().format.autofitRows();
-        table.name = "Example";
+        table.name = 'Example';
 
         table.getRange().format.autofitColumns();
         table.getRange().format.autofitRows();
@@ -73,19 +82,18 @@ export class ExcelService {
 
       });
     } catch (error) {
-
+      console.log(error);
     }
   }
 
   async changeColor(event: any) {
     try {
       await Excel.run(async context => {
-        var data = this.getData(event);
+
         const range = context.workbook.getSelectedRange();
         range.load('address');
-        range.format.fill.color = data.color;
-        await context.sync();
-        console.log(`The range address was ${range.address}.`);
+        // range.format.fill.color = data.color;
+        await context.sync();;
       });
     } catch (error) {
 

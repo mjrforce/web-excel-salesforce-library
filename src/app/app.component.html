@@ -30,6 +30,7 @@
                     <span class="slds-assistive-text">Description</span>
                 </span>
             </div>
+            <!---->
             <div class="slds-media__body">
                 <button *ngIf="!isLoggedIn" class="slds-button slds-button_neutral slds-button_stateful slds-not-selected"
                     aria-live="assertive" (click)="login()">
@@ -46,10 +47,11 @@
                         </svg>Logout</span>
                 </button>
                 <button class="slds-button slds-button_neutral slds-button_stateful slds-not-selected" aria-live="assertive"
-                    (click)="createtable()">
+                    (click)="start()">
                     <span class="slds-text-not-selected">
-
-                        Publish</span>
+                        <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#goals" />
+                        </svg>Start</span>
                 </button>
             </div>
         </div>

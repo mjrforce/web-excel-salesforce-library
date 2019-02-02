@@ -105,6 +105,16 @@
               "src/assets",
               {
                 "glob": "**/*",
+                "input": "./node_modules/@salesforce-ux/design-system/assets/styles",
+                "output": "src/assets/styles/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/jsforce/lib",
+                "output": "src/assets/js/"
+              }
+              {
+                "glob": "**/*",
                 "input": "./node_modules/@salesforce-ux/design-system/assets/fonts",
                 "output": "src/assets/fonts/"
               },

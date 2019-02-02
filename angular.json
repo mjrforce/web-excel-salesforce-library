@@ -112,7 +112,7 @@
                 "glob": "**/*",
                 "input": "./node_modules/jsforce/lib",
                 "output": "src/assets/js/"
-              }
+              },
               {
                 "glob": "**/*",
                 "input": "./node_modules/@salesforce-ux/design-system/assets/fonts",

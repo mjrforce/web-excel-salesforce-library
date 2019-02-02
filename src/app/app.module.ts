@@ -16,7 +16,7 @@ import { HeaderComponent } from './modules/header/header.component';
 import { QueryComponent } from './modules/query/query.component';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-//
+
 @NgModule({
   declarations: [
     AppComponent,

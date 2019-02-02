@@ -28,6 +28,7 @@ export class DataService {
   getconfig(): any {
 
     return this.oauthService.getconfig();
+
   }
   subscribe(event: String, callback: Function) {
     var conn = new jsforce.Connection(this.getconfig());

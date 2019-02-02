@@ -32,6 +32,8 @@ export class QueryComponent {
   model: SFTable = new SFTable();
   submitted: boolean = false;
   isLive: boolean = false;
+  listofsobjects: [] = [];
+
   onSubmit() { this.submitted = true; }
   onLiveChange(option: boolean) {
     this.ngZone.run(() => {
@@ -41,8 +43,15 @@ export class QueryComponent {
   //
 
   ngOnInit() {
+    this.dataService.globalDescribe(function (err, res) {
+      if (err) { return console.error(err); }
+      console.log('Num of SObjects : ' + res.sobjects.length);
+      this.listofsobjects = res.sobjects;
+      console.log(JSON.stringify(this.listofsobjects));
+    }.bind(this));
 
   }
+
 
 
 

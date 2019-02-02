@@ -6,8 +6,9 @@ import { Result } from '../classes/oauth/result';
 import { APP_BASE_HREF } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+let jsforce = require('jsforce');
 
-declare const jsforce: any;
+
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-type': 'application/json' })
@@ -21,6 +22,8 @@ export class DataService {
     private officeService: OfficeDataService,
     private oauthService: OAuthService,
     private result: Result) { }
+
+  ;
 
   getconfig(): any {
 
@@ -44,6 +47,11 @@ export class DataService {
   query(q: string, callback: Function) {
     var conn = new jsforce.Connection(this.getconfig());
     conn.query(q, callback);
+  }
+
+  globalDescribe(callback: Function) {
+    var conn = new jsforce.Connection(this.getconfig());
+    conn.describeGlobal(callback);
   }
 
   start(template: string, callback: Function) {

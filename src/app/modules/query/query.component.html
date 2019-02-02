@@ -1,51 +1,49 @@
-<article class="slds-card">
-  <div class="slds-card__header slds-grid">
-    <header class="slds-media slds-media_center slds-has-flexi-truncate">
-
-    </header>
-  </div>
-  <div class="slds-card__body slds-card__body_inner">
-    <div class="slds-form-element">
-      <form (ngSubmit)="onSubmit()" #queryForm="ngForm">
-        <div class="slds-form">
-          <div class="slds-form-element slds-form-element_stacked">
-            <label class="slds-form-element__label" for="stacked-input-id-02">SOQL</label>
-            <div class="slds-form-element__control">
-              <textarea [(ngModel)]="model.query" id="query" placeholder="SELECT Id, Name, ..." class="slds-textarea"
-                name="query"></textarea>
-            </div>
-          </div>
-
-          <fieldset class="slds-form-element slds-form-element_stacked">
-            <legend class="slds-form-element__legend slds-form-element__label">Platform Events</legend>
-            <div class="slds-form-element__control">
-              <div class="slds-checkbox">
-                <input type="checkbox" [(ngModel)]="model.live" (change)="onLiveChange($event.target.checked)" name="default"
-                  id="live" value="" />
-                <label class="slds-checkbox__label" for="live">
-                  <span class="slds-checkbox_faux"></span>
-                  <span class="slds-form-element__label">Live Data Required</span>
-                </label>
-              </div>
-            </div>
-          </fieldset>
-          <div class="slds-form-element slds-form-element_stacked">
-            <div *ngIf="isLive" class="slds-form-element slds-form-element_stacked">
-              <label class="slds-form-element__label" for="stacked-input-id-01">Platform Event</label>
-              <div class="slds-form-element__control">
-                <input type="text" [(ngModel)]="model.platformEvent" id="platformEvent" placeholder="Platform Event Name"
-                  class="slds-input" name="platformEvent" />
-              </div>
-            </div>
-          </div>
-
-
-
-        </div>
-      </form>
-
-
+<form (ngSubmit)="onSubmit()" #queryForm="ngForm">
+  <div class="slds-form">
+    <div class="slds-form-element slds-form-element_stacked">
+      <label class="slds-form-element__label" for="stacked-input-id-02">SOQL</label>
+      <div class="slds-form-element__control">
+        <textarea [(ngModel)]="model.query" id="query" placeholder="SELECT Id, Name, ..." class="slds-textarea" name="query"></textarea>
+      </div>
     </div>
-    <footer class="slds-card__footer">
 
-    </footer>
+    <fieldset class="slds-form-element slds-form-element_stacked">
+      <legend class="slds-form-element__legend slds-form-element__label">Platform Events</legend>
+      <div class="slds-form-element__control">
+        <div class="slds-checkbox">
+          <input type="checkbox" [(ngModel)]="model.live" (change)="onLiveChange($event.target.checked)" name="default"
+            id="live" value="" />
+          <label class="slds-checkbox__label" for="live">
+            <span class="slds-checkbox_faux"></span>
+            <span class="slds-form-element__label">Live Data Required</span>
+          </label>
+        </div>
+      </div>
+    </fieldset>
+    <div class="slds-form-element slds-form-element_stacked">
+      <div *ngIf="isLive" class="slds-form-element slds-form-element_stacked">
+        <label class="slds-form-element__label" for="stacked-input-id-01">Platform Event</label>
+        <div class="slds-form-element__control">
+          <input type="text" [(ngModel)]="model.platformEvent" id="platformEvent" placeholder="Platform Event Name"
+            class="slds-input" name="platformEvent" />
+        </div>
+      </div>
+    </div>
+    <div class="slds-form-element">
+      <label class="slds-form-element__label" for="select-01">Select Label</label>
+      <div class="slds-form-element__control">
+        <div class="slds-select_container">
+          <select class="slds-select" id="select-01">
+            <option value="">Please select</option>
+
+          </select>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  </div>
+</form>

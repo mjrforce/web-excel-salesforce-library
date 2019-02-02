@@ -10,9 +10,7 @@
     "start": "node index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon index.js",
-    "client": "ng serve --proxy-config proxy.config.json",
-    "preinstall": "npm install -g @angular/cli @angular-devkit/build-angular @angular/compiler typescript",
-    "postinstall": "ng build --aot --prod"
+    "client": "ng serve --proxy-config proxy.config.json"
   },
   "private": true,
   "dependencies": {
@@ -35,6 +33,7 @@
     "office-toolbox": "^0.1.0",
     "office-ui-fabric-js": "^1.5.0",
     "rxjs": "~6.3.3",
+    "stream": "0.0.2",
     "svg4everybody": "^2.1.9",
     "tslib": "^1.9.0",
     "web-animations-js": "^2.3.1",

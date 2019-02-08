@@ -1,0 +1,179 @@
+<apex:component >
+    <script>
+    
+   
+
+String.prototype.endsWith = function (suffix) {
+  return this.indexOf(suffix, this.length - suffix.length) !== -1;
+}
+
+function ExcelService() {
+
+
+
+}
+
+
+ExcelService.prototype.toColumnName = function (num) {
+  for (var ret = '', a = 1, b = 26; (num -= a) >= 0; a = b, b *= 26) {
+    ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
+  }
+  return ret;
+}
+
+ExcelService.prototype.parseObject = function (val) {
+
+  var row = [];
+  for (var prop in val) {
+    if (val.hasOwnProperty(prop)) {
+      if (prop != 'attributes') {
+        if (typeof val[prop] == 'undefined') {
+          row[prop.toUpperCase()] = "";
+        } else if (typeof val[prop] != 'object') {
+          row[prop.toUpperCase()] = val[prop];
+        } else if (val[prop] == null) {
+          row[prop.toUpperCase()] = "";
+        } else {
+          row[prop.toUpperCase()] = excelService.parseObject(val[prop]);
+        }
+      }
+    }
+  }
+  return row;
+
+}
+
+ExcelService.prototype.getValue = function (arr, key) {
+  if (key.indexOf('.') > 0) {
+    var ks = key.split('.');
+    var k = ks.shift();
+    return excelService.getValue(arr[k], ks.join('.'));
+  } else {
+    return arr[key];
+  }
+
+}
+ExcelService.prototype.createTable = function (data) {
+
+  var n = data.q.toUpperCase();
+  var f = n.substring(7, n.indexOf(" FROM")).replace(/ /g, '').split(',');
+  var o = n.substring(n.indexOf("FROM ") + 5);
+  if (o.indexOf(' WHERE') > -1)
+    o = o.substring(0, o.indexOf(" WHERE"));
+  o = o.trim();
+  data.object = o;
+  data.fieldlist = f;
+
+  dataService.globalDescribe(data).then(function (data) {
+
+    
+        Excel.run(function (context) {
+            let myWorkbook = context.workbook;
+            let activeCell = myWorkbook.getActiveCell();
+         
+            activeCell.load("address");
+
+            return context.sync().then(function(){ console.log('got here');})
+            
+       
+        }).catch(function (error) {
+            console.log("Error: " + error);
+            if (error instanceof OfficeExtension.Error) {
+                console.log("Debug info: " + JSON.stringify(error.debugInfo));
+            }
+        });
+        
+        Excel.run(function (context) {
+            var h = [];
+
+
+      for (var i = 0; i < data.fieldlist.length; i++) {
+
+        if (data.fieldlist[i].indexOf('.') > -1) {
+          var arr = data.fieldlist[i].split('.');
+          label = '';
+          var obj = data.object;
+
+          for (var j = 0; j < arr.length; j++) {
+            var f = data.desc[obj].fmap[arr[j]];
+            if (typeof f == 'undefined') {
+              f = data.desc[obj].fmap[arr[j] + 'ID'];
+            }
+            if (typeof f == 'undefined' && arr[j].indexOf('__R') > 0) {
+              f = data.desc[obj].fmap[arr[j].replace('__R', '__C')];
+            }
+            if (j < arr.length && f.referenceTo.length > 0)
+              obj = f.referenceTo[0].toUpperCase();
+            if (j != 0) { label = label + ':'; }
+            label = label + f.label;
+
+          }
+          h.push(label);
+        } else {
+          label = data.desc[data.object].fmap[data.fieldlist[i]].label;
+          h.push(label);
+        }
+      }
+
+      var sheetData = [];
+      sheetData.push(h);
+
+      var rangeString = "A1:";
+      console.log('checkbox: ' + $('#currentlocation').prop('checked'));
+
+      if ($('#currentlocation').prop('checked') == true) {
+        console.log('Current Location: ');
+        rangeString =  "B1:";
+      }
+
+      rangeString = rangeString + excelService.toColumnName(h.length) + (data.result.records.length + 1);
+      console.log(rangeString);
+
+      for (var i = 0; i < data.result.records.length; i++) {
+        var row = [];
+        var record = excelService.parseObject(data.result.records[i]);
+
+        for (var j = 0; j < data.fieldlist.length; j++) {
+          var f = data.fieldlist[j];
+          var val = excelService.getValue(record, f);
+
+          row.push(val);
+
+        }
+        sheetData.push(row);
+      }
+      
+      var sheet = context.workbook.worksheets.getActiveWorksheet();
+      var range = sheet.getRange(rangeString);
+
+
+      range.values = sheetData;
+
+      console.log('table');
+      var table = sheet.tables.add(rangeString, true);
+      table.name = 'Example';
+
+      console.log('start sync');
+
+            return context.sync();
+        }).catch(function (error) {
+            console.log("Error: " + error);
+            if (error instanceof OfficeExtension.Error) {
+                console.log("Debug info: " + JSON.stringify(error.debugInfo));
+            }
+        });
+    
+ 
+    
+    
+
+  });
+}
+
+
+
+
+    
+    
+    </script>
+</apex:component>

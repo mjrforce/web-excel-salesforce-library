@@ -1,0 +1,127 @@
+<apex:page cache="false" showheader="false" sidebar="false" applyBodyTag="false" doctype="html-5.0" lightningStylesheets="true" applyHtmlTag="false">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <apex:slds />
+        <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <title>web-excel-salesforce-library</title>
+            <script src="https://appsforoffice.microsoft.com/lib/beta/hosted/office.js" type="text/javascript"></script>
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/svg4everybody/2.1.9/svg4everybody.min.js"></script>
+            
+            <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsforce/1.9.1/jsforce.min.js"/>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js"/>
+            <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.2.0/css/fabric.min.css" ></link>
+            <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.2.0/css/fabric.components.min.css"></link>
+            <c:WESLI_Office_Data_Service ></c:WESLI_Office_Data_Service>
+            <c:WESLI_Oauth_Service ></c:WESLI_Oauth_Service>  
+            <c:WESLI_Salesforce_Data_Service ></c:WESLI_Salesforce_Data_Service>
+            <c:WESLI_Excel_Service ></c:WESLI_Excel_Service>
+            <script>
+                let officeDataService = new OfficeDataService();
+            let oauthService = new OAuthService();
+            let dataService = new DataService();
+            let excelService = new ExcelService();
+            
+            svg4everybody();
+            Office.onReady(function(info){
+                $(document).ready(function(){
+                    if (info.host === Office.HostType.Excel) {
+                        $('#excelapp').show();
+                    }else{
+                    }
+                });
+            });
+            
+            function runQuery(){
+               dataService.query($('#soql').val()).then(function(data){ 
+                   excelService.createTable(data); });
+            }
+            </script>
+            
+        </head>
+        
+        <body>
+            <div id="status"/>
+            <div id="excelapp" class="slds-scope">
+                <article class="slds-card">
+                    <div class="slds-card__header slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-doctype-excel" title="Excel">
+                                    <svg class="slds-icon" aria-hidden="true">
+                                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/doctype-sprite/svg/symbols.svg#excel')}"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Description</span>
+                                </span>
+                                
+                            </div>
+                            <div class="slds-media__body">
+                                <button onclick="location.reload();" class="slds-button slds-button_icon slds-button_icon-brand" title="Search">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#refresh')}"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Search</span>
+                                </button>
+                                <button id="loginbutton" class="slds-button slds-button_neutral  slds-not-selected slds-button_brand"
+                                        aria-live="assertive" onclick="oauthService.login();">
+                                    <span class="slds-text-not-selected">
+                                        <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#add')}"/>
+                                        </svg>Login</span>
+                                </button>
+                                <button id="logoutbutton" style="display: none;" class="slds-button slds-not-selected slds-button_brand"
+                                        aria-live="assertive" onclick="oauthService.logout()">
+                                    <span class="slds-text-not-selected">
+                                        <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#logout')}"/>
+                                        </svg>Logout</span>
+                                </button>
+                            </div>
+                        </header>
+                    </div>
+                </article>
+                <article class="slds-card">
+                    <div class="slds-card__body slds-card__body_inner">    
+                        <div class="slds-form">
+                            
+                            <div class="slds-form-element slds-form-element_stacked">
+                                <label class="slds-form-element__label" for="stacked-input-id-02">SOQL 56</label>
+                                <div class="slds-form-element__control">
+                                    <textarea id="soql" placeholder="Select Id, Name, ... FROM Account" class="slds-textarea"></textarea>
+                                </div>
+                            </div>
+                            
+                                <button onclick="runQuery();" class="slds-button slds-button_icon slds-button_icon-brand" title="Search">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#search')}"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Search</span>
+                                </button>
+                            
+                            <fieldset class="slds-form-element slds-form-element_stacked">
+                                <legend class="slds-form-element__legend slds-form-element__label">Settings</legend>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-checkbox">
+                                        <input type="checkbox" name="default" id="currentlocation" value="currentlocation" />
+                                        <label class="slds-checkbox__label" for="currentlocation">
+                                            <span class="slds-checkbox_faux"></span>
+                                            <span class="slds-form-element__label">Use current location</span>
+                                        </label>
+                                    </div>
+                                    
+                                </div>
+                            </fieldset>
+                            
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </body>
+    </html>
+</apex:page>

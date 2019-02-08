@@ -1,0 +1,17 @@
+{
+  "packageDirectories": [
+    {
+      "path": "sfdx-source/wesli",
+      "default": true
+    },
+    {
+      "path": "sfdx-source/unpackaged"
+    },
+    {
+      "path": "sfdx-source/untracked"
+    }
+  ],
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "44.0"
+}

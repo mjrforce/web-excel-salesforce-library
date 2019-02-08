@@ -1,4 +1,3 @@
-import { Component, SystemJsNgModuleLoader } from '@angular/core';
 import { Inject } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import { DataService } from '../services/salesforce-data-service';
@@ -7,8 +6,6 @@ import { NgZone } from '@angular/core';
 declare const Excel: any;
 
 export class ExcelService {
-
-  events: any[] = [];
 
   constructor(
     @Inject(APP_BASE_HREF) private baseHref: string,
@@ -19,42 +16,8 @@ export class ExcelService {
   ngOnInit() {
   }
 
-  getEvents(): any[] {
-    return this.events;
-  }
-
-  addEvent(event: any) {
-    var service = this;
-    this.ngZone.run(() => {
-      service.events.push(event);
-    });
-  }
-
-  socketEventHandler = (event: any): void => {
-    console.log('socket event: ' + JSON.stringify(event));
-
-    if (event['message'].name == 'create-table')
-      this.asynccreateTable(event['message']);
-
-  }
-
-  /**
- * Init Process by name
- */
-
-  start(process: string) {
-    this.dataService.start(process, function () {
-    })
-  }
-
-  /**
-   * Get Data from Excel_Event__e
-   */
-
-
-
   async asynccreateTable(data: any) {
-    console.log('create-table');
+
     try {
       await Excel.run(async context => {
 
@@ -85,20 +48,4 @@ export class ExcelService {
       console.log(error);
     }
   }
-
-  async changeColor(event: any) {
-    try {
-      await Excel.run(async context => {
-
-        const range = context.workbook.getSelectedRange();
-        range.load('address');
-        // range.format.fill.color = data.color;
-        await context.sync();;
-      });
-    } catch (error) {
-
-    }
-  }
-
-
 }

@@ -1,65 +1,64 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { OfficeDataService } from './office-data-service'
 import { APP_BASE_HREF } from '@angular/common';
-import { Result } from '../classes/oauth/result';
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { OfficeDataService } from './office-data-service';
 declare const Office: any;
-
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-type': 'application/json' })
-};
 
 @Injectable({ providedIn: 'root' })
 export class OAuthService {
-  constructor(private http: HttpClient,
-    private officeService: OfficeDataService,
+  constructor(
     @Inject(APP_BASE_HREF) private baseHref: string,
-    private result: Result) { }
-  dlg = null;
-  connection = null;
+    private officeDataService: OfficeDataService) { }
 
   ngOnInit() {
-    this.result = new Result();
+
   }
 
+  getloginUrl(callback: Function) {
 
-  login(callback: Function) {
-    var service = this;
-    Office.onReady(function () {
-      Office.context.ui.displayDialogAsync(service.baseHref + '/api/oauth/auth', {
-        height: 70,
-        width: 40
-      },
-        function (result: any) {
-          service.dlg = result.value;
-          service.dlg.addEventHandler("dialogMessageReceived", function (arg: any) {
-            service.dlg.close();
-            service.officeService.saveToLocalStorage('oauthresult', arg.message);
-            callback(arg.message as any);
-          });
-        });
-    });
   }
 
-  getconfig(): any {
-    var config = JSON.parse(this.officeService.getFromLocalStorage('oauthresult'));
-    return config.connection;
-  }
+  getLogout(token: string, callback: Function) {
 
-
-  logout(callback: Function) {
-
-    this.http.post<string>(this.baseHref + '/api/oauth/logout', this.getconfig(), httpOptions).subscribe(function (data) {
-      this.officeService.clearLocalStorage('oauthresult');
-      callback(data as any);
-    }.bind(this));
   }
 
   isLoggedIn() {
-    var settings = this.getconfig();
-    return settings != null;//
+    return this.officeDataService.getFromLocalStorage('oauthresult') != null &&
+      this.officeDataService.getFromLocalStorage('oauthresult') != ''
+  }
+
+  login(callback: Function) {
+    Office.onReady(function () {
+      this.getloginUrl(function (result: string) {
+        var parser = new DOMParser;
+        var dom = parser.parseFromString('<!doctype html><body>' + result, 'text/html');
+        var decodedString = dom.body.textContent;
+
+        Office.context.ui.displayDialogAsync(decodedString, {
+          height: 70,
+          width: 40
+        },
+          function (result) {
+            this.dlg = result.value;
+            this.dlg.addEventHandler("dialogMessageReceived", function (arg: any) {
+              this.dlg.close();
+
+              var conn = {}
+              var arr1 = arg.message.substring(1).split('&');
+              for (var i = 0; i < arr1.length; i++) {
+                var arr2 = arr1[i].split('=');
+                conn[arr2[0]] = decodeURIComponent(arr2[1]);
+              }
+              this.officeDataService.saveToLocalStorage('oauthresult', JSON.stringify(conn));
+            }.bind(this));
+          }.bind(this));
+      }.bind(this))
+    });
+  }
+
+  logout(callback: Function) {
+    var oauth2 = this.officeDataService.getFromLocalStorage('oauthresult');
+    this.getLogout(JSON.parse(oauth2).access_token, function () {
+      this.officeDataService.clearLocalStorage('oauthresult');
+    });
   }
 }

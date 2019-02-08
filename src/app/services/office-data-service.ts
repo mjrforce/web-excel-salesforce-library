@@ -9,7 +9,7 @@ export class OfficeDataService {
 
 
   // Stores the settings in the JavaScript APIs for Office property bag.
-  saveToPropertyBag(key, value) {
+  saveToPropertyBag(key: string, value: any) {
 
     // Note that Project does not support the settings object.
     // Need to check that the settings object is available before setting.
@@ -26,7 +26,7 @@ export class OfficeDataService {
   }
 
   // Retrieves the specified setting value from the JavaScript APIs for Office  property bag using the specified key.
-  getFromPropertyBag(key) {
+  getFromPropertyBag(key: string) {
 
     // Note that Project does not support the settings object.
     // Need to check that the settings object is available before setting.
@@ -45,13 +45,13 @@ export class OfficeDataService {
   }
 
   // Stores the settings as a browser cookie.
-  saveToBrowserCookies(key, value) {
+  saveToBrowserCookies(key: string, value: any) {
 
     document.cookie = key + "=" + value;
   }
 
   // Retrieves the specified setting from the browser cookies.
-  getFromBrowserCookies(key) {
+  getFromBrowserCookies(key: string) {
     var cookies = {};
     var all = document.cookie;
     var value = null;
@@ -76,20 +76,20 @@ export class OfficeDataService {
 
   // Stores the settings using local storage (Web Storage that doesn't expire).
   // See http://msdn.microsoft.com/en-us/library/ie/cc197062(v=vs.85).aspx information about localStorage, sessionStorage.
-  saveToLocalStorage(_key, _value) {
+  saveToLocalStorage(_key: string, _value: any) {
 
     localStorage.setItem(_key, _value)
 
   }
 
   // Retrieves the specified setting from local storage (Web Storage that doesn't expire).
-  getFromLocalStorage(_key) {
+  getFromLocalStorage(_key: string) {
 
     var value = localStorage.getItem(_key);
     return value;
   }
 
-  clearLocalStorage(_key) {
+  clearLocalStorage(_key: string) {
 
     localStorage.removeItem(_key);
 
@@ -97,20 +97,20 @@ export class OfficeDataService {
   }
 
   // Stores the settings using session storage (Web Storage limited to the lifetime of the browser window).
-  saveToSessionStorage(_key, _value) {
+  saveToSessionStorage(_key: string, _value: any) {
 
     sessionStorage.setItem(_key, _value);
   }
 
   // Retrieves the specified setting from session storage (Web Storage limited to the lifetime of the browser window).
-  getFromSessionStorage(_key) {
+  getFromSessionStorage(_key: string) {
 
     var value = sessionStorage.getItem(_key);
     return value;
   }
 
   // Stores the settings in a hidden <div> added to the document.
-  saveToDocument(key, value) {
+  saveToDocument(key: string, value: any) {
     var hiddenStorage = null;
     var hiddenName = "hiddenstorage";
 
@@ -137,7 +137,7 @@ export class OfficeDataService {
   }
 
   // Retrieves the specified setting from a hidden <div> in the document.
-  getFromDocument(key) {
+  getFromDocument(key: string) {
     var value = null;
 
     if (document.getElementById(key) != null) {

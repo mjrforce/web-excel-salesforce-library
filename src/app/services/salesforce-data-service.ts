@@ -17,6 +17,7 @@ export class DataService {
     console.log('starting javascript remoting');
     WesliOauth.getOauthSettings(function (response: any, event: any) {
       if (event.statusCode == '200') {
+        console.log(response);
         resolve(response);
       }
       else {

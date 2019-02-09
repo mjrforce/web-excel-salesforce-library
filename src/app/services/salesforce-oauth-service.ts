@@ -26,7 +26,8 @@ export class OAuthService {
       this.dataService.getOauth2().then(function (oauth2) {
 
         Office.onReady(function () {
-          Office.context.ui.displayDialogAsync(oauth2.getAuthorizationUrl({ scope: 'api id web' }), {
+          console.log(oauth2.getAuthorizationUrl({ scope: 'api openid web' }));
+          Office.context.ui.displayDialogAsync(oauth2.getAuthorizationUrl({ scope: 'api openid web' }), {
             height: 70,
             width: 40
           },
@@ -44,10 +45,9 @@ export class OAuthService {
                 resolve(conn);
               }.bind(this));
             }.bind(this));
-        });
-
-      });
-    });
+        }.bind(this));
+      }.bind(this));
+    }.bind(this));
   }
 
   logout() {

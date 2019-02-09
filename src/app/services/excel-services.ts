@@ -3,7 +3,7 @@ import { Inject } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import { DataService } from '../services/salesforce-data-service';
 import { NgZone } from '@angular/core';
-
+declare const Office: any;
 declare const Excel: any;
 
 export class ExcelService {
@@ -80,7 +80,7 @@ export class ExcelService {
 
       }).catch(function (error) {
         console.log("Error: " + error);
-        if (error instanceof OfficeExtension.Error) {
+        if (error) {
           console.log("Debug info: " + JSON.stringify(error.debugInfo));
         }
       });

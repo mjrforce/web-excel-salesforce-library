@@ -37,7 +37,7 @@ export class DataService {
           reject();
         }
       }.bind(this));
-  }.bind(this));
+  });
 
   getOauth2() {
     return this.OauthPromise.then(function (response) {

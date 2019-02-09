@@ -10,10 +10,10 @@ if (environment.production) {
 }
 
 declare const Office: any;
+Office.initialize = reason => {
+  document.getElementById('sideload-msg').style.display = 'none';
 
-document.getElementById('sideload-msg').style.display = 'none';
-
-// Bootstrap the app//
-platformBrowserDynamic().bootstrapModule(AppModule).catch(error => console.error(error));
-
+  // Bootstrap the app//
+  platformBrowserDynamic().bootstrapModule(AppModule).catch(error => console.error(error));
+};
 

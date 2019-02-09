@@ -36,10 +36,11 @@ export class OAuthService {
               this.dlg.addEventHandler("dialogMessageReceived", function (arg) {
                 this.dlg.close();
                 var code = arg.message.substring(arg.message.indexOf('code=') + 5);
-                var conn = this.dataService.getOauth2();
-                conn.authorize(code, function (err, userInfo) {
-                  this.officeDataService.saveToLocalStorage('oauthresult', JSON.stringify(conn));
-                  resolve(conn);
+                this.dataService.getOauth2().then(function (conn) {
+                  conn.authorize(code, function (err, userInfo) {
+                    this.officeDataService.saveToLocalStorage('oauthresult', JSON.stringify(conn));
+                    resolve(conn);
+                  }.bind(this));
                 }.bind(this));
               }.bind(this));
             }.bind(this));

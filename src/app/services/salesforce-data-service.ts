@@ -63,7 +63,15 @@ export class DataService {
     return c;
   }
 
-  globalDescribe(data: any) {
+  async query(q: string) {
+    return this.getConnection().then(function (conn) {
+      return conn.query(q).then(function (result, err) {
+        return { q: q, result: result };
+      });
+    });
+  }
+
+  async globalDescribe(data: any) {
 
     return this.getConnection().then(function (conn) {
       return new Promise(function (resolve, reject) {

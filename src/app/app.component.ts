@@ -28,6 +28,8 @@ export class AppComponent {
 
   }
 
+  soql: string = '';
+
   ngOnInit() {
     this.ngZone.run(() => {
       this.isLoggedIn = this.authService.isLoggedIn();
@@ -52,6 +54,11 @@ export class AppComponent {
   }
 
   runQuery() {
-
+    console.log('Query: ' + this.soql);
+    if (this.soql != '' && this.soql != null) {
+      this.dataService.query(this.soql).then(function (data) {
+        this.excelService.createTable(data);
+      }.bind(this));
+    }
   }
 }

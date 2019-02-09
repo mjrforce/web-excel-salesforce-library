@@ -52,7 +52,7 @@ export class OAuthService {
 
   logout() {
     return new Promise(function (resolve, reject) {
-      this.dataService.getConnection().logout(function (err) {
+      this.dataService.LogoutPromise.then(function (err) {
         if (err) {
           reject(err);
           return console.error(err);
@@ -60,8 +60,8 @@ export class OAuthService {
         // now the session has been expired.
         this.officeDataService.clearLocalStorage('oauthresult');
         resolve();
-      });
-    });
+      }.bind(this));
+    }.bind(this));
   }
 
 

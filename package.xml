@@ -9,7 +9,9 @@
         <name>ApexPage</name>
     </types>
 	<types>
-		<members>WesliOauth</members>
+		<members>WESLI_OAuth_Service</members>
+        <members>WESLI_OAuth_Service_Test</members>
+        <members>WESLI_Mock</members>
         <name>ApexClass</name>
     </types>
 

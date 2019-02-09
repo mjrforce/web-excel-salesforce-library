@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 declare const jsforce: any;
-declare const WesliOauth: any;
+declare const WESLI_OAuth_Service: any;
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
@@ -15,7 +15,7 @@ export class DataService {
 
   OauthPromise = new Promise(function (resolve, reject) {
     console.log('starting javascript remoting');
-    WesliOauth.getOauthSettings(function (response: any, event: any) {
+    WESLI_OAuth_Service.getSettings(function (response: any, event: any) {
       if (event.statusCode == '200') {
         console.log(response);
         resolve(response);
@@ -25,6 +25,19 @@ export class DataService {
       }
     });
   });
+
+  LogoutPromise = new Promise(function (resolve, reject) {
+
+    WESLI_OAuth_Service.getLogout(JSON.parse(this.officeService.getFromLocalStorage('oauthresult')),
+      function (response: any, event: any) {
+        if (event.statusCode == '200') {
+          resolve(response);
+        }
+        else {
+          reject();
+        }
+      }.bind(this));
+  }.bind(this));
 
   getOauth2() {
     return this.OauthPromise.then(function (response) {

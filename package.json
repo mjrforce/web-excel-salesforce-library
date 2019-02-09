@@ -3,16 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "deploy": "ng build && sfdx force:source:deploy -x package.xml -u wesli",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "start": "node index.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "nodemon index.js",
-    "client": "ng serve --proxy-config proxy.config.json",
-    "preinstall": "npm install -g @angular/cli @angular-devkit/build-angular @angular/compiler typescript",
-    "postinstall": "ng build --aot --prod"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {

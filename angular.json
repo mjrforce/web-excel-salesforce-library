@@ -18,29 +18,11 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "styles": [
-              "src/styles.css",
-              "node_modules/@salesforce-ux/design-system/assets/styles/salesforce-lightning-design-system.min.css"
-            ],
+            "styles": [],
             "scripts": [],
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              {
-                "glob": "**/*",
-                "input": "./node_modules/@salesforce-ux/design-system/assets/fonts",
-                "output": "/assets/fonts/"
-              },
-              {
-                "glob": "**/*",
-                "input": "./node_modules/@salesforce-ux/design-system/assets/icons",
-                "output": "/assets/icons/"
-              },
-              {
-                "glob": "**/*",
-                "input": "./node_modules/@salesforce-ux/design-system/assets/images",
-                "output": "/assets/images/"
-              }
+              "src/assets"
             ]
           },
           "configurations": {

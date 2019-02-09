@@ -22,11 +22,11 @@
         body. </h2>
     <app-root></app-root>
     
-<script type="text/javascript" src="https://localhost:4200/runtime.js"></script>
-<script type="text/javascript" src="https://localhost:4200/polyfills.js"></script>
-<script type="text/javascript" src="https://localhost:4200/styles.js"></script>
-<script type="text/javascript" src="https://localhost:4200/vendor.js"></script>
-<script type="text/javascript" src="https://localhost:4200/main.js"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/runtime.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/polyfills.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/styles.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/vendor.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/main.js')}"></script>
 </body>
 
 

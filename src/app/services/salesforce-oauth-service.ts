@@ -21,12 +21,13 @@ export class OAuthService {
   }
 
   login() {
-    this.dataService.getConn().then(function (conn) {
+    this.dataService.getOauth2().then(function (oauth2) {
+
       Office.onReady(function () {
 
         var urlString;
-
-        Office.context.ui.displayDialogAsync(urlString, {
+        console.log(oauth2.getAuthorizationUrl({ scope: 'api id web refresh' }));
+        Office.context.ui.displayDialogAsync(oauth2.getAuthorizationUrl({ scope: 'api id web refresh' }), {
           height: 70,
           width: 40
         },

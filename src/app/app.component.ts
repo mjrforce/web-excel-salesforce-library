@@ -36,7 +36,7 @@ export class AppComponent {
   }
 
   login() {
-
+    this.authService.login();
   }
 
   logout() {

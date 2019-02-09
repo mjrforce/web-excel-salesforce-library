@@ -24,10 +24,10 @@ export class DataService {
     });
   });
 
-  getConn() {
+  getOauth2() {
     return WesliOauth.then(function (response) {
       console.log('Custom Settings: ' + JSON.stringify(response));
-      return new jsforce.Connection(response);
+      return new jsforce.OAuth2(response);
     });
   }
 }

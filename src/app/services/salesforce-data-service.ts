@@ -26,18 +26,6 @@ export class DataService {
     });
   });
 
-  LogoutPromise = new Promise(function (resolve, reject) {
-
-    WESLI_OAuth_Service.getLogout(JSON.parse(this.officeService.getFromLocalStorage('oauthresult')),
-      function (response: any, event: any) {
-        if (event.statusCode == '200') {
-          resolve(response);
-        }
-        else {
-          reject();
-        }
-      }.bind(this));
-  });
 
   getOauth2() {
     return this.OauthPromise.then(function (response) {

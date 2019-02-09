@@ -5,7 +5,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 declare const Office: any;
-
+declare const WESLI_OAuth_Service;
 @Injectable({ providedIn: 'root' })
 export class OAuthService {
   constructor(
@@ -51,16 +51,20 @@ export class OAuthService {
   }
 
   logout() {
+
     return new Promise(function (resolve, reject) {
-      this.dataService.LogoutPromise.then(function (err) {
-        if (err) {
-          reject(err);
-          return console.error(err);
-        }
-        // now the session has been expired.
-        this.officeDataService.clearLocalStorage('oauthresult');
-        resolve();
-      }.bind(this));
+      var settings = JSON.parse(this.officeService.getFromLocalStorage('oauthresult'));
+      console.log('Settings: ' + JSON.stringify(settings));
+      WESLI_OAuth_Service.getLogout(settings.access_token,
+        function (response: any, event: any) {
+          if (event.statusCode == '200') {
+            this.officeDataService.clearLocalStorage('oauthresult');
+            resolve(response);
+          }
+          else {
+            reject();
+          }
+        }.bind(this));
     }.bind(this));
   }
 

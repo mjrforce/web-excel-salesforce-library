@@ -18,7 +18,8 @@ declare const Excel: any;
 export class AppComponent {
   isLoggedIn = false;
 
-  constructor(private authService: OAuthService,
+  constructor(
+    private authService: OAuthService,
     private ngZone: NgZone,
     private dataService: DataService,
     private excelService: ExcelService,
@@ -29,7 +30,7 @@ export class AppComponent {
 
   ngOnInit() {
     this.ngZone.run(() => {
-
+      this.isLoggedIn = this.authService.isLoggedIn();
     });
 
   }

@@ -4,25 +4,15 @@
 		<members>WESLI_Settings__c</members>
         <name>CustomObject</name>
     </types>
-
     <types>
 		<members>WESLI</members>
-		<members>callback</members>
         <name>ApexPage</name>
     </types>
 	<types>
-		<members>WESLI_Oauth_Service</members>
-		<members>WESLI_Excel_Service</members>
-		<members>WESLI_Office_Data_Service</members>
-		<members>WESLI_Salesforce_Data_Service</members>
-		<name>ApexComponent</name>
-	</types>
-	<types>
-		<members>WESLI_OAuth_Service_Test</members>
-		<members>WESLI_OAuth_Service</members>
-		<members>WESLI_Mock</members>
-		<name>ApexClass</name>
-	</types>
+		<members>WesliOauth</members>
+        <name>ApexClass</name>
+    </types>
+
 	<types>
 		<members>WESLI</members>
 		<name>StaticResource</name>

@@ -30,4 +30,11 @@ export class DataService {
       return new jsforce.OAuth2(response);
     });
   }
+
+  getConnection() {
+    var token = JSON.parse(this.officeService.getFromLocalStorage('oauthresult'));
+    console.log(token);
+    var conn = new jsforce.Connection();
+    return conn;
+  }
 }

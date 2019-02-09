@@ -24,7 +24,7 @@ export class OAuthService {
     this.dataService.getOauth2().then(function (oauth2) {
 
       Office.onReady(function () {
-        Office.context.ui.displayDialogAsync(oauth2.getAuthorizationUrl({ scope: 'api id web refresh_token' }), {
+        Office.context.ui.displayDialogAsync(oauth2.getAuthorizationUrl({ scope: 'api id web' }), {
           height: 70,
           width: 40
         },
@@ -43,6 +43,14 @@ export class OAuthService {
           }.bind(this));
       });
 
+    });
+  }
+
+  logout() {
+    this.dataService.getConnection().logout(function (err) {
+      if (err) { return console.error(err); }
+      // now the session has been expired.
+      this.officeDataService.clearLocalStorage('oauthresult');
     });
   }
 

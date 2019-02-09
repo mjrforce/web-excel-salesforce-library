@@ -21,36 +21,46 @@ export class OAuthService {
   }
 
   login() {
-    this.dataService.getOauth2().then(function (oauth2) {
+    return new Promise(function (resolve, reject) {
 
-      Office.onReady(function () {
-        Office.context.ui.displayDialogAsync(oauth2.getAuthorizationUrl({ scope: 'api id web' }), {
-          height: 70,
-          width: 40
-        },
-          function (result) {
-            this.dlg = result.value;
-            this.dlg.addEventHandler("dialogMessageReceived", function (arg) {
-              this.dlg.close();
-              var conn = {}
-              var arr1 = arg.message.substring(1).split('&');
-              for (var i = 0; i < arr1.length; i++) {
-                var arr2 = arr1[i].split('=');
-                conn[arr2[0]] = decodeURIComponent(arr2[1]);
-              }
-              this.officeDataService.saveToLocalStorage('oauthresult', JSON.stringify(conn));
+      this.dataService.getOauth2().then(function (oauth2) {
+
+        Office.onReady(function () {
+          Office.context.ui.displayDialogAsync(oauth2.getAuthorizationUrl({ scope: 'api id web' }), {
+            height: 70,
+            width: 40
+          },
+            function (result) {
+              this.dlg = result.value;
+              this.dlg.addEventHandler("dialogMessageReceived", function (arg) {
+                this.dlg.close();
+                var conn = {}
+                var arr1 = arg.message.substring(1).split('&');
+                for (var i = 0; i < arr1.length; i++) {
+                  var arr2 = arr1[i].split('=');
+                  conn[arr2[0]] = decodeURIComponent(arr2[1]);
+                }
+                this.officeDataService.saveToLocalStorage('oauthresult', JSON.stringify(conn));
+                resolve(conn);
+              }.bind(this));
             }.bind(this));
-          }.bind(this));
-      });
+        });
 
+      });
     });
   }
 
   logout() {
-    this.dataService.getConnection().logout(function (err) {
-      if (err) { return console.error(err); }
-      // now the session has been expired.
-      this.officeDataService.clearLocalStorage('oauthresult');
+    return new Promise(function (resolve, reject) {
+      this.dataService.getConnection().logout(function (err) {
+        if (err) {
+          reject(err);
+          return console.error(err);
+        }
+        // now the session has been expired.
+        this.officeDataService.clearLocalStorage('oauthresult');
+        resolve();
+      });
     });
   }
 

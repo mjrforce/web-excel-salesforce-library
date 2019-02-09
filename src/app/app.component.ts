@@ -36,11 +36,19 @@ export class AppComponent {
   }
 
   login() {
-    this.authService.login();
+    this.authService.login().then(function () {
+      this.ngZone.run(() => {
+        this.isLoggedIn = this.authService.isLoggedIn();
+      }).bind(this);
+    });
   }
 
   logout() {
-
+    this.authService.logout().then(function () {
+      this.ngZone.run(() => {
+        this.isLoggedIn = this.authService.isLoggedIn();
+      }).bind(this);
+    });
   }
 
   runQuery() {

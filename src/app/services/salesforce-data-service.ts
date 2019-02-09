@@ -14,6 +14,7 @@ export class DataService {
     private officeService: OfficeDataService) { }
 
   OauthPromise = new Promise(function (resolve, reject) {
+    console.log('starting javascript remoting');
     WesliOauth.getOauthSettings(function (response: any, event: any) {
       if (event.statusCode == '200') {
         resolve(response);
@@ -25,8 +26,7 @@ export class DataService {
   });
 
   getOauth2() {
-    return WesliOauth.then(function (response) {
-      console.log('Custom Settings: ' + JSON.stringify(response));
+    return this.OauthPromise.then(function (response) {
       return new jsforce.OAuth2(response);
     });
   }

@@ -24,10 +24,7 @@ export class OAuthService {
     this.dataService.getOauth2().then(function (oauth2) {
 
       Office.onReady(function () {
-
-        var urlString;
-        console.log(oauth2.getAuthorizationUrl({ scope: 'api id web refresh' }));
-        Office.context.ui.displayDialogAsync(oauth2.getAuthorizationUrl({ scope: 'api id web refresh' }), {
+        Office.context.ui.displayDialogAsync(oauth2.getAuthorizationUrl({ scope: 'api id web refresh_token' }), {
           height: 70,
           width: 40
         },

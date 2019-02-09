@@ -39,7 +39,7 @@ export class AppComponent {
     this.authService.login().then(function () {
       this.ngZone.run(() => {
         this.isLoggedIn = this.authService.isLoggedIn();
-      }).bind(this);
+      });
     }.bind(this));
   }
 
@@ -47,7 +47,7 @@ export class AppComponent {
     this.authService.logout().then(function () {
       this.ngZone.run(() => {
         this.isLoggedIn = this.authService.isLoggedIn();
-      }).bind(this);
+      });
     }.bind(this));
   }
 

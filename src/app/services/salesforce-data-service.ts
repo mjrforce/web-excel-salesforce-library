@@ -27,6 +27,22 @@ export class DataService {
   });
 
 
+
+  getLoginUrl() {
+    return new Promise(function (resolve, reject) {
+
+      WESLI_OAuth_Service.getloginUrl(function (response: any, event: any) {
+        if (event.statusCode == '200') {
+          resolve(response);
+        }
+        else {
+          reject();
+        }
+      });
+    });
+  }
+
+
   getOauth2() {
     return this.OauthPromise.then(function (response) {
       return new jsforce.OAuth2(response);
@@ -34,9 +50,9 @@ export class DataService {
   }
 
   getConnection() {
-    var token = JSON.parse(this.officeService.getFromLocalStorage('oauthresult'));
-    console.log(token);
-    var conn = new jsforce.Connection();
-    return conn;
+    return this.getOauth2().then(function (oauth2) {
+      var conn = new jsforce.Connection({ oauth2: oauth2 });
+      return conn;
+    });
   }
 }

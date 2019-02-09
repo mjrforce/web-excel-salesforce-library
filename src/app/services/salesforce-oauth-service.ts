@@ -22,28 +22,34 @@ export class OAuthService {
 
   login() {
     return new Promise(function (resolve, reject) {
-
       this.dataService.getOauth2().then(function (oauth2) {
-
         Office.onReady(function () {
-          console.log(oauth2.getAuthorizationUrl({ scope: 'api openid web' }));
-          Office.context.ui.displayDialogAsync(oauth2.getAuthorizationUrl({ scope: 'api openid web' }), {
-            height: 70,
-            width: 40
-          },
-            function (result) {
-              this.dlg = result.value;
-              this.dlg.addEventHandler("dialogMessageReceived", function (arg) {
-                this.dlg.close();
-                var code = arg.message.substring(arg.message.indexOf('code=') + 5);
-                this.dataService.getOauth2().then(function (conn) {
-                  conn.authorize(code, function (err, userInfo) {
-                    this.officeDataService.saveToLocalStorage('oauthresult', JSON.stringify(conn));
-                    resolve(conn);
-                  }.bind(this));
+          this.dataService.getLoginUrl().then(function (url) {
+            var parser = new DOMParser;
+            var dom = parser.parseFromString(
+              '<!doctype html><body>' + url,
+              'text/html');
+            var decodedString = dom.body.textContent;
+            Office.context.ui.displayDialogAsync(decodedString, {
+              height: 70,
+              width: 40
+            },
+              function (result) {
+                this.dlg = result.value;
+                this.dlg.addEventHandler("dialogMessageReceived", function (arg) {
+                  this.dlg.close();
+                  var conn = {}
+                  var arr1 = arg.message.substring(1).split('&');
+                  for (var i = 0; i < arr1.length; i++) {
+                    var arr2 = arr1[i].split('=');
+                    conn[arr2[0]] = decodeURIComponent(arr2[1]);
+                  }
+                  this.officeDataService.saveToLocalStorage('oauthresult', JSON.stringify(conn));
+                  resolve(conn);
+
                 }.bind(this));
               }.bind(this));
-            }.bind(this));
+          }.bind(this));
         }.bind(this));
       }.bind(this));
     }.bind(this));

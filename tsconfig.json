@@ -12,11 +12,6 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "es5",
-    "paths": {
-      "jsforce": [
-        "./node_modules/jsforce/build/jsforce.min.js"
-      ]
-    },
     "typeRoots": [
       "node_modules/@types"
     ],

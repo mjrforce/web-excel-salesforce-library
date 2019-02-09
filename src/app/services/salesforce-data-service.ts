@@ -1,28 +1,33 @@
 import { Injectable, Inject } from '@angular/core';
 import { OfficeDataService } from './office-data-service';
-import { OAuthService } from './salesforce-oauth-service'
 import { APP_BASE_HREF } from '@angular/common';
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 declare const jsforce: any;
+declare const WesliOauth: any;
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
 
   constructor(@Inject(APP_BASE_HREF) private baseHref: string,
-    private officeService: OfficeDataService,
-    private oauthService: OAuthService) { }
+    private officeService: OfficeDataService) { }
 
+  OauthPromise = new Promise(function (resolve, reject) {
+    WesliOauth.getOauthSettings(function (response: any, event: any) {
+      if (event.statusCode == '200') {
+        resolve(response);
+      }
+      else {
+        reject();
+      }
+    });
+  });
 
-  subscribe(callback: Function) {
-
+  getConn() {
+    return WesliOauth.then(function (response) {
+      console.log('Custom Settings: ' + JSON.stringify(response));
+      return new jsforce.Connection(response);
+    });
   }
-
-  unsubscribe(callback: Function) {
-
-  }
-
-  publish(template: string, callback: Function) {
-
-  }
-
 }

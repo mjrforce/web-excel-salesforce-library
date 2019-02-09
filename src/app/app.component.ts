@@ -8,6 +8,8 @@ import { environment } from '../environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
 import { NgZone } from '@angular/core';
 
+declare const Excel: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
@@ -15,7 +17,6 @@ import { NgZone } from '@angular/core';
 
 export class AppComponent {
   isLoggedIn = false;
-  socket: SocketIOClient.Socket;
 
   constructor(private authService: OAuthService,
     private ngZone: NgZone,
@@ -28,32 +29,20 @@ export class AppComponent {
 
   ngOnInit() {
     this.ngZone.run(() => {
-      this.isLoggedIn = this.authService.isLoggedIn();
+
     });
 
   }
 
   login() {
 
-    this.authService.login(function (message: any) {
-      this.ngZone.run(() => {
-        this.isLoggedIn = true;
-        this.dataService.subscribe(function () {
-        });
-      })
-    }.bind(this));
   }
 
   logout() {
 
-    var service = this;
-    this.dataService.unsubscribe(function () {
-      this.authService.logout(function (result: any) {
-        this.ngZone.run(() => {
-          this.isLoggedIn = this.authService.isLoggedIn();
+  }
 
-        });
-      }.bind(this));
-    }.bind(this));
+  runQuery() {
+
   }
 }

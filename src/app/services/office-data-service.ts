@@ -9,7 +9,7 @@ export class OfficeDataService {
 
 
   // Stores the settings in the JavaScript APIs for Office property bag.
-  saveToPropertyBag(key: string, value: any) {
+  saveToPropertyBag(key, value) {
 
     // Note that Project does not support the settings object.
     // Need to check that the settings object is available before setting.
@@ -26,7 +26,7 @@ export class OfficeDataService {
   }
 
   // Retrieves the specified setting value from the JavaScript APIs for Office  property bag using the specified key.
-  getFromPropertyBag(key: string) {
+  getFromPropertyBag(key) {
 
     // Note that Project does not support the settings object.
     // Need to check that the settings object is available before setting.
@@ -45,13 +45,13 @@ export class OfficeDataService {
   }
 
   // Stores the settings as a browser cookie.
-  saveToBrowserCookies(key: string, value: any) {
+  saveToBrowserCookies(key, value) {
 
     document.cookie = key + "=" + value;
   }
 
   // Retrieves the specified setting from the browser cookies.
-  getFromBrowserCookies(key: string) {
+  getFromBrowserCookies(key) {
     var cookies = {};
     var all = document.cookie;
     var value = null;
@@ -76,7 +76,7 @@ export class OfficeDataService {
 
   // Stores the settings using local storage (Web Storage that doesn't expire).
   // See http://msdn.microsoft.com/en-us/library/ie/cc197062(v=vs.85).aspx information about localStorage, sessionStorage.
-  saveToLocalStorage(_key: string, _value: any) {
+  saveToLocalStorage(_key: string, _value: string) {
 
     localStorage.setItem(_key, _value)
 
@@ -97,7 +97,7 @@ export class OfficeDataService {
   }
 
   // Stores the settings using session storage (Web Storage limited to the lifetime of the browser window).
-  saveToSessionStorage(_key: string, _value: any) {
+  saveToSessionStorage(_key: string, _value: string) {
 
     sessionStorage.setItem(_key, _value);
   }
@@ -110,7 +110,7 @@ export class OfficeDataService {
   }
 
   // Stores the settings in a hidden <div> added to the document.
-  saveToDocument(key: string, value: any) {
+  saveToDocument(key: string, value: string) {
     var hiddenStorage = null;
     var hiddenName = "hiddenstorage";
 

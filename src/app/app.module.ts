@@ -8,7 +8,6 @@ import { ExcelService } from './services/excel-services';
 import { OAuthService } from './services/salesforce-oauth-service';
 import { HttpClientModule } from '@angular/common/http';
 import { APP_BASE_HREF } from '@angular/common';
-import { Result } from './classes/oauth/result';
 import { environment } from '../environments/environment';
 
 
@@ -25,7 +24,6 @@ import { environment } from '../environments/environment';
     OfficeDataService,
     OAuthService,
     ExcelService,
-    Result,
     [{ provide: APP_BASE_HREF, useValue: environment.baseURL }]
   ],
   bootstrap: [AppComponent]

@@ -4,10 +4,13 @@
   "scripts": {
     "ng": "ng",
     "build": "ng build",
-    "deploy": "sfdx force:source:deploy -u wesli -x package.xml",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "start": "node index.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon index.js",
+    "client": "ng serve --proxy-config proxy.config.json",
     "preinstall": "npm install -g @angular/cli @angular-devkit/build-angular @angular/compiler typescript",
     "postinstall": "ng build --aot --prod"
   },

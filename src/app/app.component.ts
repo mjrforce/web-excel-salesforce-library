@@ -2,8 +2,8 @@ import { Component, SystemJsNgModuleLoader } from '@angular/core';
 import { Inject } from '@angular/core';
 import { OAuthService } from './services/salesforce-oauth-service';
 import { DataService } from './services/salesforce-data-service';
-import { ExcelService } from './services/excel-services';
-import { OfficeDataService } from './services/office-data-service'
+import { OfficeDataService } from './services/office-data-service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from '../environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
 import { NgZone } from '@angular/core';
@@ -17,24 +17,53 @@ declare const Excel: any;
 
 export class AppComponent {
   isLoggedIn = false;
+  queryForm: FormGroup;
+  submitted = false;
+
 
   constructor(
     private authService: OAuthService,
     private ngZone: NgZone,
     private dataService: DataService,
-    private excelService: ExcelService,
     private officeService: OfficeDataService,
+    private formBuilder: FormBuilder,
     @Inject(APP_BASE_HREF) private baseHref: string) {
 
   }
 
-  soql: string = '';
-
   ngOnInit() {
     this.ngZone.run(() => {
       this.isLoggedIn = this.authService.isLoggedIn();
+      this.queryForm = this.formBuilder.group({
+        soql: ['', Validators.required],
+        currentlocation: [true]
+      });
     });
 
+  }
+
+  get f() { return this.queryForm.controls; }
+
+  onSubmit() {
+    this.submitted = true;
+
+    // stop here if form is invalid
+    if (this.queryForm.invalid) {
+      return;
+    }
+
+    console.log(JSON.stringify(this.queryForm.value));
+    this.dataService.query(this.queryForm.value.soql).then(function (data) {
+
+      console.log('data: ')
+      console.log(data);
+      this.dataService.globalDescribe(data).then(function (data) {
+        console.log('Describe Result:');
+        console.log(data);
+      })
+
+
+    }.bind(this));
   }
 
   login() {
@@ -51,14 +80,5 @@ export class AppComponent {
         this.isLoggedIn = this.authService.isLoggedIn();
       });
     }.bind(this));
-  }
-
-  runQuery() {
-    console.log('Query: ' + this.soql);
-    if (this.soql != '' && this.soql != null) {
-      this.dataService.query(this.soql).then(function (data) {
-        this.excelService.createTable(data);
-      }.bind(this));
-    }
   }
 }

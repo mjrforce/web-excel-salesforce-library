@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable, Inject, SystemJsNgModuleLoader } from '@angular/core';
 import { OfficeDataService } from './office-data-service';
 import { APP_BASE_HREF } from '@angular/common';
 import { Observable, of } from 'rxjs';
@@ -45,15 +45,28 @@ export class DataService {
 
   getOauth2() {
     return this.OauthPromise.then(function (response) {
+      console.log('oauth2: ');
+      console.log(response);
       return new jsforce.OAuth2(response);
     });
   }
 
   getConnection() {
     return this.getOauth2().then(function (oauth2) {
-      var conn = new jsforce.Connection({ oauth2: oauth2 });
+      console.log('Connection: ');
+      console.log(oauth2);
+      var conn;
+      var oauthresult = this.officeService.getFromLocalStorage('oauthresult');
+      if (oauthresult != null && oauthresult != '') {
+        var oresult = JSON.parse(oauthresult);
+        console.log('oresult: ');
+        console.log(oresult);
+        conn = new jsforce.Connection({ accessToken: oresult.access_token, instanceUrl: oresult.instance_url });
+      } else {
+        conn = new jsforce.Connection({ oauth2: oauth2 });
+      }
       return conn;
-    });
+    }.bind(this));
   }
   arrayContains(arr: any, str: string) {
     var c = false;
@@ -63,9 +76,11 @@ export class DataService {
     return c;
   }
 
-  async query(q: string) {
+  query(q: string) {
+    console.log('q: ' + q);
     return this.getConnection().then(function (conn) {
       return conn.query(q).then(function (result, err) {
+        console.log({ q: q, result: result });
         return { q: q, result: result };
       });
     });

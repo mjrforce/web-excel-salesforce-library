@@ -31,16 +31,21 @@
     </article>
     <article class="slds-card">
         <div class="slds-card__body slds-card__body_inner">
-            <div class="slds-form">
-                <div class="slds-form-element slds-form-element_stacked">
+            <form [formGroup]="queryForm" (ngSubmit)="onSubmit()" class="slds-form">
+                <div class="slds-form-element slds-form-element_stacked form-group">
                     <label class="slds-form-element__label" for="stacked-input-id-02">SOQL
                         56</label>
                     <div class="slds-form-element__control">
-                        <textarea id="soql" [(ngModel)]="soql" placeholder="Select Id, Name, ... FROM Account" class="slds-textarea"></textarea>
+                        <textarea id="soql" formControlName="soql" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.soql.errors }"
+                            placeholder="Select Id, Name, ... FROM Account" class="slds-textarea">
+                        </textarea>
+                        <div *ngIf="submitted && f.soql.errors" class="invalid-feedback">
+                            <div *ngIf="f.soql.errors.required">Query is required</div>
+                        </div>
                     </div>
                 </div>
 
-                <button (click)="runQuery()" class="slds-button slds-button_icon slds-button_icon-brand" title="Search">
+                <button type="submit" class="slds-button slds-button_icon slds-button_icon-brand" title="Search">
                     <svg class="slds-button__icon" aria-hidden="true">
                         <use xlink:href="/_slds/icons/standard-sprite/svg/symbols.svg#search">
                         </use>
@@ -49,9 +54,10 @@
 
                 <fieldset class="slds-form-element slds-form-element_stacked">
                     <legend class="slds-form-element__legend slds-form-element__label">Settings</legend>
-                    <div class="slds-form-element__control">
+                    <div class="slds-form-element__control form-group">
                         <div class="slds-checkbox">
-                            <input type="checkbox" name="default" id="currentlocation" value="currentlocation">
+                            <input type="checkbox" class="form-control" formControlName="currentlocation" name="currentlocation"
+                                id="currentlocation">
                             <label class="slds-checkbox__label" for="currentlocation">
                                 <span class="slds-checkbox_faux"></span>
                                 <span class="slds-form-element__label">Use current location</span>
@@ -60,7 +66,7 @@
                     </div>
                 </fieldset>
 
-            </div>
+            </form>
         </div>
     </article>
 </div>

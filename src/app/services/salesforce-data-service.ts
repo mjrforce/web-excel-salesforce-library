@@ -80,17 +80,26 @@ export class DataService {
     console.log('q: ' + q);
     return this.getConnection().then(function (conn) {
       return conn.query(q).then(function (result, err) {
-        console.log({ q: q, result: result });
-        return { q: q, result: result };
+        var n = q.toUpperCase();
+        var f = n.substring(7, n.indexOf(" FROM")).replace(/ /g, '').split(',');
+        var o = n.substring(n.indexOf("FROM ") + 5);
+        if (o.indexOf(' WHERE') > -1)
+          o = o.substring(0, o.indexOf(" WHERE"));
+        o = o.trim();
+        var data = { object: o, fieldlist: f, q: q, result: result };
+        console.log(data);
+        return data;
       });
     });
   }
 
   async globalDescribe(data: any) {
 
+    console.log('get Connection for global describe');
     return this.getConnection().then(function (conn) {
+      console.log('Got the connection, now start a new promise');
       return new Promise(function (resolve, reject) {
-
+        console.log('inside the promise...');
         if (typeof data.resolve == 'undefined') {
           data.resolve = resolve;
         }
@@ -116,13 +125,21 @@ export class DataService {
 
         for (var i = 0; i < mydata.objects.length; i++) {
           if (this.arrayContains(mydata.completedObjects, mydata.objects[i]) == false) {
+            console.log('Describing ... ' + mydata.objects[i]);
+
             promises.push(conn.sobject(mydata.objects[i]).describe());
             mydata.completedObjects.push(mydata.objects[i]);
           }
         }
 
+
+
         if (promises.length > 0) {
-          Promise.all(promises).then(function (data) {
+          console.log('Look at all these promises...');
+          console.log(promises);
+          Promise.all(promises).then(function (data: any) {
+            console.log('These promises are resolved...');
+            console.log(data);
             for (var i = 0; i < data.length; i++) {
               data[i].fmap = [];
               for (var j = 0; j < data[i].fields.length; j++) {
@@ -140,22 +157,24 @@ export class DataService {
               mydata.desc[data[i].name.toUpperCase()] = data[i];
             }
             return mydata;
-          }).then(function (data) {
+          }.bind(this)).then(function (data: any) {
             if (data.nextObjects.length > 0) {
               data.objects = data.nextObjects;
 
             } else {
 
             }
+            console.log('more to do...');
             this.globalDescribe(data);
-          });
+          }.bind(this));
 
         } else {
+          console.log('All done!');
           data.resolve(mydata);
 
         }
-      });
+      }.bind(this));
 
-    });
+    }.bind(this));
   }
 }

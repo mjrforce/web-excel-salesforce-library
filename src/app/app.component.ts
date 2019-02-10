@@ -3,6 +3,8 @@ import { Inject } from '@angular/core';
 import { OAuthService } from './services/salesforce-oauth-service';
 import { DataService } from './services/salesforce-data-service';
 import { OfficeDataService } from './services/office-data-service';
+import { ExcelService } from './services/excel-service';
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from '../environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
@@ -26,12 +28,14 @@ export class AppComponent {
     private ngZone: NgZone,
     private dataService: DataService,
     private officeService: OfficeDataService,
+    private excelService: ExcelService,
     private formBuilder: FormBuilder,
     @Inject(APP_BASE_HREF) private baseHref: string) {
 
   }
 
   ngOnInit() {
+
     this.ngZone.run(() => {
       this.isLoggedIn = this.authService.isLoggedIn();
       this.queryForm = this.formBuilder.group({
@@ -54,15 +58,8 @@ export class AppComponent {
 
     console.log(JSON.stringify(this.queryForm.value));
     this.dataService.query(this.queryForm.value.soql).then(function (data) {
-
-      console.log('data: ')
-      console.log(data);
-      this.dataService.globalDescribe(data).then(function (data) {
-        console.log('Describe Result:');
-        console.log(data);
-      })
-
-
+      data.queryForm = this.queryForm.value;
+      this.excelService.createTable(data);
     }.bind(this));
   }
 

@@ -20,16 +20,22 @@ export class OAuthService {
     return oauth != '' && oauth != null;
   }
 
-  login() {
+  login(loginUrl: string) {
     return new Promise(function (resolve, reject) {
+      console.log('requesting url: ' + loginUrl);
       this.dataService.getOauth2().then(function (oauth2) {
+        if (loginUrl != oauth2.loginUrl && loginUrl != '') {
+          console.log('use custom url: ' + loginUrl);
+          oauth2.loginUrl = loginUrl;
+        }
         Office.onReady(function () {
           this.dataService.getLoginUrl().then(function (url) {
             var parser = new DOMParser;
             var dom = parser.parseFromString(
               '<!doctype html><body>' + url,
               'text/html');
-            var decodedString = dom.body.textContent;
+            var decodedString = oauth2.loginUrl + dom.body.textContent;
+            console.log('Final url: ' + decodedString);
             Office.context.ui.displayDialogAsync(decodedString, {
               height: 70,
               width: 40

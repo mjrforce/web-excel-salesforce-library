@@ -40,10 +40,17 @@ export class AppComponent {
       this.isLoggedIn = this.authService.isLoggedIn();
       this.queryForm = this.formBuilder.group({
         soql: ['', Validators.required],
-        currentlocation: [true]
+        currentlocation: [true],
+        usecustomloginurl: [false],
+        customurl: ['https://login.salesforce.com']
       });
     });
 
+
+  }
+
+  get usecustomloginurl() {
+    return this.queryForm.value.usecustomloginurl;
   }
 
   get f() { return this.queryForm.controls; }
@@ -64,7 +71,9 @@ export class AppComponent {
   }
 
   login() {
-    this.authService.login().then(function () {
+    var loginurl = (this.queryForm.value.usecustomloginurl ? this.queryForm.value.customurl : '');
+    console.log('Use this url: ' + loginurl)
+    this.authService.login(loginurl).then(function () {
       this.ngZone.run(() => {
         this.isLoggedIn = this.authService.isLoggedIn();
       });

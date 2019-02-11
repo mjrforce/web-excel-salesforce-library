@@ -64,6 +64,25 @@
                             </label>
                         </div>
                     </div>
+                    <div class="slds-form-element__control form-group">
+                        <div class="slds-checkbox">
+                            <input type="checkbox" class="form-control" formControlName="usecustomloginurl" name="usecustomloginurl"
+                                id="usecustomloginurl">
+                            <label class="slds-checkbox__label" for="usecustomloginurl">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-form-element__label">Custom Login Url</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div *ngIf="usecustomloginurl" class="slds-form-element__control form-group">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="customurl">Custom Login Url</label>
+                            <div class="slds-form-element__control">
+                                <input id="customurl" formControlName="customurl" name="customurl" placeholder="" class="slds-input"
+                                    type="text" value="" />
+                            </div>
+                        </div>
+                    </div>
                 </fieldset>
 
             </form>

@@ -3,7 +3,7 @@ public class WESLI_OAuth_Service {
     @RemoteAction
     public static string getloginUrl(){
         oauth2 oauth2 = new oauth2();
-        return oauth2.loginUrl + '/services/oauth2/authorize?response_type=token&client_id=' + oauth2.clientId + '&redirect_uri=' + oauth2.redirectUri;
+        return '/services/oauth2/authorize?response_type=token&client_id=' + oauth2.clientId + '&redirect_uri=' + oauth2.redirectUri;
     }
     @remoteAction
     public static string getLogout(string token){

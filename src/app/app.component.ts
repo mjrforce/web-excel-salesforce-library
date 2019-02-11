@@ -81,7 +81,8 @@ export class AppComponent {
   }
 
   logout() {
-    this.authService.logout().then(function () {
+    var baseHref = (this.queryForm.value.customurl);
+    this.authService.logout(baseHref).then(function () {
       this.ngZone.run(() => {
         this.isLoggedIn = this.authService.isLoggedIn();
       });

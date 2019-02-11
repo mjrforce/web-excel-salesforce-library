@@ -6,10 +6,10 @@ public class WESLI_OAuth_Service {
         return '/services/oauth2/authorize?response_type=token&client_id=' + oauth2.clientId + '&redirect_uri=' + oauth2.redirectUri;
     }
     @remoteAction
-    public static string getLogout(string token){
+    public static string getLogout(string basehref, string token){
         oauth2 oauth2 = new oauth2();
         HttpRequest req = new HttpRequest();
-        req.setEndpoint(oauth2.loginurl + '/services/oauth2/revoke?token=' + token);
+        req.setEndpoint(basehref + '/services/oauth2/revoke?token=' + token);
         req.setMethod('GET');
         Http http = new Http();
         HTTPResponse res = http.send(req);

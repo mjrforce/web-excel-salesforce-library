@@ -62,12 +62,13 @@ export class OAuthService {
     }.bind(this));
   }
 
-  logout() {
+  logout(baseHref: string) {
 
     return new Promise(function (resolve, reject) {
       var settings = JSON.parse(this.officeDataService.getFromLocalStorage('oauthresult'));
       console.log('Settings: ' + JSON.stringify(settings));
-      WESLI_OAuth_Service.getLogout(settings.access_token,
+
+      WESLI_OAuth_Service.getLogout(baseHref, settings.access_token,
         function (response: any, event: any) {
           if (event.statusCode == '200') {
             this.officeDataService.clearLocalStorage('oauthresult');

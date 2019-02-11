@@ -137,7 +137,7 @@ export class ExcelService {
                 rowstring = rowstring + char;
             }
             coloffset = this.charToNumber(colString) - 1;
-            rowoffset = parseInt(rowstring);
+            rowoffset = parseInt(rowstring) - 1;
             console.log('rangeString: ' + rangeString);
             console.log('colString: ' + colString);
             console.log('column offset: ' + coloffset);

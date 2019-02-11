@@ -3,7 +3,9 @@ import { Injectable, Inject } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import { DataService } from '../services/salesforce-data-service';
 import { NgZone } from '@angular/core';
+
 declare const Office: any;
+declare const OfficeExtension: any;
 declare const Excel: any;
 
 @Injectable({ providedIn: 'root' })
@@ -11,20 +13,38 @@ export class ExcelService {
 
   constructor(private dataService: DataService) { }
 
-  convertToColumn(iCol: number) {
-    var iCol = 29
-    var iAlpha;
-    var iRemainder;
-    var convertToLetter = '';
-    iAlpha = Math.floor(iCol / 27)
-    iRemainder = iCol - (iAlpha * 26)
-    if (iAlpha > 0) {
-      convertToLetter = String.fromCharCode(iAlpha + 64)
+  charToNumber(val: string) {
+
+    var base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var baseNumber = base.length;
+
+    var runningTotal = 0;
+    var characterIndex = 0;
+    var indexExponent = val.length - 1;
+
+    while (characterIndex < val.length) {
+      var digit = val[characterIndex];
+      var digitValue = base.indexOf(digit) + 1;
+      runningTotal += Math.pow(baseNumber, indexExponent) * digitValue;
+
+      characterIndex += 1
+      indexExponent -= 1
     }
-    if (iRemainder > 0) {
-      convertToLetter = convertToLetter + String.fromCharCode(iRemainder + 64);
+
+    return runningTotal;
+  }
+
+  numberToChar(number: number) {
+
+    var numeric = (number - 1) % 26;
+    var letter = String.fromCharCode(65 + numeric);
+    var number2 = parseInt(((number - 1) / 26).toString());
+    if (number2 > 0) {
+      return this.numberToChar(number2) + letter;
+    } else {
+      return letter;
     }
-    return convertToLetter;
+
   }
 
   getValue(arr: any, key: string) {
@@ -60,97 +80,101 @@ export class ExcelService {
 
   async createTable(data: any) {
 
-    this.dataService.globalDescribe(data).then(function (data: any) {
+    this.dataService.globalDescribe(data).then(async function (data: any) {
 
-      Excel.run(async function (context) {
+      try {
+        await Excel.run(async context => {
+          var h = [];
 
-        let myWorkbook = context.workbook;
-        let activeCell = myWorkbook.getActiveCell();
+          for (var i = 0; i < data.fieldlist.length; i++) {
 
-        activeCell.load("address");
+            if (data.fieldlist[i].indexOf('.') > -1) {
+              var arr = data.fieldlist[i].split('.');
+              var label = '';
+              var obj = data.object;
 
-        await context.sync();
+              for (var j = 0; j < arr.length; j++) {
+                var f = data.desc[obj].fmap[arr[j]];
+                if (typeof f == 'undefined') {
+                  f = data.desc[obj].fmap[arr[j] + 'ID'];
+                }
+                if (typeof f == 'undefined' && arr[j].indexOf('__R') > 0) {
+                  f = data.desc[obj].fmap[arr[j].replace('__R', '__C')];
+                }
+                if (j < arr.length && f.referenceTo.length > 0)
+                  obj = f.referenceTo[0].toUpperCase();
+                if (j != 0) { label = label + ':'; }
+                label = label + f.label;
 
-        console.log('active address: ' + activeCell.address);
-
-        var h = [];
-
-
-        for (var i = 0; i < data.fieldlist.length; i++) {
-
-          if (data.fieldlist[i].indexOf('.') > -1) {
-            var arr = data.fieldlist[i].split('.');
-            var label = '';
-            var obj = data.object;
-
-            for (var j = 0; j < arr.length; j++) {
-              var f = data.desc[obj].fmap[arr[j]];
-              if (typeof f == 'undefined') {
-                f = data.desc[obj].fmap[arr[j] + 'ID'];
               }
-              if (typeof f == 'undefined' && arr[j].indexOf('__R') > 0) {
-                f = data.desc[obj].fmap[arr[j].replace('__R', '__C')];
-              }
-              if (j < arr.length && f.referenceTo.length > 0)
-                obj = f.referenceTo[0].toUpperCase();
-              if (j != 0) { label = label + ':'; }
-              label = label + f.label;
+              h.push(label);
+            } else {
+              label = data.desc[data.object].fmap[data.fieldlist[i]].label;
+              h.push(label);
+            }
+          }
+
+          var sheetData = [];
+          sheetData.push(h);
+
+          var rangeString = "A1:";
+          var offset = 0;
+
+          if (data.queryForm.currentlocation == true) {
+            const currRange = context.workbook.getSelectedRange();
+            currRange.load('address');
+            await context.sync();
+            rangeString = currRange.address.split('!')[1].split(':')[0];
+            var colString = '';
+            for (var i = 0; i < rangeString.length; i++) {
+              var char = rangeString.charAt(i);
+              console.log('Testing: ' + char + ' typeof: ' + typeof char);
+              if (isNaN(parseInt(char)) == true)
+                colString = colString + char;
+            }
+            offset = this.charToNumber(colString);
+            console.log('rangeString: ' + rangeString);
+            console.log('colString: ' + colString);
+            console.log('offset: ' + offset);
+            rangeString = rangeString + ":";
+          }
+
+          rangeString = rangeString + this.numberToChar(h.length + offset) + (data.result.records.length + 1);
+          console.log(rangeString);
+
+          for (var i = 0; i < data.result.records.length; i++) {
+            var row = [];
+            var record = this.parseObject(data.result.records[i]);
+
+            for (var j = 0; j < data.fieldlist.length; j++) {
+              var f = data.fieldlist[j];
+              var val = this.getValue(record, f);
+
+              row.push(val);
 
             }
-            h.push(label);
-          } else {
-            label = data.desc[data.object].fmap[data.fieldlist[i]].label;
-            h.push(label);
+            sheetData.push(row);
           }
-        }
 
-        var sheetData = [];
-        sheetData.push(h);
-
-        var rangeString = "A1:";
-        console.log('checkbox: ' + data.useCurrentLocation);
-
-        if (data.useCurrentLocation == true) {
-          console.log('Current Location: ');
-          rangeString = "B1:";
-        }
-
-        rangeString = rangeString + this.convertToColumn(h.length) + (data.result.records.length + 1);
-        console.log(rangeString);
-
-        for (var i = 0; i < data.result.records.length; i++) {
-          var row = [];
-          var record = this.parseObject(data.result.records[i]);
-
-          for (var j = 0; j < data.fieldlist.length; j++) {
-            var f = data.fieldlist[j];
-            var val = this.getValue(record, f);
-
-            row.push(val);
-
-          }
-          sheetData.push(row);
-        }
-
-        var sheet = context.workbook.worksheets.getActiveWorksheet();
-        var range = sheet.getRange(rangeString);
+          var sheet = context.workbook.worksheets.getActiveWorksheet();
+          var range = sheet.getRange(rangeString);
 
 
-        range.values = sheetData;
+          range.values = sheetData;
 
-        console.log('table');
-        var table = sheet.tables.add(rangeString, true);
-        table.name = 'Example';
+          console.log('table');
+          var table = sheet.tables.add(rangeString, true);
+          table.name = 'Example';
 
-        console.log('start sync');
+          console.log('start sync');
 
-        return context.sync();
-      }).catch(function (error) {
-        console.log("Error: " + error);
-        if (error) {
-          console.log("Debug info: " + JSON.stringify(error.debugInfo));
-        }
-      });
+          await context.sync();
+
+
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }.bind(this));
   }
 }

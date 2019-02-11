@@ -41,6 +41,7 @@ export class OAuthService {
               width: 40
             },
               function (result) {
+                console.log(result);
                 this.dlg = result.value;
                 this.dlg.addEventHandler("dialogMessageReceived", function (arg) {
                   this.dlg.close();

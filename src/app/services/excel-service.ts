@@ -118,7 +118,8 @@ export class ExcelService {
           sheetData.push(h);
 
           var rangeString = "A1:";
-          var offset = 0;
+          var coloffset = 0;
+          var rowoffset = 0;
 
           if (data.queryForm.currentlocation == true) {
             const currRange = context.workbook.getSelectedRange();
@@ -126,20 +127,25 @@ export class ExcelService {
             await context.sync();
             rangeString = currRange.address.split('!')[1].split(':')[0];
             var colString = '';
+            var rowstring = '';
             for (var i = 0; i < rangeString.length; i++) {
               var char = rangeString.charAt(i);
               console.log('Testing: ' + char + ' typeof: ' + typeof char);
               if (isNaN(parseInt(char)) == true)
                 colString = colString + char;
+              else
+                rowstring = rowstring + char;
             }
-            offset = this.charToNumber(colString);
+            coloffset = this.charToNumber(colString) - 1;
+            rowoffset = parseInt(rowstring);
             console.log('rangeString: ' + rangeString);
             console.log('colString: ' + colString);
-            console.log('offset: ' + offset);
+            console.log('column offset: ' + coloffset);
+            console.log('row offset: ' + rowoffset);
             rangeString = rangeString + ":";
           }
 
-          rangeString = rangeString + this.numberToChar(h.length + offset) + (data.result.records.length + 1);
+          rangeString = rangeString + this.numberToChar(h.length + coloffset) + (data.result.records.length + 1 + rowoffset);
           console.log(rangeString);
 
           for (var i = 0; i < data.result.records.length; i++) {

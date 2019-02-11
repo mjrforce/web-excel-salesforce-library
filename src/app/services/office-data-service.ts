@@ -76,20 +76,20 @@ export class OfficeDataService {
 
   // Stores the settings using local storage (Web Storage that doesn't expire).
   // See http://msdn.microsoft.com/en-us/library/ie/cc197062(v=vs.85).aspx information about localStorage, sessionStorage.
-  saveToLocalStorage(_key, _value) {
+  saveToLocalStorage(_key: string, _value: string) {
 
     localStorage.setItem(_key, _value)
 
   }
 
   // Retrieves the specified setting from local storage (Web Storage that doesn't expire).
-  getFromLocalStorage(_key) {
+  getFromLocalStorage(_key: string) {
 
     var value = localStorage.getItem(_key);
     return value;
   }
 
-  clearLocalStorage(_key) {
+  clearLocalStorage(_key: string) {
 
     localStorage.removeItem(_key);
 
@@ -97,20 +97,20 @@ export class OfficeDataService {
   }
 
   // Stores the settings using session storage (Web Storage limited to the lifetime of the browser window).
-  saveToSessionStorage(_key, _value) {
+  saveToSessionStorage(_key: string, _value: string) {
 
     sessionStorage.setItem(_key, _value);
   }
 
   // Retrieves the specified setting from session storage (Web Storage limited to the lifetime of the browser window).
-  getFromSessionStorage(_key) {
+  getFromSessionStorage(_key: string) {
 
     var value = sessionStorage.getItem(_key);
     return value;
   }
 
   // Stores the settings in a hidden <div> added to the document.
-  saveToDocument(key, value) {
+  saveToDocument(key: string, value: string) {
     var hiddenStorage = null;
     var hiddenName = "hiddenstorage";
 
@@ -137,7 +137,7 @@ export class OfficeDataService {
   }
 
   // Retrieves the specified setting from a hidden <div> in the document.
-  getFromDocument(key) {
+  getFromDocument(key: string) {
     var value = null;
 
     if (document.getElementById(key) != null) {

@@ -1,0 +1,35 @@
+<apex:page controller="WESLI_OAuth_Service" cache="false" showheader="false" sidebar="false" applyBodyTag="false" doctype="html-5.0" lightningStylesheets="true" applyHtmlTag="false">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>angular-office-reference</title>
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.debug.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsforce/1.9.1/jsforce.min.js"/>
+
+    <!-- CDN -->
+    <!-- For the Office UI Fabric, go to http://aka.ms/office-ui-fabric to learn more. -->
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.2.0/css/fabric.min.css" />
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.2.0/css/fabric.components.min.css" />
+</head>
+
+<body>
+<apex:slds />
+<button onclick="location.reload();">Reload</button>
+    <h2 id="sideload-msg" className='ms-fontSize-su ms-fontColor-neutralPrimary'>Please sideload your addin to see app
+        body. </h2>
+    <app-root></app-root>
+    
+<script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/runtime.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/polyfills.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/styles.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/vendor.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/main.js')}"></script>
+</body>
+
+
+</html>
+</apex:page>

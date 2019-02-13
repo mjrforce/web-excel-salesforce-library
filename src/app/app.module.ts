@@ -10,7 +10,9 @@ import { APP_BASE_HREF } from '@angular/common';
 import { environment } from '../environments/environment';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ExcelService } from './services/excel-service';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Query } from './classes/Query';
 
 @NgModule({
   declarations: [
@@ -19,13 +21,16 @@ import { ExcelService } from './services/excel-service';
   imports: [
     BrowserModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DragDropModule,
+    BrowserAnimationsModule
   ],
   providers: [
     DataService,
     OfficeDataService,
     OAuthService,
     ExcelService,
+    Query,
     [{ provide: APP_BASE_HREF, useValue: environment.baseURL }]
   ],
   bootstrap: [AppComponent]

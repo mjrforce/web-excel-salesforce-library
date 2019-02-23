@@ -1,23 +1,34 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
-    "allowJs": true,
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
-    "module": "es2015",
+    "target": "es5",
+    "module": "commonjs",
+    "jsx": "react",
     "moduleResolution": "node",
+    "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es5",
+    "removeComments": false,
+    "outDir": "dist",
+    "allowUnusedLabels": false,
+    "noImplicitReturns": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "baseUrl": "./",
+    "lib": [
+      "es7",
+      "dom"
+    ],
+    "paths": {
+      "jsforce": ["./node_modules/jsforce/build/jsforce.min.js"]
+  },
+    "pretty": true,
     "typeRoots": [
       "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
     ]
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "compileOnSave": false,
+  "buildOnSave": false
 }

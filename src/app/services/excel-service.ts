@@ -80,7 +80,7 @@ export class ExcelService {
 
   async createTable(data: any) {
 
-    this.dataService.globalDescribe(data).then(async function (data: any) {
+    this.dataService.describeObject(data).then(async function (data: any) {
 
       try {
         await Excel.run(async context => {

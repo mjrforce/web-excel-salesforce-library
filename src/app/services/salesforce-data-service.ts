@@ -93,7 +93,19 @@ export class DataService {
     });
   }
 
-  async globalDescribe(data: any) {
+  async globalDescribe() {
+    return this.getConnection().then(function (conn) {
+      return conn.describeGlobal();
+    });
+  }
+
+  async describe(object: string) {
+    return this.getConnection().then(function (conn) {
+      return conn.describe(object);
+    });
+  }
+
+  async describeObject(data: any) {
 
     console.log('get Connection for global describe');
     return this.getConnection().then(function (conn) {
@@ -165,7 +177,7 @@ export class DataService {
 
             }
             console.log('more to do...');
-            this.globalDescribe(data);
+            this.describeObject(data);
           }.bind(this));
 
         } else {

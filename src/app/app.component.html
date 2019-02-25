@@ -143,8 +143,9 @@
         </article>
         <div style="height: 180px;">
             <div class="slds-docked-form-footer">
-                <button type="button" class="slds-button slds-button_neutral">Cancel</button>
-                <button type="button" class="slds-button slds-button_brand">Save</button>
+                <button type="button" class="slds-button slds-button_neutral" (click)="runQuery()">Run</button>
+                <button type="button" class="slds-button slds-button_neutral" (click)="openthequeries()">List</button>
+                <button type="button" class="slds-button slds-button_brand" (click)="openthesave()">Save</button>
 
                 <button *ngIf="isLoggedIn" type="button" id="logoutbutton"
                     class="slds-button slds-not-selected slds-button_brand" aria-live="assertive" (click)="logout()">
@@ -159,5 +160,113 @@
 
             </div>
         </div>
+
+
+        <div class="demo-only" style="height: 640px;" *ngIf="openSave">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" (click)="closeSave()">
+                            <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close" />
+                            </svg>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Save Query</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="text-input-query">Query Name</label>
+                            <div class="slds-form-element__control">
+                                <input id="text-input-query" formControlName="label" placeholder="My Account Query"
+                                    class="slds-input" type="text" value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" (click)="closeSave()">Cancel</button>
+                        <button class="slds-button slds-button_brand" (click)="saveQuery()">Save</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+
+
+        <div class="demo-only" style="height: 640px;" *ngIf="openQueries">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" (click)="closeQueries()">
+                            <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close" />
+                            </svg>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Modal Header</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <table
+                            class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout"
+                            role="grid">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Field">Query</div>
+                                    </th>
+                                    <th class="" scope="col" style="width: 3.25rem;">
+                                        <div class="slds-truncate slds-assistive-text" title="Actions">Actions</div>
+                                    </th>
+                                    <th class="" scope="col" style="width: 3.25rem;">
+                                        <div class="slds-truncate slds-assistive-text" title="Actions">Actions</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr class="slds-hint-parent" *ngFor="let q of queries; let i = index;">
+                                    <td role="gridcell">
+                                        <div class="slds-truncate" title="qlabel">{{q.label}}</div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <button
+                                            class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small"
+                                            aria-haspopup="true" tabindex="-1" (click)="selectQuery(i)" title="Select">
+                                            <svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small"
+                                                aria-hidden="true">
+                                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#check" />
+                                            </svg>
+                                            <span class="slds-assistive-text"></span>
+                                        </button>
+                                    </td>
+
+                                    <td role="gridcell">
+                                        <button
+                                            class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small"
+                                            aria-haspopup="true" tabindex="-1" (click)="deleteQuery(i)" title="Delete">
+                                            <svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small"
+                                                aria-hidden="true">
+                                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close" />
+                                            </svg>
+                                            <span class="slds-assistive-text"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" (click)="closeQueries()">Cancel</button>
+                        <button class="slds-button slds-button_brand">Save</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+
     </form>
 </div>

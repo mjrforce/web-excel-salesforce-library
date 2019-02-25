@@ -15,6 +15,13 @@ export class OfficeDataService {
     // Need to check that the settings object is available before setting.
     if (Office.context.document.settings) {
       Office.context.document.settings.set(key, value);
+      Office.context.document.settings.saveAsync(function (asyncResult) {
+        if (asyncResult.status == Office.AsyncResultStatus.Failed) {
+          console.log('Settings save failed. Error: ' + asyncResult.error.message);
+        } else {
+          console.log('Settings saved.');
+        }
+      });
     }
     else {
       var unsupportedError = {

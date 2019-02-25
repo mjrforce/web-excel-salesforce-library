@@ -76,7 +76,7 @@ export class DataService {
     return c;
   }
 
-  query(q: string) {
+  async query(q: string, qf: any) {
     console.log('q: ' + q);
     return this.getConnection().then(function (conn) {
       return conn.query(q).then(function (result, err) {
@@ -85,8 +85,9 @@ export class DataService {
         var o = n.substring(n.indexOf("FROM ") + 5);
         if (o.indexOf(' WHERE') > -1)
           o = o.substring(0, o.indexOf(" WHERE"));
+        console.log('Object Name: ' + o);
         o = o.trim();
-        var data = { object: o, fieldlist: f, q: q, result: result };
+        var data = { object: o, fieldlist: f, q: q, result: result, qf: qf };
         console.log(data);
         return data;
       });

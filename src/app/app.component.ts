@@ -5,11 +5,11 @@ import { DataService } from './services/salesforce-data-service';
 import { OfficeDataService } from './services/office-data-service';
 import { ExcelService } from './services/excel-service';
 
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { environment } from '../environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
 import { NgZone } from '@angular/core';
-
+import { QUERIES } from '@angular/core/src/render3/interfaces/view';
 
 
 declare const Excel: any;
@@ -21,9 +21,20 @@ declare const Excel: any;
 
 export class AppComponent {
   isLoggedIn = false;
-  queryForm: FormGroup;
   submitted = false;
   objects = [];
+  queries = [];
+  openSave = false;
+  openQueries = false;
+  fieldarray = [];
+  queryForm = new FormGroup({
+    label: new FormControl(''),
+    soql: new FormControl(''),
+    object: new FormControl(''),
+    fields: new FormArray([]),
+    usecustomloginurl: new FormControl(''),
+    customurl: new FormControl('')
+  });
 
   constructor(
     private authService: OAuthService,
@@ -36,17 +47,47 @@ export class AppComponent {
 
   }
 
+  closeSave() {
+    this.ngZone.run(() => {
+      this.openSave = false;
+    });
+  }
+
+  openthesave() {
+    this.ngZone.run(() => {
+      this.openSave = true;
+    });
+  }
+
+  closeQueries() {
+    this.ngZone.run(() => {
+      this.openQueries = false;
+    });
+  }
+
+  openthequeries() {
+    this.ngZone.run(() => {
+      this.openQueries = true;
+    });
+  }
+
   ngOnInit() {
     this.ngZone.run(() => {
       this.initObjects();
+      this.loadQueries();
+      console.log('queries: ');
+      console.log(this.queries);
+
       this.isLoggedIn = this.authService.isLoggedIn();
-      this.queryForm = this.formBuilder.group({
-        soql: [''],
-        object: [''],
-        fields: this.formBuilder.array([]),
-        usecustomloginurl: [false],
-        customurl: ['https://login.salesforce.com']
-      });
+      var d = {
+        label: '',
+        soql: '',
+        object: '',
+        fields: [],
+        usecustomloginurl: false,
+        customurl: 'https://login.salesforce.com'
+      };
+      this.queryForm.setValue(d);
     });
   }
 
@@ -80,14 +121,36 @@ export class AppComponent {
     });
   }
 
+  saveQuery() {
+    this.queries.push(this.queryForm.value);
+    console.log(this.queries);
+    this.officeService.saveToPropertyBag('queries', JSON.stringify(this.queries));
+    console.log(this.officeService.getFromPropertyBag('queries'));
+    this.closeSave();
+  }
+
+  newQuery() {
+    this.queryForm.reset();
+  }
+
+  loadQueries() {
+
+    var str = this.officeService.getFromPropertyBag('queries');
+    if (str != null) {
+      this.queries = JSON.parse(str);
+    }
+  }
+
   updateSOQL() {
     var fields = this.queryForm.get('fields') as FormArray;
     var q = 'SELECT ';
     var f = [];
+    this.fieldarray = [];
     console.log(fields);
     for (var i = 0; i < fields.value.length; i++) {
       if (fields.value[i].selected == true) {
         f.push(fields.value[i].meta.name);
+        this.fieldarray.push(fields.value[i]);
       }
     }
     if (f.length == 0) {
@@ -123,14 +186,35 @@ export class AppComponent {
     if (this.queryForm.invalid) {
       return;
     }
+  }
 
-    if (false) {
-      console.log(JSON.stringify(this.queryForm.value));
-      this.dataService.query(this.queryForm.value.soql).then(function (data) {
-        data.queryForm = this.queryForm.value;
-        this.excelService.createTable(data);
-      }.bind(this));
+  deleteQuery(i: any) {
+    console.log(i);
+    console.log(typeof i);
+    this.queries.splice(i, 1);
+    this.officeService.saveToPropertyBag('queries', JSON.stringify(this.queries));
+
+  }
+  selectQuery(i: any) {
+    var d = this.queries[i];
+    d.fields = [];
+    for (var j = 0; j < this.queries.length; j++) {
+      d.fields.push(new FormControl(this.queries[i].fields[j]));
     }
+    this.ngZone.run(() => {
+      this.queryForm.setValue(d);
+    });
+
+  }
+
+  async runQuery() {
+    console.log(JSON.stringify(this.queryForm.value));
+    this.dataService.query(this.queryForm.value.soql, this.queryForm.value).then(function (data) {
+      data.queryForm = this.queryForm.value;
+      data.fieldlist = this.fieldarray;
+      this.excelService.createTable(data);
+    }.bind(this));
+
   }
 
   login() {

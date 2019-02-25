@@ -64,13 +64,13 @@ export class ExcelService {
       if (val.hasOwnProperty(prop)) {
         if (prop != 'attributes') {
           if (typeof val[prop] == 'undefined') {
-            row[prop.toUpperCase()] = "";
+            row[prop] = "";
           } else if (typeof val[prop] != 'object') {
-            row[prop.toUpperCase()] = val[prop];
+            row[prop] = val[prop];
           } else if (val[prop] == null) {
-            row[prop.toUpperCase()] = "";
+            row[prop] = "";
           } else {
-            row[prop.toUpperCase()] = this.parseObject(val[prop]);
+            row[prop] = this.parseObject(val[prop]);
           }
         }
       }
@@ -80,107 +80,90 @@ export class ExcelService {
 
   async createTable(data: any) {
 
-    this.dataService.describeObject(data).then(async function (data: any) {
+    try {
+      await Excel.run(async context => {
+        var h = [];
+        for (var i = 0; i < data.fieldlist.length; i++)
+          h.push(data.fieldlist[i].meta.label);
 
-      try {
-        await Excel.run(async context => {
-          var h = [];
+        console.log('data: ');
+        console.log(data);
 
-          for (var i = 0; i < data.fieldlist.length; i++) {
+        var sheetData = [];
+        sheetData.push(h);
 
-            if (data.fieldlist[i].indexOf('.') > -1) {
-              var arr = data.fieldlist[i].split('.');
-              var label = '';
-              var obj = data.object;
+        var rangeString = "A1:";
+        var coloffset = 0;
+        var rowoffset = 0;
 
-              for (var j = 0; j < arr.length; j++) {
-                var f = data.desc[obj].fmap[arr[j]];
-                if (typeof f == 'undefined') {
-                  f = data.desc[obj].fmap[arr[j] + 'ID'];
-                }
-                if (typeof f == 'undefined' && arr[j].indexOf('__R') > 0) {
-                  f = data.desc[obj].fmap[arr[j].replace('__R', '__C')];
-                }
-                if (j < arr.length && f.referenceTo.length > 0)
-                  obj = f.referenceTo[0].toUpperCase();
-                if (j != 0) { label = label + ':'; }
-                label = label + f.label;
-
-              }
-              h.push(label);
-            } else {
-              label = data.desc[data.object].fmap[data.fieldlist[i]].label;
-              h.push(label);
-            }
-          }
-
-          var sheetData = [];
-          sheetData.push(h);
-
-          var rangeString = "A1:";
-          var coloffset = 0;
-          var rowoffset = 0;
-
-          if (data.queryForm.currentlocation == true) {
-            const currRange = context.workbook.getSelectedRange();
-            currRange.load('address');
-            await context.sync();
-            rangeString = currRange.address.split('!')[1].split(':')[0];
-            var colString = '';
-            var rowstring = '';
-            for (var i = 0; i < rangeString.length; i++) {
-              var char = rangeString.charAt(i);
-              console.log('Testing: ' + char + ' typeof: ' + typeof char);
-              if (isNaN(parseInt(char)) == true)
-                colString = colString + char;
-              else
-                rowstring = rowstring + char;
-            }
-            coloffset = this.charToNumber(colString) - 1;
-            rowoffset = parseInt(rowstring) - 1;
-            console.log('rangeString: ' + rangeString);
-            console.log('colString: ' + colString);
-            console.log('column offset: ' + coloffset);
-            console.log('row offset: ' + rowoffset);
-            rangeString = rangeString + ":";
-          }
-
-          rangeString = rangeString + this.numberToChar(h.length + coloffset) + (data.result.records.length + 1 + rowoffset);
-          console.log(rangeString);
-
-          for (var i = 0; i < data.result.records.length; i++) {
-            var row = [];
-            var record = this.parseObject(data.result.records[i]);
-
-            for (var j = 0; j < data.fieldlist.length; j++) {
-              var f = data.fieldlist[j];
-              var val = this.getValue(record, f);
-
-              row.push(val);
-
-            }
-            sheetData.push(row);
-          }
-
-          var sheet = context.workbook.worksheets.getActiveWorksheet();
-          var range = sheet.getRange(rangeString);
-
-
-          range.values = sheetData;
-
-          console.log('table');
-          var table = sheet.tables.add(rangeString, true);
-          table.name = 'Example';
-
-          console.log('start sync');
-
+        if (data.queryForm.currentlocation == true) {
+          const currRange = context.workbook.getSelectedRange();
+          currRange.load('address');
           await context.sync();
+          rangeString = currRange.address.split('!')[1].split(':')[0];
+          var colString = '';
+          var rowstring = '';
+          for (var i = 0; i < rangeString.length; i++) {
+            var char = rangeString.charAt(i);
+            console.log('Testing: ' + char + ' typeof: ' + typeof char);
+            if (isNaN(parseInt(char)) == true)
+              colString = colString + char;
+            else
+              rowstring = rowstring + char;
+          }
+          coloffset = this.charToNumber(colString) - 1;
+          rowoffset = parseInt(rowstring) - 1;
+          console.log('rangeString: ' + rangeString);
+          console.log('colString: ' + colString);
+          console.log('column offset: ' + coloffset);
+          console.log('row offset: ' + rowoffset);
+          rangeString = rangeString + ":";
+        }
+
+        rangeString = rangeString + this.numberToChar(h.length + coloffset) + (data.result.records.length + 1 + rowoffset);
+        console.log(rangeString);
+
+        for (var i = 0; i < data.result.records.length; i++) {
+          var row = [];
+          var record = this.parseObject(data.result.records[i]);
+          console.log('record: ');
+          console.log(record);
+
+          for (var j = 0; j < data.fieldlist.length; j++) {
+            console.log('record: ');
+            console.log(record);
+            console.log('f: ');
+
+            var f = data.fieldlist[j];
+            console.log(f);
+            var val = record[f.meta.name];
+            console.log('value: ' + val);
+
+            row.push(val);
+
+          }
+          sheetData.push(row);
+        }
+
+        var sheet = context.workbook.worksheets.getActiveWorksheet();
+        var range = sheet.getRange(rangeString);
 
 
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }.bind(this));
+        range.values = sheetData;
+
+        console.log('table');
+        var table = sheet.tables.add(rangeString, true);
+        table.name = 'Example';
+
+        console.log('start sync');
+
+        await context.sync();
+
+
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 }

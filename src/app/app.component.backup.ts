@@ -135,7 +135,7 @@ export class AppComponent {
 
     if (false) {
       console.log(JSON.stringify(this.queryForm.value));
-      this.dataService.query(this.queryForm.value.soql).then(function (data) {
+      this.dataService.query(this.queryForm.value.soql, {}).then(function (data) {
         data.queryForm = this.queryForm.value;
         this.excelService.createTable(data);
       }.bind(this));

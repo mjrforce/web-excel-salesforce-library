@@ -73,12 +73,15 @@ export class AppComponent {
 
   ngOnInit() {
     this.ngZone.run(() => {
-      this.initObjects();
+
       this.loadQueries();
       console.log('queries: ');
       console.log(this.queries);
 
       this.isLoggedIn = this.authService.isLoggedIn();
+      if (this.isLoggedIn == true) {
+        this.initObjects();
+      }
       var d = {
         label: '',
         soql: '',
@@ -87,7 +90,11 @@ export class AppComponent {
         usecustomloginurl: false,
         customurl: 'https://login.salesforce.com'
       };
-      this.queryForm.setValue(d);
+      if (this.queries.length > 0) {
+        this.selectQuery(0);
+      } else {
+        this.queryForm.setValue(d);
+      }
     });
   }
 
@@ -109,14 +116,11 @@ export class AppComponent {
 
       })
     }.bind(this));
-
-
-
   }
 
-  createField(field: any): FormGroup {
+  createField(field: any, sel?: boolean): FormGroup {
     return this.formBuilder.group({
-      selected: [false],
+      selected: [sel || false],
       meta: [field]
     });
   }
@@ -189,21 +193,33 @@ export class AppComponent {
   }
 
   deleteQuery(i: any) {
-    console.log(i);
-    console.log(typeof i);
     this.queries.splice(i, 1);
     this.officeService.saveToPropertyBag('queries', JSON.stringify(this.queries));
-
   }
   selectQuery(i: any) {
-    var d = this.queries[i];
-    d.fields = [];
-    for (var j = 0; j < this.queries.length; j++) {
-      d.fields.push(new FormControl(this.queries[i].fields[j]));
-    }
+
     this.ngZone.run(() => {
-      this.queryForm.setValue(d);
-    });
+      this.queryForm.reset();
+      var data = this.queries[i];
+      this.queryForm.patchValue({
+        label: data.label,
+        soql: data.soql,
+        object: data.object,
+        usecustomloginurl: data.usecustomloginurl,
+        customurl: data.customurl
+      })
+
+      var fields = this.queryForm.get('fields') as FormArray;
+      while (fields.length) {
+        fields.removeAt(0);
+      }
+
+      console.log(data.fields);
+      for (var j = 0; j < data.fields.length; j++) {
+        fields.push(this.createField(data.fields[j].meta, data.fields[j].selected));
+      }
+    })
+
 
   }
 
@@ -222,6 +238,7 @@ export class AppComponent {
     this.authService.login(loginurl).then(function () {
       this.ngZone.run(() => {
         this.isLoggedIn = this.authService.isLoggedIn();
+        this.initObjects();
       });
     }.bind(this));
   }

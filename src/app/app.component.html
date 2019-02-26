@@ -23,53 +23,52 @@
                         </div>
                     </div>
 
-                    <div class="slds-no-flex">
 
-                        <div class="slds-grid slds-gutters">
 
-                            <div class="slds-col" *ngIf="!isLoggedIn">
-                                <button type="button" id="loginbutton"
-                                    class="slds-button slds-button_neutral  slds-not-selected slds-button_brand"
-                                    aria-live="assertive" (click)="login()">
-                                    <span class="slds-text-not-selected">
-                                        <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left"
-                                            aria-hidden="true">
-                                            <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#add"></use>
-                                        </svg>Login </span>
-                                </button>
-                            </div>
-                            <div class="slds-col" *ngIf="isLoggedIn">
-                                <div class="slds-form-element">
-                                    <div class="slds-form-element__control">
-                                        <div class="slds-select_container">
-                                            <select (change)="onObjectChange()" formControlName="object"
-                                                class="slds-select" id="select-01">
-                                                <option value="">Please select</option>
-                                                <option *ngFor="let obj of objects" [value]="obj.name">
-                                                    {{obj.label}}
-                                                </option>
-                                            </select>
-                                        </div>
+                    <div class="slds-grid slds-gutters">
+
+                        <div class="slds-col" *ngIf="!isLoggedIn">
+                            <button type="button" id="loginbutton"
+                                class="slds-button slds-button_neutral  slds-not-selected slds-button_brand"
+                                aria-live="assertive" (click)="login()">
+                                <span class="slds-text-not-selected">
+                                    <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left"
+                                        aria-hidden="true">
+                                        <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                    </svg>Login </span>
+                            </button>
+                        </div>
+                        <div class="slds-col" *ngIf="isLoggedIn">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select_container">
+                                        <select (change)="onObjectChange()" formControlName="object" class="slds-select"
+                                            id="select-01">
+                                            <option value="">Please select</option>
+                                            <option *ngFor="let obj of objects" [value]="obj.name">
+                                                {{obj.label}}
+                                            </option>
+                                        </select>
                                     </div>
                                 </div>
-
-
                             </div>
-                            <div class="slds-col" *ngIf="isLoggedIn">
-                                <div class="slds-form-element">
-                                    <div
-                                        class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
-                                        <svg class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default"
-                                            aria-hidden="true">
-                                            <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#search" />
-                                        </svg>
-                                        <input id="text-input-id-1" placeholder="Placeholder Text" class="slds-input"
-                                            type="text" value="" />
-                                    </div>
+
+
+                        </div>
+                        <div class="slds-col" *ngIf="isLoggedIn">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+                                    <svg class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default"
+                                        aria-hidden="true">
+                                        <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#search" />
+                                    </svg>
+                                    <input id="text-input-id-1" placeholder="Placeholder Text" class="slds-input"
+                                        type="text" value="" />
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </header>
             </div>
             <div class="slds-card__body" *ngIf="isLoggedIn">
@@ -221,9 +220,6 @@
                                     <th class="" scope="col" style="width: 3.25rem;">
                                         <div class="slds-truncate slds-assistive-text" title="Actions">Actions</div>
                                     </th>
-                                    <th class="" scope="col" style="width: 3.25rem;">
-                                        <div class="slds-truncate slds-assistive-text" title="Actions">Actions</div>
-                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -235,6 +231,16 @@
                                     <td role="gridcell">
                                         <button
                                             class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small"
+                                            aria-haspopup="true" tabindex="-1" (click)="selectAndRunQuery(i)"
+                                            title="Run">
+                                            <svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small"
+                                                aria-hidden="true">
+                                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#play" />
+                                            </svg>
+                                            <span class="slds-assistive-text"></span>
+                                        </button>
+                                        <button
+                                            class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small"
                                             aria-haspopup="true" tabindex="-1" (click)="selectQuery(i)" title="Select">
                                             <svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small"
                                                 aria-hidden="true">
@@ -242,9 +248,6 @@
                                             </svg>
                                             <span class="slds-assistive-text"></span>
                                         </button>
-                                    </td>
-
-                                    <td role="gridcell">
                                         <button
                                             class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small"
                                             aria-haspopup="true" tabindex="-1" (click)="deleteQuery(i)" title="Delete">
@@ -255,13 +258,15 @@
                                             <span class="slds-assistive-text"></span>
                                         </button>
                                     </td>
+
+
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <footer class="slds-modal__footer">
                         <button class="slds-button slds-button_neutral" (click)="closeQueries()">Cancel</button>
-                        <button class="slds-button slds-button_brand">Save</button>
+                        <button class="slds-button slds-button_brand" (click)="runAll()">Run All</button>
                     </footer>
                 </div>
             </section>

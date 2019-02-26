@@ -47,30 +47,6 @@ export class AppComponent {
 
   }
 
-  closeSave() {
-    this.ngZone.run(() => {
-      this.openSave = false;
-    });
-  }
-
-  openthesave() {
-    this.ngZone.run(() => {
-      this.openSave = true;
-    });
-  }
-
-  closeQueries() {
-    this.ngZone.run(() => {
-      this.openQueries = false;
-    });
-  }
-
-  openthequeries() {
-    this.ngZone.run(() => {
-      this.openQueries = true;
-    });
-  }
-
   ngOnInit() {
     this.ngZone.run(() => {
 
@@ -95,6 +71,30 @@ export class AppComponent {
       } else {
         this.queryForm.setValue(d);
       }
+    });
+  }
+
+  closeSave() {
+    this.ngZone.run(() => {
+      this.openSave = false;
+    });
+  }
+
+  openthesave() {
+    this.ngZone.run(() => {
+      this.openSave = true;
+    });
+  }
+
+  closeQueries() {
+    this.ngZone.run(() => {
+      this.openQueries = false;
+    });
+  }
+
+  openthequeries() {
+    this.ngZone.run(() => {
+      this.openQueries = true;
     });
   }
 
@@ -142,6 +142,16 @@ export class AppComponent {
     var str = this.officeService.getFromPropertyBag('queries');
     if (str != null) {
       this.queries = JSON.parse(str);
+    }
+  }
+
+  updateFieldlist() {
+    var fields = this.queryForm.get('fields') as FormArray;
+    this.fieldarray = [];
+    for (var i = 0; i < fields.value.length; i++) {
+      if (fields.value[i].selected == true) {
+        this.fieldarray.push(fields.value[i]);
+      }
     }
   }
 
@@ -196,6 +206,11 @@ export class AppComponent {
     this.queries.splice(i, 1);
     this.officeService.saveToPropertyBag('queries', JSON.stringify(this.queries));
   }
+
+  selectAndRunQuery(i: any) {
+    this.selectQuery(i);
+    this.runQuery();
+  }
   selectQuery(i: any) {
 
     this.ngZone.run(() => {
@@ -219,18 +234,26 @@ export class AppComponent {
         fields.push(this.createField(data.fields[j].meta, data.fields[j].selected));
       }
     })
-
-
   }
 
   async runQuery() {
-    console.log(JSON.stringify(this.queryForm.value));
-    this.dataService.query(this.queryForm.value.soql, this.queryForm.value).then(function (data) {
+    this.run(this.queryForm.value.soql, this.queryForm.value);
+  }
+
+  async runAll() {
+    for (var i = 0; i < this.queries.length; i++) {
+      this.run(this.queries[i].soql, this.queries[i]);
+    }
+  }
+
+  async run(soql: string, queryForm: any) {
+
+    this.dataService.query(soql, queryForm).then(function (data) {
       data.queryForm = this.queryForm.value;
+      this.updateFieldlist();
       data.fieldlist = this.fieldarray;
       this.excelService.createTable(data);
     }.bind(this));
-
   }
 
   login() {

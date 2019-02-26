@@ -26,8 +26,6 @@ export class DataService {
     });
   });
 
-
-
   getLoginUrl() {
     return new Promise(function (resolve, reject) {
 
@@ -42,25 +40,18 @@ export class DataService {
     });
   }
 
-
   getOauth2() {
     return this.OauthPromise.then(function (response) {
-      console.log('oauth2: ');
-      console.log(response);
       return new jsforce.OAuth2(response);
     });
   }
 
   getConnection() {
     return this.getOauth2().then(function (oauth2) {
-      console.log('Connection: ');
-      console.log(oauth2);
       var conn;
       var oauthresult = this.officeService.getFromLocalStorage('oauthresult');
       if (oauthresult != null && oauthresult != '') {
         var oresult = JSON.parse(oauthresult);
-        console.log('oresult: ');
-        console.log(oresult);
         conn = new jsforce.Connection({ accessToken: oresult.access_token, instanceUrl: oresult.instance_url });
       } else {
         conn = new jsforce.Connection({ oauth2: oauth2 });
@@ -77,18 +68,23 @@ export class DataService {
   }
 
   async query(q: string, qf: any) {
-    console.log('q: ' + q);
     return this.getConnection().then(function (conn) {
-      return conn.query(q).then(function (result, err) {
-        var n = q.toUpperCase();
+      var qs = q;
+      var p = [];
+      var loc = 'A1';
+      if (q.search(/ place /i) > -1) {
+        p = q.split(/ place /i);
+        qs = p[0];
+        loc = p[1];
+      }
+      return conn.query(qs).then(function (result, err) {
+        var n = qs.toUpperCase();
         var f = n.substring(7, n.indexOf(" FROM")).replace(/ /g, '').split(',');
         var o = n.substring(n.indexOf("FROM ") + 5);
         if (o.indexOf(' WHERE') > -1)
           o = o.substring(0, o.indexOf(" WHERE"));
-        console.log('Object Name: ' + o);
         o = o.trim();
-        var data = { object: o, fieldlist: f, q: q, result: result, qf: qf };
-        console.log(data);
+        var data = { object: o, fieldlist: f, q: qs, result: result, qf: qf, loc: loc };
         return data;
       });
     });
@@ -108,11 +104,9 @@ export class DataService {
 
   async describeObject(data: any) {
 
-    console.log('get Connection for global describe');
+
     return this.getConnection().then(function (conn) {
-      console.log('Got the connection, now start a new promise');
       return new Promise(function (resolve, reject) {
-        console.log('inside the promise...');
         if (typeof data.resolve == 'undefined') {
           data.resolve = resolve;
         }
@@ -138,21 +132,14 @@ export class DataService {
 
         for (var i = 0; i < mydata.objects.length; i++) {
           if (this.arrayContains(mydata.completedObjects, mydata.objects[i]) == false) {
-            console.log('Describing ... ' + mydata.objects[i]);
-
             promises.push(conn.sobject(mydata.objects[i]).describe());
             mydata.completedObjects.push(mydata.objects[i]);
           }
         }
 
-
-
         if (promises.length > 0) {
-          console.log('Look at all these promises...');
-          console.log(promises);
+
           Promise.all(promises).then(function (data: any) {
-            console.log('These promises are resolved...');
-            console.log(data);
             for (var i = 0; i < data.length; i++) {
               data[i].fmap = [];
               for (var j = 0; j < data[i].fields.length; j++) {
@@ -173,21 +160,13 @@ export class DataService {
           }.bind(this)).then(function (data: any) {
             if (data.nextObjects.length > 0) {
               data.objects = data.nextObjects;
-
-            } else {
-
             }
-            console.log('more to do...');
             this.describeObject(data);
           }.bind(this));
-
         } else {
-          console.log('All done!');
           data.resolve(mydata);
-
         }
       }.bind(this));
-
     }.bind(this));
   }
 }

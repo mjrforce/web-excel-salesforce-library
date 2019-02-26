@@ -83,11 +83,9 @@ export class ExcelService {
     try {
       await Excel.run(async context => {
         var h = [];
-        for (var i = 0; i < data.fieldlist.length; i++)
+        for (var i = 0; i < data.fieldlist.length; i++) {
           h.push(data.fieldlist[i].meta.label);
-
-        console.log('data: ');
-        console.log(data);
+        }
 
         var sheetData = [];
         sheetData.push(h);
@@ -96,16 +94,22 @@ export class ExcelService {
         var coloffset = 0;
         var rowoffset = 0;
 
-        if (data.queryForm.currentlocation == true) {
+        if (data.queryForm.currentlocation == true || (data.loc != '' && data.loc != null)) {
           const currRange = context.workbook.getSelectedRange();
           currRange.load('address');
           await context.sync();
-          rangeString = currRange.address.split('!')[1].split(':')[0];
+
+          if (data.queryForm.currentlocation == true) {
+            rangeString = currRange.address.split('!')[1].split(':')[0];
+          } else {
+            rangeString = data.loc;
+          }
+
           var colString = '';
           var rowstring = '';
+
           for (var i = 0; i < rangeString.length; i++) {
             var char = rangeString.charAt(i);
-            console.log('Testing: ' + char + ' typeof: ' + typeof char);
             if (isNaN(parseInt(char)) == true)
               colString = colString + char;
             else
@@ -113,34 +117,25 @@ export class ExcelService {
           }
           coloffset = this.charToNumber(colString) - 1;
           rowoffset = parseInt(rowstring) - 1;
-          console.log('rangeString: ' + rangeString);
-          console.log('colString: ' + colString);
-          console.log('column offset: ' + coloffset);
-          console.log('row offset: ' + rowoffset);
           rangeString = rangeString + ":";
         }
+        console.log('column offset: ' + coloffset);
 
         rangeString = rangeString + this.numberToChar(h.length + coloffset) + (data.result.records.length + 1 + rowoffset);
-        console.log(rangeString);
-
+        console.log('records:');
+        console.log(data.result.records);
+        console.log('fieldlist: ');
+        console.log(data.fieldlist);
         for (var i = 0; i < data.result.records.length; i++) {
           var row = [];
           var record = this.parseObject(data.result.records[i]);
-          console.log('record: ');
-          console.log(record);
+
+
 
           for (var j = 0; j < data.fieldlist.length; j++) {
-            console.log('record: ');
-            console.log(record);
-            console.log('f: ');
-
             var f = data.fieldlist[j];
-            console.log(f);
             var val = record[f.meta.name];
-            console.log('value: ' + val);
-
             row.push(val);
-
           }
           sheetData.push(row);
         }
@@ -152,14 +147,12 @@ export class ExcelService {
         range.values = sheetData;
 
         console.log('table');
+        console.log(sheetData);
+        console.log(rangeString);
         var table = sheet.tables.add(rangeString, true);
         table.name = 'Example';
-
         console.log('start sync');
-
         await context.sync();
-
-
       });
     } catch (error) {
       console.log(error);

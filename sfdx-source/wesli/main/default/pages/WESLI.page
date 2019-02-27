@@ -22,12 +22,23 @@
     <h2 id="sideload-msg" className='ms-fontSize-su ms-fontColor-neutralPrimary'>Please sideload your addin to see app
         body. </h2>
     <app-root></app-root>
+
+<apex:outputpanel layout="none" rendered="{!NOT(ISNULL($CurrentPage.Parameters.local))}">
+<script type="text/javascript" src="https://localhost:3000/runtime.js"></script>
+<script type="text/javascript" src="https://localhost:3000/polyfills.js"></script>
+<script type="text/javascript" src="https://localhost:3000/styles.js"></script>
+<script type="text/javascript" src="https://localhost:3000/vendor.js"></script>
+<script type="text/javascript" src="https://localhost:3000/main.js"></script>
+</apex:outputpanel>
     
+<apex:outputpanel layout="none" rendered="{!ISNULL($CurrentPage.Parameters.local)}">
 <script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/runtime.js')}"></script>
 <script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/polyfills.js')}"></script>
 <script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/styles.js')}"></script>
 <script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/vendor.js')}"></script>
 <script type="text/javascript" src="{!URLFOR($Resource.WESLI, '/dist/main.js')}"></script>
+</apex:outputpanel>
+
 </body>
 
 

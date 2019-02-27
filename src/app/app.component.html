@@ -1,3 +1,16 @@
+<style>
+    div.slds-popover_tooltip {
+        display: none;
+    }
+
+    a:hover+div.slds-popover_tooltip {
+        display: block;
+    }
+
+    div:hover+div.slds-popover_tooltip {
+        display: block;
+    }
+</style>
 <div id="excelapp" class="slds-scope">
     <form [formGroup]="queryForm">
         <article class="slds-card">
@@ -96,7 +109,7 @@
                                 <div class="slds-truncate" title="Field">Field</div>
                             </th>
                             <th class="" scope="col">
-                                <div class="slds-truncate" title="Label">Label</div>
+                                <div class="slds-truncate" title="Label">Type</div>
                             </th>
                         </tr>
                     </thead>
@@ -121,10 +134,23 @@
                                 </div>
                             </td>
                             <td role="gridcell">
-                                <div class="slds-truncate" title="fieldnme">{{field.value.meta.name}}</div>
+                                <div class="slds-truncate" title="fieldnme">{{field.value.meta.label}}</div>
+                                <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip"
+                                    id="help" style="position: absolute; top: -37px; left: 0px;">
+                                    <div class="slds-popover__body">{{field.value.meta.label}}</div>
+                                </div>
                             </td>
-                            <td role="gridcell">
-                                <div class="slds-truncate" title="label">{{field.value.meta.label}}</div>
+                            <td role="gridcell" *ngIf="field.value.meta.type != 'reference'">
+                                <div class="slds-truncate" title="label">{{field.value.meta.type}}</div>
+                            </td>
+                            <td role="gridcell" *ngIf="field.value.meta.type == 'reference'">
+                                <div class="slds-truncate">
+                                    <a href="javascript:void(0)" aria-describedby="help">Reference</a>
+                                    <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left"
+                                        role="tooltip" id="help" style="position: absolute; top: -37px; left: 0px;">
+                                        <div class="slds-popover__body">Click to describe</div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -206,7 +232,7 @@
                             </svg>
                             <span class="slds-assistive-text">Close</span>
                         </button>
-                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Modal Header</h2>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Saved Queries</h2>
                     </header>
                     <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
                         <table
@@ -217,7 +243,7 @@
                                     <th class="" scope="col">
                                         <div class="slds-truncate" title="Field">Query</div>
                                     </th>
-                                    <th class="" scope="col" style="width: 3.25rem;">
+                                    <th class="" scope="col" style="width: 7rem;">
                                         <div class="slds-truncate slds-assistive-text" title="Actions">Actions</div>
                                     </th>
                                 </tr>

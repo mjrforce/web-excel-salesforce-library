@@ -60,7 +60,8 @@
             "browserTarget": "web-excel-salesforce-library:build",
             "sslKey": "./certs/server.key",
             "sslCert": "./certs/server.crt",
-            "ssl": true
+            "ssl": true,
+            "port": 3000
           },
           "configurations": {
             "production": {

@@ -130,6 +130,7 @@ export class AppComponent {
       objname = obj.meta.referenceTo[0];
     }
     this.dataService.describe(objname).then(function (data) {
+
       this.ngZone.run(() => {
         if (typeof obj != 'undefined') {
           // data.meta.referenceFrom = obj
@@ -139,7 +140,15 @@ export class AppComponent {
           data.fields[i].referenceFrom = obj
           if (typeof obj != 'undefined') {
             data.fields[i].fullLabel = obj.meta.fullLabel + ':' + data.fields[i].label;
-            data.fields[i].fullName = obj.meta.fullName + '.' + data.fields[i].name;
+            var parent = obj.meta.fullName;
+            if (obj.meta.custom == false) {
+              if (parent.endsWith('Id')) {
+                parent = parent.slice(0, -2);
+              }
+            } else {
+              parent = parent.replace('__c', '__r');
+            }
+            data.fields[i].fullName = parent + '.' + data.fields[i].name;
           } else {
             data.fields[i].fullLabel = data.fields[i].label;
             data.fields[i].fullName = data.fields[i].name;
@@ -177,7 +186,7 @@ export class AppComponent {
     }
   }
 
-  updateFieldlist() {
+  async updateFieldlist() {
     var fields = this.queryForm.get('fields') as FormArray;
     this.fieldarray = [];
     for (var i = 0; i < fields.value.length; i++) {
@@ -278,12 +287,13 @@ export class AppComponent {
   }
 
   async run(soql: string, queryForm: any) {
-
-    this.dataService.query(soql, queryForm).then(function (data) {
-      data.queryForm = this.queryForm.value;
-      this.updateFieldlist();
-      data.fieldlist = this.fieldarray;
-      this.excelService.createTable(data);
+    this.excelService.fixQuery(soql).then(function (data) {
+      this.dataService.query(data, queryForm).then(function (data) {
+        data.queryForm = this.queryForm.value;
+        this.updateFieldlist();
+        data.fieldlist = this.fieldarray;
+        this.excelService.createTable(data);
+      }.bind(this));
     }.bind(this));
   }
 

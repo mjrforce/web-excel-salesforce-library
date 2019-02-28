@@ -56,9 +56,50 @@ export class ExcelService {
       return arr[key];
     }
   }
+  async getCellValue(a: string) {
+    return await Excel.run(async (context) => {
+      var sheet = context.workbook.worksheets.getItem(a.split('!')[0]);
+      var range = sheet.getRange(a.split('!')[1]);
+      range.load(['address', 'values']);
+      await context.sync();
+
+      var cellvalue = range.values[0][0];
+      if (typeof cellvalue == 'number')
+        return cellvalue;
+      else
+        return '\'' + cellvalue + '\'';
+    });
+  }
+
+  async fixQuery(q: string) {
+
+    if (q.toUpperCase().indexOf(' WHERE ') > -1) {
+
+      if (q.toUpperCase().indexOf(' EXCEL{{') > -1) {
+        var a = q.split(' EXCEL{{');
+        var qr = a.shift();
+        for (var i = 0; i < a.length; i++) {
+          var addr = a[i].split('}}')[0];
+          await this.getCellValue(addr).then(function (data) {
+            qr += data;
+          });
+
+          if (a[i].split('}}').length > 1)
+            qr += a[i].split('}}')[1];
+        }
+        console.log('old query: ' + q + ' new query: ' + qr);
+        return qr;
+      } else {
+        return q;
+      }
+    } else {
+      return q;
+    }
+  }
 
   parseObject(val: any) {
-
+    console.log('parsing...');
+    console.log(val);
     var row = [];
     for (var prop in val) {
       if (val.hasOwnProperty(prop)) {
@@ -75,6 +116,8 @@ export class ExcelService {
         }
       }
     }
+    console.log('returning....');
+    console.log(row);
     return row;
   }
 
@@ -84,7 +127,7 @@ export class ExcelService {
       await Excel.run(async context => {
         var h = [];
         for (var i = 0; i < data.fieldlist.length; i++) {
-          h.push(data.fieldlist[i].meta.label);
+          h.push(data.fieldlist[i].meta.fullLabel);
         }
 
         var sheetData = [];
@@ -98,11 +141,20 @@ export class ExcelService {
           const currRange = context.workbook.getSelectedRange();
           currRange.load('address');
           await context.sync();
+          var sheetname = '';
 
           if (data.queryForm.currentlocation == true) {
             rangeString = currRange.address.split('!')[1].split(':')[0];
+            sheetname = currRange.address.split('!')[0];
+
           } else {
             rangeString = data.loc;
+            if (data.loc.indexOf('!') > -1) {
+              sheetname = data.loc.split('!')[0];
+              rangeString = data.loc.split('!')[1];
+            } else {
+              sheetname = currRange.address.split('!')[0];
+            }
           }
 
           var colString = '';
@@ -119,28 +171,28 @@ export class ExcelService {
           rowoffset = parseInt(rowstring) - 1;
           rangeString = rangeString + ":";
         }
-        console.log('column offset: ' + coloffset);
 
         rangeString = rangeString + this.numberToChar(h.length + coloffset) + (data.result.records.length + 1 + rowoffset);
-        console.log('records:');
-        console.log(data.result.records);
-        console.log('fieldlist: ');
-        console.log(data.fieldlist);
         for (var i = 0; i < data.result.records.length; i++) {
           var row = [];
           var record = this.parseObject(data.result.records[i]);
 
-
-
           for (var j = 0; j < data.fieldlist.length; j++) {
             var f = data.fieldlist[j];
-            var val = record[f.meta.name];
+            var a = f.meta.fullName.split('.');
+            var val = record[a[0]];
+            for (var k = 1; k < a.length; k++) {
+              val = val[a[k]];
+            }
             row.push(val);
           }
           sheetData.push(row);
         }
 
         var sheet = context.workbook.worksheets.getActiveWorksheet();
+        if (sheetname.length > 0) {
+          sheet = context.workbook.worksheets.getItem(sheetname);
+        }
         var range = sheet.getRange(rangeString);
 
 

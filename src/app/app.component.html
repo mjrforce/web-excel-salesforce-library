@@ -75,8 +75,8 @@
                                         aria-hidden="true">
                                         <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#search" />
                                     </svg>
-                                    <input id="text-input-id-1" placeholder="Placeholder Text" class="slds-input"
-                                        type="text" value="" />
+                                    <input id="text-input-id-1" formControlName="search" placeholder="Search ..."
+                                        class="slds-input" type="text" />
                                 </div>
                             </div>
                         </div>
@@ -85,6 +85,7 @@
                 </header>
             </div>
             <div class="slds-card__body" *ngIf="isLoggedIn">
+                {{search}}
                 <table
                     class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout"
                     role="grid">
@@ -134,10 +135,10 @@
                                 </div>
                             </td>
                             <td role="gridcell">
-                                <div class="slds-truncate" title="fieldnme">{{field.value.meta.label}}</div>
+                                <div class="slds-truncate" title="fieldname">{{field.value.meta.fullLabel}}</div>
                                 <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip"
                                     id="help" style="position: absolute; top: -37px; left: 0px;">
-                                    <div class="slds-popover__body">{{field.value.meta.label}}</div>
+                                    <div class="slds-popover__body">{{field.value.meta.fullLabel}}</div>
                                 </div>
                             </td>
                             <td role="gridcell" *ngIf="field.value.meta.type != 'reference'">
@@ -145,7 +146,8 @@
                             </td>
                             <td role="gridcell" *ngIf="field.value.meta.type == 'reference'">
                                 <div class="slds-truncate">
-                                    <a href="javascript:void(0)" aria-describedby="help">Reference</a>
+                                    <a href="javascript:void(0)" (click)="describeRelationship(i)"
+                                        aria-describedby="help">Reference</a>
                                     <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left"
                                         role="tooltip" id="help" style="position: absolute; top: -37px; left: 0px;">
                                         <div class="slds-popover__body">Click to describe</div>
@@ -153,6 +155,7 @@
                                 </div>
                             </td>
                         </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -160,7 +163,7 @@
                 <div class="slds-form-element">
                     <label class="slds-form-element__label" for="textarea-id-01">SOQL</label>
                     <div class="slds-form-element__control">
-                        <textarea id="textarea-id-01" class="slds-textarea" placeholder="Placeholder Text"
+                        <textarea id="textarea-id-01" class="slds-textarea" placeholder="SELECT ..."
                             formControlName="soql"></textarea>
                     </div>
                 </div>

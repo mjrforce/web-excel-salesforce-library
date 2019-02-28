@@ -27,13 +27,16 @@ export class AppComponent {
   openSave = false;
   openQueries = false;
   fieldarray = [];
+  filtered = new FormArray([]);
+  describes = {};
   queryForm = new FormGroup({
     label: new FormControl(''),
     soql: new FormControl(''),
     object: new FormControl(''),
     fields: new FormArray([]),
     usecustomloginurl: new FormControl(''),
-    customurl: new FormControl('')
+    customurl: new FormControl(''),
+    search: new FormControl('')
   });
 
   constructor(
@@ -46,14 +49,13 @@ export class AppComponent {
     @Inject(APP_BASE_HREF) private baseHref: string) {
 
   }
-
+  searchchanged() {
+    console.log(this.queryForm.value.search);
+  }
   ngOnInit() {
     this.ngZone.run(() => {
 
       this.loadQueries();
-      console.log('queries: ');
-      console.log(this.queries);
-
       this.isLoggedIn = this.authService.isLoggedIn();
       if (this.isLoggedIn == true) {
         this.initObjects();
@@ -64,7 +66,8 @@ export class AppComponent {
         object: '',
         fields: [],
         usecustomloginurl: false,
-        customurl: 'https://login.salesforce.com'
+        customurl: 'https://login.salesforce.com',
+        search: ''
       };
       if (this.queries.length > 0) {
         this.selectQuery(0);
@@ -98,22 +101,51 @@ export class AppComponent {
     });
   }
 
-  onObjectChange() {
-    console.log(this.queryForm.value.object)
-    this.dataService.describe(this.queryForm.value.object).then(function (data) {
+  async describeRelationship(i: number) {
+    var fields = this.queryForm.get('fields') as FormArray;
+    console.log(i);
+    console.log(fields.value);
+    console.log(fields.value[i]);
+
+    if (this.describes.hasOwnProperty(fields.value[i].meta.referenceTo[0])) {
+      console.log('has ' + fields.value[i].meta.referenceTo[0]);
+    } else {
+      this.onObjectChange(fields.value[i]);
+    }
+  }
+
+  async onObjectChange(obj?: any) {
+
+
+    var fields = this.queryForm.get('fields') as FormArray;
+    var objname = this.queryForm.value.object;
+    console.log(typeof obj);
+    if (typeof obj == 'undefined') {
+
+      this.describes = {};
+      while (fields.length) {
+        fields.removeAt(0);
+      }
+    } else {
+      objname = obj.meta.referenceTo[0];
+    }
+    this.dataService.describe(objname).then(function (data) {
       this.ngZone.run(() => {
-
-        var fields = this.queryForm.get('fields') as FormArray;
-        while (fields.length) {
-          fields.removeAt(0);
+        if (typeof obj != 'undefined') {
+          // data.meta.referenceFrom = obj
         }
-
-        console.log(data.fields);
+        this.describes[objname] = data;
         for (var i = 0; i < data.fields.length; i++) {
+          data.fields[i].referenceFrom = obj
+          if (typeof obj != 'undefined') {
+            data.fields[i].fullLabel = obj.meta.fullLabel + ':' + data.fields[i].label;
+            data.fields[i].fullName = obj.meta.fullName + '.' + data.fields[i].name;
+          } else {
+            data.fields[i].fullLabel = data.fields[i].label;
+            data.fields[i].fullName = data.fields[i].name;
+          }
           fields.push(this.createField(data.fields[i]));
         }
-
-
       })
     }.bind(this));
   }
@@ -155,7 +187,8 @@ export class AppComponent {
     }
   }
 
-  updateSOQL() {
+  async updateSOQL() {
+    console.log('update soql');
     var fields = this.queryForm.get('fields') as FormArray;
     var q = 'SELECT ';
     var f = [];
@@ -163,22 +196,20 @@ export class AppComponent {
     console.log(fields);
     for (var i = 0; i < fields.value.length; i++) {
       if (fields.value[i].selected == true) {
-        f.push(fields.value[i].meta.name);
+        f.push(fields.value[i].meta.fullName);
         this.fieldarray.push(fields.value[i]);
       }
     }
     if (f.length == 0) {
       q = '';
     } else {
-      console.log(this.queryForm.value.object)
+
       q += f.join(',') + ' FROM ' + this.queryForm.value.object
     }
 
     this.ngZone.run(() => {
       var value = this.queryForm.value;
-      console.log(value);
       value.soql = q;
-      console.log(value);
       this.queryForm.setValue(value);
     });
 

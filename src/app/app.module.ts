@@ -13,10 +13,13 @@ import { ExcelService } from './services/excel-service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Query } from './classes/Query';
+import { FilterPipe } from './pipes/filter-pipe';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    FilterPipe
+
   ],
   imports: [
     BrowserModule,
@@ -31,6 +34,7 @@ import { Query } from './classes/Query';
     OAuthService,
     ExcelService,
     Query,
+
     [{ provide: APP_BASE_HREF, useValue: environment.baseURL }]
   ],
   bootstrap: [AppComponent]

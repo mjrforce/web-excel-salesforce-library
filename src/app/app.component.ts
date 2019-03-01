@@ -176,11 +176,24 @@ export class AppComponent {
   async updateFieldlist() {
     var fields = this.queryForm.get('fields') as FormArray;
     this.fieldarray = [];
-    for (var i = 0; i < fields.value.length; i++) {
-      if (fields.value[i].selected == true) {
-        this.fieldarray.push(fields.value[i]);
+    var q = this.queryForm.value.soql.toLowerCase();
+    console.log(q);
+
+    var a = q.trim().search(/select /);
+    var b = q.search(/ from /);
+    console.log(a);
+    console.log(b);
+    var arr = q.trim().substring(a + 7, b).replace(/\s/g, "").split(',');
+    console.log(arr);
+
+    for (var i = 0; i < arr.length; i++) {
+      console.log(fields.value[i].meta.fullName.toLowerCase());
+      if (fields.value.filter(function (val) { return val.meta.fullName.toLowerCase() == arr[i] }).length == 1) {
+        this.fieldarray.push(fields.value.filter(function (val) { return val.meta.fullName.toLowerCase() == arr[i] })[0]);
       }
     }
+    console.log('fieldarray: ');
+    console.log(this.fieldarray);
   }
 
   async updateSOQL() {
@@ -298,6 +311,7 @@ export class AppComponent {
       this.dataService.query(data, queryForm).then(function (data) {
         data.queryForm = this.queryForm.value;
         this.updateFieldlist();
+        console.log(this.fieldarray);
         data.fieldlist = this.fieldarray;
         this.excelService.createTable(data);
       }.bind(this));

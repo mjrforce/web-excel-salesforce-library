@@ -224,10 +224,22 @@ export class AppComponent {
 
 
   }
+  get filteredResults() {
+    var fields = this.queryForm.get('fields') as FormArray;
+    return fields.controls.filter(function (field) {
+      var search = this.queryForm.value.search;
+      var matchName = (field.value.meta.fullName.toUpperCase().indexOf(search.toUpperCase()) > -1);
+      var matchLabel = (field.value.meta.fullLabel.toUpperCase().indexOf(search.toUpperCase()) > -1);
+      var doFilter = (search != '' && search != null);
+      return (doFilter == false || (matchName || matchLabel));
+    }.bind(this));
+  }
 
   initObjects() {
     this.dataService.globalDescribe().then(function (data) {
-      this.objects = data.sobjects;
+      this.objects = data.sobjects.filter(function (sobj) {
+        return sobj.queryable = true && sobj.searchable == true;
+      });
     }.bind(this));
   }
 

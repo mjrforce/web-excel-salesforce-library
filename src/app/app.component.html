@@ -117,7 +117,7 @@
                     <tbody>
 
                         <tr formArrayName="fields" class="slds-hint-parent"
-                            *ngFor="let field of f.fields.controls; let i = index;">
+                            *ngFor="let field of filteredResults; let i = index;">
 
 
                             <td class="slds-text-align_right" role="gridcell">
@@ -169,7 +169,7 @@
                 </div>
             </footer>
         </article>
-        <div style="height: 180px;">
+        <div style="height: 180px;" *ngIf="isLoggedIn">
             <div class="slds-docked-form-footer">
                 <button type="button" class="slds-button slds-button_neutral" (click)="runQuery()">Run</button>
                 <button type="button" class="slds-button slds-button_neutral" (click)="openthequeries()">List</button>

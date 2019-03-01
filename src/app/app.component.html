@@ -268,9 +268,9 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody cdkDropList (cdkDropListDropped)="drop($event)">
 
-                                <tr class="slds-hint-parent" *ngFor="let q of queries; let i = index;">
+                                <tr class="slds-hint-parent" *ngFor="let q of queries; let i = index;" cdkDrag>
                                     <td role="gridcell">
                                         <div class="slds-truncate" title="qlabel">{{q.label}}</div>
                                     </td>

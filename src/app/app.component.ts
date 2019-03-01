@@ -10,6 +10,7 @@ import { environment } from '../environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
 import { NgZone } from '@angular/core';
 import { QUERIES } from '@angular/core/src/render3/interfaces/view';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 
 declare const Excel: any;
@@ -234,15 +235,16 @@ export class AppComponent {
       .filter(function (field) {
         var search = this.queryForm.value.search;
         var selectedonly = this.queryForm.value.selectedonly;
+
         var matchName = true;
         var matchLabel = true;
         if (search != null) {
           matchName = (field.value.meta.fullName.toUpperCase().indexOf(search.toUpperCase()) > -1);
           matchLabel = (field.value.meta.fullLabel.toUpperCase().indexOf(search.toUpperCase()) > -1);
         }
-        var doFilter = ((search != '' && search != null) || selectedonly);
+        var doFilter = (search != '' && search != null);
 
-        return (doFilter == false || (matchName || matchLabel)) && (selectedonly == false || field.value.selected);
+        return (doFilter == false || (matchName || matchLabel)) && (selectedonly == false || selectedonly == null || field.value.selected);
       }.bind(this));
   }
 
@@ -294,6 +296,10 @@ export class AppComponent {
         fields.push(this.createField(data.fields[j].meta, data.fields[j].selected));
       }
     })
+  }
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.queries, event.previousIndex, event.currentIndex);
+    this.officeService.saveToPropertyBag('queries', JSON.stringify(this.queries));
   }
 
   async runQuery() {

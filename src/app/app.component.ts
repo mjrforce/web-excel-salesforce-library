@@ -105,25 +105,15 @@ export class AppComponent {
 
   async describeRelationship(i: number) {
     var fields = this.queryForm.get('fields') as FormArray;
-    console.log(i);
-    console.log(fields.value);
-    console.log(fields.value[i]);
-
-    if (this.describes.hasOwnProperty(fields.value[i].meta.referenceTo[0])) {
-      console.log('has ' + fields.value[i].meta.referenceTo[0]);
-    } else {
-      this.onObjectChange(fields.value[i]);
-    }
+    this.onObjectChange(fields.value[i]);
   }
 
   async onObjectChange(obj?: any) {
 
-
     var fields = this.queryForm.get('fields') as FormArray;
     var objname = this.queryForm.value.object;
-    console.log(typeof obj);
-    if (typeof obj == 'undefined') {
 
+    if (typeof obj == 'undefined') {
       this.describes = {};
       while (fields.length) {
         fields.removeAt(0);
@@ -134,9 +124,6 @@ export class AppComponent {
     this.dataService.describe(objname).then(function (data) {
 
       this.ngZone.run(() => {
-        if (typeof obj != 'undefined') {
-          // data.meta.referenceFrom = obj
-        }
         this.describes[objname] = data;
         for (var i = 0; i < data.fields.length; i++) {
           data.fields[i].referenceFrom = obj
@@ -170,9 +157,7 @@ export class AppComponent {
 
   saveQuery() {
     this.queries.push(this.queryForm.value);
-    console.log(this.queries);
     this.officeService.saveToPropertyBag('queries', JSON.stringify(this.queries));
-    console.log(this.officeService.getFromPropertyBag('queries'));
     this.closeSave();
   }
 
@@ -199,12 +184,10 @@ export class AppComponent {
   }
 
   async updateSOQL() {
-    console.log('update soql');
     var fields = this.queryForm.get('fields') as FormArray;
     var q = 'SELECT ';
     var f = [];
     this.fieldarray = [];
-    console.log(fields);
     for (var i = 0; i < fields.value.length; i++) {
       if (fields.value[i].selected == true) {
         f.push(fields.value[i].meta.fullName);
@@ -214,7 +197,6 @@ export class AppComponent {
     if (f.length == 0) {
       q = '';
     } else {
-
       q += f.join(',') + ' FROM ' + this.queryForm.value.object
     }
 
@@ -263,8 +245,6 @@ export class AppComponent {
 
   onSubmit() {
     this.submitted = true;
-
-    // stop here if form is invalid
     if (this.queryForm.invalid) {
       return;
     }
@@ -297,7 +277,6 @@ export class AppComponent {
         fields.removeAt(0);
       }
 
-      console.log(data.fields);
       for (var j = 0; j < data.fields.length; j++) {
         fields.push(this.createField(data.fields[j].meta, data.fields[j].selected));
       }

@@ -22,14 +22,11 @@ declare const Excel: any;
 
 export class AppComponent {
   isLoggedIn = false;
-  submitted = false;
   objects = [];
   queries = [];
   openSave = false;
   openQueries = false;
-  fieldarray = [];
-  filtered = new FormArray([]);
-  describes = {};
+
   queryForm = new FormGroup({
     label: new FormControl(''),
     soql: new FormControl(''),
@@ -115,7 +112,6 @@ export class AppComponent {
     var objname = this.queryForm.value.object;
 
     if (typeof obj == 'undefined') {
-      this.describes = {};
       while (fields.length) {
         fields.removeAt(0);
       }
@@ -125,7 +121,6 @@ export class AppComponent {
     this.dataService.describe(objname).then(function (data) {
 
       this.ngZone.run(() => {
-        this.describes[objname] = data;
         for (var i = 0; i < data.fields.length; i++) {
           data.fields[i].referenceFrom = obj
           if (typeof obj != 'undefined') {
@@ -174,38 +169,30 @@ export class AppComponent {
     }
   }
 
-  async updateFieldlist() {
-    var fields = this.queryForm.get('fields') as FormArray;
-    this.fieldarray = [];
-    var q = this.queryForm.value.soql.toLowerCase();
-    console.log(q);
+  async updateFieldlist(data: any) {
 
+    var fields = data.qf.fields;
+    var q = data.q.toLowerCase();
+    data.fieldlist = [];
     var a = q.trim().search(/select /);
     var b = q.search(/ from /);
-    console.log(a);
-    console.log(b);
     var arr = q.trim().substring(a + 7, b).replace(/\s/g, "").split(',');
-    console.log(arr);
 
     for (var i = 0; i < arr.length; i++) {
-      console.log(fields.value[i].meta.fullName.toLowerCase());
-      if (fields.value.filter(function (val) { return val.meta.fullName.toLowerCase() == arr[i] }).length == 1) {
-        this.fieldarray.push(fields.value.filter(function (val) { return val.meta.fullName.toLowerCase() == arr[i] })[0]);
+      if (fields.filter(function (val) { return val.meta.fullName.toLowerCase() == arr[i] }).length == 1) {
+        data.fieldlist.push(fields.filter(function (val) { return val.meta.fullName.toLowerCase() == arr[i] })[0]);
       }
     }
-    console.log('fieldarray: ');
-    console.log(this.fieldarray);
+
   }
 
   async updateSOQL() {
     var fields = this.queryForm.get('fields') as FormArray;
     var q = 'SELECT ';
     var f = [];
-    this.fieldarray = [];
     for (var i = 0; i < fields.value.length; i++) {
       if (fields.value[i].selected == true) {
         f.push(fields.value[i].meta.fullName);
-        this.fieldarray.push(fields.value[i]);
       }
     }
     if (f.length == 0) {
@@ -258,13 +245,6 @@ export class AppComponent {
 
   get f() { return this.queryForm.controls; }
 
-  onSubmit() {
-    this.submitted = true;
-    if (this.queryForm.invalid) {
-      return;
-    }
-  }
-
   deleteQuery(i: any) {
     this.queries.splice(i, 1);
     this.officeService.saveToPropertyBag('queries', JSON.stringify(this.queries));
@@ -308,6 +288,7 @@ export class AppComponent {
 
   async runAll() {
     for (var i = 0; i < this.queries.length; i++) {
+      this.selectQuery(i);
       this.run(this.queries[i].soql, this.queries[i]);
     }
   }
@@ -316,9 +297,7 @@ export class AppComponent {
     this.excelService.fixQuery(soql).then(function (data) {
       this.dataService.query(data, queryForm).then(function (data) {
         data.queryForm = this.queryForm.value;
-        this.updateFieldlist();
-        console.log(this.fieldarray);
-        data.fieldlist = this.fieldarray;
+        this.updateFieldlist(data);
         this.excelService.createTable(data);
       }.bind(this));
     }.bind(this));

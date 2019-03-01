@@ -228,19 +228,27 @@ export class AppComponent {
   }
   get filteredResults() {
     var fields = this.queryForm.get('fields') as FormArray;
-    return fields.controls.filter(function (field) {
-      var search = this.queryForm.value.search;
-      var selectedonly = this.queryForm.value.selectedonly;
-      var matchName = true;
-      var matchLabel = true;
-      if (search != null) {
-        matchName = (field.value.meta.fullName.toUpperCase().indexOf(search.toUpperCase()) > -1);
-        matchLabel = (field.value.meta.fullLabel.toUpperCase().indexOf(search.toUpperCase()) > -1);
-      }
-      var doFilter = ((search != '' && search != null) || selectedonly);
+    return fields.controls
+      .sort(function (a, b) {
+        if (a.value.meta.fullLabel > b.value.meta.fullLabel)
+          return 1;
+        if (a.value.meta.fullLabel < b.value.meta.fullLabel)
+          return -1;
+        return 0;
+      })
+      .filter(function (field) {
+        var search = this.queryForm.value.search;
+        var selectedonly = this.queryForm.value.selectedonly;
+        var matchName = true;
+        var matchLabel = true;
+        if (search != null) {
+          matchName = (field.value.meta.fullName.toUpperCase().indexOf(search.toUpperCase()) > -1);
+          matchLabel = (field.value.meta.fullLabel.toUpperCase().indexOf(search.toUpperCase()) > -1);
+        }
+        var doFilter = ((search != '' && search != null) || selectedonly);
 
-      return (doFilter == false || (matchName || matchLabel)) && (selectedonly == false || field.value.selected);
-    }.bind(this));
+        return (doFilter == false || (matchName || matchLabel)) && (selectedonly == false || field.value.selected);
+      }.bind(this));
   }
 
   initObjects() {

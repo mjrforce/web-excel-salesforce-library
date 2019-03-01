@@ -36,7 +36,8 @@ export class AppComponent {
     fields: new FormArray([]),
     usecustomloginurl: new FormControl(''),
     customurl: new FormControl(''),
-    search: new FormControl('')
+    search: new FormControl(''),
+    selectedonly: new FormControl()
   });
 
   constructor(
@@ -67,7 +68,8 @@ export class AppComponent {
         fields: [],
         usecustomloginurl: false,
         customurl: 'https://login.salesforce.com',
-        search: ''
+        search: '',
+        selectedonly: false
       };
       if (this.queries.length > 0) {
         this.selectQuery(0);
@@ -228,10 +230,16 @@ export class AppComponent {
     var fields = this.queryForm.get('fields') as FormArray;
     return fields.controls.filter(function (field) {
       var search = this.queryForm.value.search;
-      var matchName = (field.value.meta.fullName.toUpperCase().indexOf(search.toUpperCase()) > -1);
-      var matchLabel = (field.value.meta.fullLabel.toUpperCase().indexOf(search.toUpperCase()) > -1);
-      var doFilter = (search != '' && search != null);
-      return (doFilter == false || (matchName || matchLabel));
+      var selectedonly = this.queryForm.value.selectedonly;
+      var matchName = true;
+      var matchLabel = true;
+      if (search != null) {
+        matchName = (field.value.meta.fullName.toUpperCase().indexOf(search.toUpperCase()) > -1);
+        matchLabel = (field.value.meta.fullLabel.toUpperCase().indexOf(search.toUpperCase()) > -1);
+      }
+      var doFilter = ((search != '' && search != null) || selectedonly);
+
+      return (doFilter == false || (matchName || matchLabel)) && (selectedonly == false || field.value.selected);
     }.bind(this));
   }
 

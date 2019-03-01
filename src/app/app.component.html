@@ -38,9 +38,9 @@
 
 
 
-                    <div class="slds-grid slds-gutters">
+                    <div class="slds-grid slds-gutters slds-wrap">
 
-                        <div class="slds-col" *ngIf="!isLoggedIn">
+                        <div class="slds-col slds-size_2-of-2" *ngIf="!isLoggedIn">
                             <button type="button" id="loginbutton"
                                 class="slds-button slds-button_neutral  slds-not-selected slds-button_brand"
                                 aria-live="assertive" (click)="login()">
@@ -51,7 +51,8 @@
                                     </svg>Login </span>
                             </button>
                         </div>
-                        <div class="slds-col" *ngIf="isLoggedIn">
+
+                        <div class="slds-col slds-size_2-of-4" *ngIf="isLoggedIn">
                             <div class="slds-form-element">
                                 <div class="slds-form-element__control">
                                     <div class="slds-select_container">
@@ -68,7 +69,8 @@
 
 
                         </div>
-                        <div class="slds-col" *ngIf="isLoggedIn">
+
+                        <div class="slds-col slds-size_2-of-4" *ngIf="isLoggedIn">
                             <div class="slds-form-element">
                                 <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
                                     <svg class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default"
@@ -77,6 +79,21 @@
                                     </svg>
                                     <input id="text-input-id-1" formControlName="search" placeholder="Search ..."
                                         class="slds-input" type="text" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1" *ngIf="isLoggedIn">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-checkbox">
+                                        <input type="checkbox" name="onlyselected" formControlName="selectedonly"
+                                            id="onlyselected" value="onlyselected" />
+                                        <label class="slds-checkbox__label" for="onlyselected">
+                                            <span class="slds-checkbox_faux"></span>
+                                            <span class="slds-form-element__label">Show only selected fields</span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

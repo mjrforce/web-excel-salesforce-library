@@ -101,6 +101,16 @@
 
                 </header>
             </div>
+            <div class="slds-card__body" *ngIf="!isLoggedIn">
+                <div class="slds-col slds-size_1-of-1" *ngIf="!isLoggedIn">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                            <input id="text-input-id-2" formControlName="customurl" placeholder="Login Url"
+                                class="slds-input" type="text" />
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="slds-card__body" *ngIf="isLoggedIn">
                 {{search}}
                 <table
@@ -272,7 +282,7 @@
 
                                 <tr class="slds-hint-parent" *ngFor="let q of queries; let i = index;" cdkDrag>
                                     <td role="gridcell">
-                                        <div class="slds-truncate" title="qlabel">{{q.label}}</div>
+                                        <div class="slds-truncate" title="{{q.label}}">{{q.label}}</div>
                                     </td>
                                     <td role="gridcell">
                                         <button

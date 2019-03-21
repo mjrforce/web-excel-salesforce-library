@@ -1,0 +1,46 @@
+{
+    "summary": {
+        "outcome": "Passed",
+        "testsRan": 1,
+        "passing": 1,
+        "failing": 0,
+        "skipped": 0,
+        "passRate": "100%",
+        "failRate": "0%",
+        "testStartTime": "Mar 6, 2019 3:35 PM",
+        "testExecutionTime": "37 ms",
+        "testTotalTime": "37 ms",
+        "commandTime": "4676 ms",
+        "hostname": "https://wesli-dev-ed.my.salesforce.com",
+        "orgId": "00D1U000000ybgBUAQ",
+        "username": "matthew.rumschlag@appirio.com.wesli",
+        "testRunId": "7071U00000W54Wj",
+        "userId": "0051U000003HneLQAS"
+    },
+    "tests": [
+        {
+            "attributes": {
+                "type": "ApexTestResult",
+                "url": "/services/data/v44.0/tooling/sobjects/ApexTestResult/07M1U000007QNwcUAG"
+            },
+            "Id": "07M1U000007QNwcUAG",
+            "QueueItemId": "7091U0000001XsxQAE",
+            "StackTrace": null,
+            "Message": null,
+            "AsyncApexJobId": "7071U00000W54WjQAJ",
+            "MethodName": "testOAuthService",
+            "Outcome": "Pass",
+            "ApexClass": {
+                "attributes": {
+                    "type": "ApexClass",
+                    "url": "/services/data/v44.0/tooling/sobjects/ApexClass/01p1U00000FfViKQAV"
+                },
+                "Id": "01p1U00000FfViKQAV",
+                "Name": "WESLI_OAuth_Service_Test",
+                "NamespacePrefix": null
+            },
+            "RunTime": 37,
+            "FullName": "WESLI_OAuth_Service_Test.testOAuthService"
+        }
+    ]
+}

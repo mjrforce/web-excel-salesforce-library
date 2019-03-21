@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+    <testsuite name="force.apex" timestamp="2019-03-06T15:35:39-05:00" hostname="https://wesli-dev-ed.my.salesforce.com" tests="1" failures="0"  errors="0"  time="0.04">
+        <properties>
+            <property name="outcome" value="Passed"/>
+            <property name="testsRan" value="1"/>
+            <property name="passing" value="1"/>
+            <property name="failing" value="0"/>
+            <property name="skipped" value="0"/>
+            <property name="passRate" value="100%"/>
+            <property name="failRate" value="0%"/>
+            <property name="testStartTime" value="Mar 6, 2019 3:35 PM"/>
+            <property name="testExecutionTime" value="0.04 s"/>
+            <property name="testTotalTime" value="0.04 s"/>
+            <property name="commandTime" value="4.68 s"/>
+            <property name="hostname" value="https://wesli-dev-ed.my.salesforce.com"/>
+            <property name="orgId" value="00D1U000000ybgBUAQ"/>
+            <property name="username" value="matthew.rumschlag@appirio.com.wesli"/>
+            <property name="testRunId" value="7071U00000W54Wj"/>
+            <property name="userId" value="0051U000003HneLQAS"/>
+        </properties>
+        <testcase name="testOAuthService" classname="WESLI_OAuth_Service_Test" time="0.04">
+        </testcase>
+    </testsuite>
+</testsuites>

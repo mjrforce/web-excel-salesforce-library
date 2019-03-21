@@ -32,7 +32,6 @@ export class AppComponent {
     soql: new FormControl(''),
     object: new FormControl(''),
     fields: new FormArray([]),
-    usecustomloginurl: new FormControl(''),
     customurl: new FormControl(''),
     search: new FormControl(''),
     selectedonly: new FormControl()
@@ -64,7 +63,6 @@ export class AppComponent {
         soql: '',
         object: '',
         fields: [],
-        usecustomloginurl: false,
         customurl: 'https://login.salesforce.com',
         search: '',
         selectedonly: false
@@ -263,7 +261,6 @@ export class AppComponent {
         label: data.label,
         soql: data.soql,
         object: data.object,
-        usecustomloginurl: data.usecustomloginurl,
         customurl: data.customurl
       })
 
@@ -304,7 +301,7 @@ export class AppComponent {
   }
 
   login() {
-    var loginurl = (this.queryForm.value.usecustomloginurl ? this.queryForm.value.customurl : '');
+    var loginurl = this.queryForm.value.customurl;
     this.authService.login(loginurl).then(function () {
       this.ngZone.run(() => {
         this.isLoggedIn = this.authService.isLoggedIn();

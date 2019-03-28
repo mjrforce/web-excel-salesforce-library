@@ -67,6 +67,22 @@ export class QueryComponent {
     
   }
 
+  async runAll() {
+    var temp = this.SOQL;
+    for (var i = 0; i < this.savedQueryList.length; i++) {
+      this.run(this.savedQueryList[i]);
+    }
+  }
+
+  async run(soql?:string) {
+    console.log('running');
+    this.excelService.fixQuery(soql || this.SOQL).then(function (data) {
+      this.dataService.query(data).then(function (data) {
+        this.excelService.createTable(data);
+      }.bind(this));
+    }.bind(this));
+  }
+
    get filteredObjects(){
      return this.objects.filter(function(val){
        var str = this.searchObj || '';
@@ -111,13 +127,9 @@ export class QueryComponent {
    }
    
    checkUnCheckAll(){
-    console.log('starting check uncheck');
     this.ngZone.run(() => {
        this.fields.forEach(function (item, index) { 
-         console.log('is all: ' + this.isAll);
            item.isSelected = this.isAll;
-           console.log(item);
-         
        }.bind(this));
        
        this.updateSOQL();
@@ -199,7 +211,6 @@ getAllFields() {
 }
 
   getAllObjects() {
-    console.log('getting objects');
     this.apiCount = this.apiCount + 1;
     this.objects = [];
     this.dataService.globalDescribe().then(function (data) {

@@ -280,20 +280,19 @@ export class AppComponent {
   }
 
   async runQuery() {
-    this.run(this.queryForm.value.soql, this.queryForm.value);
+    this.run(this.queryForm.value.soql);
   }
 
   async runAll() {
     for (var i = 0; i < this.queries.length; i++) {
       this.selectQuery(i);
-      this.run(this.queries[i].soql, this.queries[i]);
+      this.run(this.queries[i].soql);
     }
   }
 
-  async run(soql: string, queryForm: any) {
+  async run(soql: string) {
     this.excelService.fixQuery(soql).then(function (data) {
-      this.dataService.query(data, queryForm).then(function (data) {
-        data.queryForm = this.queryForm.value;
+      this.dataService.query(data).then(function (data) {
         this.updateFieldlist(data);
         this.excelService.createTable(data);
       }.bind(this));

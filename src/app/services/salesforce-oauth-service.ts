@@ -22,10 +22,8 @@ export class OAuthService {
 
   login(loginUrl: string) {
     return new Promise(function (resolve, reject) {
-      console.log('requesting url: ' + loginUrl);
       this.dataService.getOauth2().then(function (oauth2) {
         if (loginUrl != oauth2.loginUrl && loginUrl != '') {
-          console.log('use custom url: ' + loginUrl);
           oauth2.loginUrl = loginUrl;
         }
         Office.onReady(function () {
@@ -35,13 +33,11 @@ export class OAuthService {
               '<!doctype html><body>' + url,
               'text/html');
             var decodedString = oauth2.loginUrl + dom.body.textContent;
-            console.log('Final url: ' + decodedString);
             Office.context.ui.displayDialogAsync(decodedString, {
               height: 70,
               width: 40
             },
               function (result) {
-                console.log(result);
                 this.dlg = result.value;
                 this.dlg.addEventHandler("dialogMessageReceived", function (arg) {
                   this.dlg.close();
@@ -66,8 +62,6 @@ export class OAuthService {
 
     return new Promise(function (resolve, reject) {
       var settings = JSON.parse(this.officeDataService.getFromLocalStorage('oauthresult'));
-      console.log('Settings: ' + JSON.stringify(settings));
-
       WESLI_OAuth_Service.getLogout(baseHref, settings.access_token,
         function (response: any, event: any) {
           if (event.statusCode == '200') {

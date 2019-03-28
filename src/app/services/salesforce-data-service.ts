@@ -3,6 +3,7 @@ import { OfficeDataService } from './office-data-service';
 import { APP_BASE_HREF } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { getQueryValue } from '@angular/core/src/view/query';
 
 declare const jsforce: any;
 declare const WESLI_OAuth_Service: any;
@@ -14,10 +15,8 @@ export class DataService {
     private officeService: OfficeDataService) { }
 
   OauthPromise = new Promise(function (resolve, reject) {
-    console.log('starting javascript remoting');
     WESLI_OAuth_Service.getSettings(function (response: any, event: any) {
       if (event.statusCode == '200') {
-        console.log(response);
         resolve(response);
       }
       else {
@@ -67,7 +66,7 @@ export class DataService {
     return c;
   }
 
-  async query(q: string, qf: any) {
+  async query(q: string) {
     return this.getConnection().then(function (conn) {
       var qs = q;
       var p = [];
@@ -84,10 +83,48 @@ export class DataService {
         if (o.indexOf(' WHERE') > -1)
           o = o.substring(0, o.indexOf(" WHERE"));
         o = o.trim();
-        var data = { object: o, fieldlist: f, q: qs, result: result, qf: qf, loc: loc };
+        console.log(f);
+        console.log('result');
+        console.log(result);
+        var table = [];
+        table.push(f);
+        for(var i=0; i<result.records.length; i++){
+          var rmap = this.getRow(result.records[i]);
+          var row = [];
+          for(var j = 0; j<f.length; j++){
+            var a = f[j].split('.');
+            var r = this.getValue(rmap, a);
+            row.push(r);
+          }
+          table.push(row);
+        }
+        var data = { object: o, fieldlist: f, q: qs, result: result, loc: loc, table: table }; 
+        console.log('data: ');
+        console.log(data);       
         return data;
-      });
-    });
+      }.bind(this));
+    }.bind(this));
+  }
+  
+  getValue(rmap, val){
+     var t = val;
+     var k = t.shift();
+     if(t.length > 0){
+       return this.getValue(rmap[k], t);
+     }else{
+       return rmap[k];
+     }
+  }
+  getRow(record){
+    var arr = [];
+    for(var property in record){
+      if(typeof record[property] == 'object'){
+        arr[property.toUpperCase()] = this.getRow(record[property]);  
+      }else{
+        arr[property.toUpperCase()] = record[property];
+      }     
+    }
+    return arr;
   }
 
   async globalDescribe() {

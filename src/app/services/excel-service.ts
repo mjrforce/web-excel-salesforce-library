@@ -87,7 +87,6 @@ export class ExcelService {
           if (a[i].split('}}').length > 1)
             qr += a[i].split('}}')[1];
         }
-        console.log('old query: ' + q + ' new query: ' + qr);
         return qr;
       } else {
         return q;
@@ -98,8 +97,6 @@ export class ExcelService {
   }
 
   parseObject(val: any) {
-    console.log('parsing...');
-    console.log(val);
     var row = [];
     for (var prop in val) {
       if (val.hasOwnProperty(prop)) {
@@ -116,8 +113,6 @@ export class ExcelService {
         }
       }
     }
-    console.log('returning....');
-    console.log(row);
     return row;
   }
 
@@ -125,29 +120,17 @@ export class ExcelService {
 
     try {
       await Excel.run(async context => {
-        var h = [];
-        for (var i = 0; i < data.fieldlist.length; i++) {
-          h.push(data.fieldlist[i].meta.fullLabel);
-        }
 
-        var sheetData = [];
-        sheetData.push(h);
 
         var rangeString = "A1:";
         var coloffset = 0;
         var rowoffset = 0;
 
-        if (data.queryForm.currentlocation == true || (data.loc != '' && data.loc != null)) {
+        if (data.loc != '' && data.loc != null){
           const currRange = context.workbook.getSelectedRange();
           currRange.load('address');
           await context.sync();
           var sheetname = '';
-
-          if (data.queryForm.currentlocation == true) {
-            rangeString = currRange.address.split('!')[1].split(':')[0];
-            sheetname = currRange.address.split('!')[0];
-
-          } else {
             rangeString = data.loc;
             if (data.loc.indexOf('!') > -1) {
               sheetname = data.loc.split('!')[0];
@@ -155,7 +138,7 @@ export class ExcelService {
             } else {
               sheetname = currRange.address.split('!')[0];
             }
-          }
+          
 
           var colString = '';
           var rowstring = '';
@@ -172,38 +155,18 @@ export class ExcelService {
           rangeString = rangeString + ":";
         }
 
-        rangeString = rangeString + this.numberToChar(h.length + coloffset) + (data.result.records.length + 1 + rowoffset);
-        for (var i = 0; i < data.result.records.length; i++) {
-          var row = [];
-          var record = this.parseObject(data.result.records[i]);
-
-          for (var j = 0; j < data.fieldlist.length; j++) {
-            var f = data.fieldlist[j];
-            var a = f.meta.fullName.split('.');
-            var val = record[a[0]];
-            for (var k = 1; k < a.length; k++) {
-              val = val[a[k]];
-            }
-            row.push(val);
-          }
-          sheetData.push(row);
-        }
-
+        rangeString = rangeString + 
+                      this.numberToChar(data.table[0].length + coloffset) + 
+                      (data.result.records.length + 1 + rowoffset);
+        
         var sheet = context.workbook.worksheets.getActiveWorksheet();
         if (sheetname.length > 0) {
           sheet = context.workbook.worksheets.getItem(sheetname);
         }
         var range = sheet.getRange(rangeString);
-
-
-        range.values = sheetData;
-
-        console.log('table');
-        console.log(sheetData);
-        console.log(rangeString);
+        range.values = data.table;
         var table = sheet.tables.add(rangeString, true);
         table.name = 'Example';
-        console.log('start sync');
         await context.sync();
       });
     } catch (error) {

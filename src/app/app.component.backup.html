@@ -1,0 +1,333 @@
+<style>
+    div.slds-popover_tooltip {
+        display: none;
+    }
+
+    a:hover+div.slds-popover_tooltip {
+        display: block;
+    }
+
+    div:hover+div.slds-popover_tooltip {
+        display: block;
+    }
+</style>
+<div id="excelapp" class="slds-scope">
+    <form [formGroup]="queryForm">
+        <article class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media" *ngIf="!isLoggedIn">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-doctype-excel" title="Excel">
+                                <svg class="slds-icon" aria-hidden="true">
+                                    <use xlink:href="/_slds/icons/doctype-sprite/svg/symbols.svg#excel"> </use>
+                                </svg> <span class="slds-assistive-text">Description</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <span class="slds-page-header__title slds-truncate"
+                                            title="Recently Viewed">WESLI</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="slds-grid slds-gutters slds-wrap">
+
+                        <div class="slds-col slds-size_2-of-2" *ngIf="!isLoggedIn">
+                            <button type="button" id="loginbutton"
+                                class="slds-button slds-button_neutral  slds-not-selected slds-button_brand"
+                                aria-live="assertive" (click)="login()">
+                                <span class="slds-text-not-selected">
+                                    <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left"
+                                        aria-hidden="true">
+                                        <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                    </svg>Login </span>
+                            </button>
+                        </div>
+
+                        <div class="slds-col slds-size_2-of-4" *ngIf="isLoggedIn">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select_container">
+                                        <select (change)="onObjectChange()" formControlName="object" class="slds-select"
+                                            id="select-01">
+                                            <option value="">Please select</option>
+                                            <option *ngFor="let obj of objects" [value]="obj.name">
+                                                {{obj.label}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="slds-col slds-size_2-of-4" *ngIf="isLoggedIn">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+                                    <svg class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default"
+                                        aria-hidden="true">
+                                        <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#search" />
+                                    </svg>
+                                    <input id="text-input-id-1" formControlName="search" placeholder="Search ..."
+                                        class="slds-input" type="text" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1" *ngIf="isLoggedIn">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-checkbox">
+                                        <input type="checkbox" name="onlyselected" formControlName="selectedonly"
+                                            id="onlyselected" value="onlyselected" />
+                                        <label class="slds-checkbox__label" for="onlyselected">
+                                            <span class="slds-checkbox_faux"></span>
+                                            <span class="slds-form-element__label">Show only selected fields</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </header>
+            </div>
+            <div class="slds-card__body" *ngIf="!isLoggedIn">
+                <div class="slds-col slds-size_1-of-1" *ngIf="!isLoggedIn">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                            <input id="text-input-id-2" formControlName="customurl" placeholder="Login Url"
+                                class="slds-input" type="text" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-card__body" *ngIf="isLoggedIn">
+                {{search}}
+                <table
+                    class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout"
+                    role="grid">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th class="slds-text-align_right" scope="col" style="width: 3.25rem;">
+                                <span id="column-group-header" class="slds-assistive-text">Choose a row</span>
+                                <div class="slds-th__action slds-th__action_form">
+                                    <div class="slds-checkbox">
+                                        <input type="checkbox" name="options" id="checkbox-header" tabindex="-1"
+                                            aria-labelledby="check-select-all-label column-group-header"
+                                            value="checkbox-header" />
+                                        <label class="slds-checkbox__label" for="checkbox-header"
+                                            id="check-select-all-label">
+                                            <span class="slds-checkbox_faux"></span>
+                                            <span class="slds-form-element__label slds-assistive-text">Select All</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Field">Field</div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Label">Type</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr formArrayName="fields" class="slds-hint-parent"
+                            *ngFor="let field of filteredResults; let i = index;">
+
+
+                            <td class="slds-text-align_right" role="gridcell">
+                                <div [formGroupName]="i" class="slds-checkbox">
+                                    <input type="checkbox" name="selected" formControlName="selected"
+                                        id="checkbox-{{i}}" tabindex="-1"
+                                        aria-labelledby="check-button-label-01 column-group-header"
+                                        value="checkbox-{{i}}" (change)="updateSOQL()" />
+                                    <label class="slds-checkbox__label" for="checkbox-{{i}}"
+                                        id="check-button-label-{{i}}">
+                                        <span class="slds-checkbox_faux"></span>
+                                        <span class="slds-form-element__label slds-assistive-text">Select item
+                                            {{i}}</span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td role="gridcell">
+                                <div class="slds-truncate" title="fieldname">{{field.value.meta.fullLabel}}</div>
+                                <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip"
+                                    id="help" style="position: absolute; top: -37px; left: 0px;">
+                                    <div class="slds-popover__body">{{field.value.meta.fullLabel}}</div>
+                                </div>
+                            </td>
+                            <td role="gridcell" *ngIf="field.value.meta.type != 'reference'">
+                                <div class="slds-truncate" title="label">{{field.value.meta.type}}</div>
+                            </td>
+                            <td role="gridcell" *ngIf="field.value.meta.type == 'reference'">
+                                <div class="slds-truncate">
+                                    <a href="javascript:void(0)" (click)="describeRelationship(i)"
+                                        aria-describedby="help">Reference</a>
+                                    <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left"
+                                        role="tooltip" id="help" style="position: absolute; top: -37px; left: 0px;">
+                                        <div class="slds-popover__body">Click to describe</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <footer class="slds-card__footer" *ngIf="isLoggedIn">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="textarea-id-01">SOQL</label>
+                    <div class="slds-form-element__control">
+                        <textarea id="textarea-id-01" class="slds-textarea" placeholder="SELECT ..."
+                            formControlName="soql"></textarea>
+                    </div>
+                </div>
+            </footer>
+        </article>
+        <div style="height: 180px;" *ngIf="isLoggedIn">
+            <div class="slds-docked-form-footer">
+                <button type="button" class="slds-button slds-button_neutral" (click)="runQuery()">Run</button>
+                <button type="button" class="slds-button slds-button_neutral" (click)="openthequeries()">List</button>
+                <button type="button" class="slds-button slds-button_brand" (click)="openthesave()">Save</button>
+
+                <button *ngIf="isLoggedIn" type="button" id="logoutbutton"
+                    class="slds-button slds-not-selected slds-button_brand" aria-live="assertive" (click)="logout()">
+                    <span class="slds-text-not-selected">
+                        <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left"
+                            aria-hidden="true">
+                            <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#logout"></use>
+                        </svg>Logout
+                    </span>
+                </button>
+
+
+            </div>
+        </div>
+
+
+        <div class="demo-only" style="height: 640px;" *ngIf="openSave">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" (click)="closeSave()">
+                            <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close" />
+                            </svg>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Save Query</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="text-input-query">Query Name</label>
+                            <div class="slds-form-element__control">
+                                <input id="text-input-query" formControlName="label" placeholder="My Account Query"
+                                    class="slds-input" type="text" value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" (click)="closeSave()">Cancel</button>
+                        <button class="slds-button slds-button_brand" (click)="saveQuery()">Save</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+
+
+        <div class="demo-only" style="height: 640px;" *ngIf="openQueries">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" (click)="closeQueries()">
+                            <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close" />
+                            </svg>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Saved Queries</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <table
+                            class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout"
+                            role="grid">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Field">Query</div>
+                                    </th>
+                                    <th class="" scope="col" style="width: 7rem;">
+                                        <div class="slds-truncate slds-assistive-text" title="Actions">Actions</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+
+                                <tr class="slds-hint-parent" *ngFor="let q of queries; let i = index;" cdkDrag>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate" title="{{q.label}}">{{q.label}}</div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <button
+                                            class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small"
+                                            aria-haspopup="true" tabindex="-1" (click)="selectAndRunQuery(i)"
+                                            title="Run">
+                                            <svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small"
+                                                aria-hidden="true">
+                                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#play" />
+                                            </svg>
+                                            <span class="slds-assistive-text"></span>
+                                        </button>
+                                        <button
+                                            class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small"
+                                            aria-haspopup="true" tabindex="-1" (click)="selectQuery(i)" title="Select">
+                                            <svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small"
+                                                aria-hidden="true">
+                                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#check" />
+                                            </svg>
+                                            <span class="slds-assistive-text"></span>
+                                        </button>
+                                        <button
+                                            class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small"
+                                            aria-haspopup="true" tabindex="-1" (click)="deleteQuery(i)" title="Delete">
+                                            <svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small"
+                                                aria-hidden="true">
+                                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close" />
+                                            </svg>
+                                            <span class="slds-assistive-text"></span>
+                                        </button>
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" (click)="closeQueries()">Cancel</button>
+                        <button class="slds-button slds-button_brand" (click)="runAll()">Run All</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+
+    </form>
+</div>

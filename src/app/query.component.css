@@ -1,0 +1,28 @@
+body{
+    font-size:12px;
+}
+.roundedCorner {
+        -webkit-border-radius: 5px !important;
+        -moz-border-radius: 5px !important;
+        border-radius: 5px !important;
+        -webkit-border-top: 5px !important;
+        -moz-border-top: 5px !important;
+        border-top: 5px !important;
+        -webkit-border-bottom: 5px !important;
+        -moz-border-bottom: 5px !important;
+        border-bottom: 5px !important;
+        padding-left : 30px;
+        border:1px solid #CCCCCC !important; 
+}
+.labelFull { 
+        width: 100%;
+        display: inline-block !important;
+        }
+        
+.scrollV {
+    overflow-y: auto !important;
+    height : 150px;
+}
+select[multiple], select[size] {
+    height: 150px;
+}

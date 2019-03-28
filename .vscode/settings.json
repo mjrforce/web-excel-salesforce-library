@@ -1,5 +1,6 @@
 {
     "html.suggest.angular1": false,
     "html.suggest.ionic": false,
-    "salesforcedx-vscode-core.retrieve-test-code-coverage": true
+    "salesforcedx-vscode-core.retrieve-test-code-coverage": true,
+    "eslint.nodePath": "c:\\Users\\mrumschl\\.vscode\\extensions\\salesforce.salesforcedx-vscode-lwc-45.7.0\\node_modules"
 }

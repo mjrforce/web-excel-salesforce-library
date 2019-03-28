@@ -4,9 +4,7 @@
             <div class="container">
                 <div class="navbar-header"> 
                     <a class="navbar-brand" href="#">Salesforce Query Builder</a>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="http://shivasoft.in/blog"> created By - Jitendra Zaa </a></li>
-                    </ul>
+                    
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -92,7 +90,8 @@
 					<div class="form-group">
 					  <label class="col-md-1 control-label" > </label>
 					  <div class="col-md-11">                     
-						 <button (click)="run()" id="singlebutton" name="singlebutton" class="btn btn-info">Run Query </button>
+             <button (click)="run()" id="singlebutton" name="singlebutton" class="btn btn-info">Run Query </button>
+             <button *ngIf="savedQueryList.length > 0" (click)="runAll()" id="singlebutton2" name="singlebutton2" class="btn btn-info">Run All </button>
                           <a href="#"  data-toggle="modal" data-target="#saveQuery" class="btn btn-default"> Save
                               <span class="glyphicon glyphicon-floppy-save"></span>
                           </a>
@@ -102,7 +101,8 @@
                           </a>
                           
 					  </div>
-					</div>
+          </div>
+          
 				</div>
 			</div> 
      </div>

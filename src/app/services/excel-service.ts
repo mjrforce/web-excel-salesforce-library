@@ -164,6 +164,8 @@ export class ExcelService {
           sheet = context.workbook.worksheets.getItem(sheetname);
         }
         var range = sheet.getRange(rangeString);
+        console.log('Data Table');
+        console.log(data.table);
         range.values = data.table;
         var table = sheet.tables.add(rangeString, true);
         table.name = 'Example';

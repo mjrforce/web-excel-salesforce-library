@@ -78,10 +78,10 @@ export class DataService {
       }
       return conn.query(qs).then(function (result, err) {
         var n = qs.toUpperCase();
-        var f = n.substring(7, n.indexOf(" FROM")).replace(/ /g, '').split(',');
-        var o = n.substring(n.indexOf("FROM ") + 5);
-        if (o.indexOf(' WHERE') > -1)
-          o = o.substring(0, o.indexOf(" WHERE"));
+        var f = n.substring(7, n.indexOf(" FROM ")).replace(/ /g, '').split(',');
+        var o = n.substring(n.indexOf(" FROM ") + 6);
+        if (o.indexOf(' WHERE ') > -1)
+          o = o.substring(0, o.indexOf(" WHERE "));
         o = o.trim();
         console.log(f);
         console.log('result');

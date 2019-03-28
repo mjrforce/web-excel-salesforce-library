@@ -68,14 +68,15 @@ export class QueryComponent {
   }
 
   async runAll() {
-    var temp = this.SOQL;
-    for (var i = 0; i < this.savedQueryList.length; i++) {
-      this.run(this.savedQueryList[i]);
+    
+    for (var i = 0; i < this.savedQueryList.length; i++){
+      console.log(this.savedQueryList[i].query);
+      this.run(this.savedQueryList[i].query);
     }
   }
 
   async run(soql?:string) {
-    console.log('running');
+    console.log('running ' + (soql || this.SOQL));
     this.excelService.fixQuery(soql || this.SOQL).then(function (data) {
       this.dataService.query(data).then(function (data) {
         this.excelService.createTable(data);
@@ -100,11 +101,8 @@ export class QueryComponent {
   }
 
    clearAllSavedQuery(){
-      if(confirm('Are you sure you want to delete all saved quries ?'))
-      {
           this.officeService.saveToPropertyBag('queries', JSON.stringify([]));
           this.savedQueryList = new Array();
-      }
    }
    
    sortColumn(txt){ 

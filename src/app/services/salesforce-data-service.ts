@@ -89,7 +89,7 @@ export class DataService {
           var rmap = this.getRow(result.records[i]);
           var row = [];
           for(var j = 0; j<f.length; j++){
-            var a = f[j].split('.');
+            var a = f[j].split('.');  
             var r = this.getValue(rmap, a);
             row.push(r);
           }
@@ -109,17 +109,31 @@ export class DataService {
      if(t.length > 0){
        return this.getValue(rmap[k.toUpperCase()], t);
      }else{
-       return rmap[k.toUpperCase()];
+       if(typeof rmap[k.toUpperCase()] == 'undefined'){
+         return '';
+       }
+       else{
+         return rmap[k.toUpperCase()];
+       }
+       
      }
   }
   getRow(record){
-    var arr = [];
+    var arr;
     for(var property in record){
       if(typeof record[property] == 'object'){
+        if(typeof arr == 'undefined'){
+           arr = [];
+        }
         arr[property.toUpperCase()] = this.getRow(record[property]);  
       }else{
-        if(typeof record[property] != 'undefined')
-          arr[property.toUpperCase()] = record[property];
+        if(typeof record[property] != 'undefined'){
+          if(typeof arr == 'undefined'){
+            arr = [];
+         }
+         arr[property.toUpperCase()] = record[property];
+        }
+          
       }     
     }
     return arr;

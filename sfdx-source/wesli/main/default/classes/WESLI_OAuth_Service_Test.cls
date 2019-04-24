@@ -6,6 +6,7 @@
          WESLI_OAuth_Service.getLoginUrl();
          WESLI_OAuth_Service.getLogout('https://test.salesforce.com','FAKETOKEN');
          WESLI_OAuth_Service.getSettings();
+         WESLI_OAuth_Service.getRoutines();
 
     }
 }

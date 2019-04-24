@@ -146,7 +146,8 @@ export class OfficeDataService {
   // Retrieves the specified setting from a hidden <div> in the document.
   getFromDocument(key: string) {
     var value = null;
-
+    var hiddenName = "hiddenstorage";
+    var hiddenStorage = document.getElementById(hiddenName);
     if (document.getElementById(key) != null) {
       var valueNode = document.getElementById(key);
       value = valueNode.innerHTML;

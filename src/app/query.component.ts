@@ -14,6 +14,7 @@ import { isForInStatement } from 'typescript';
 
 
 declare const Excel: any;
+declare const WESLI_OAuth_Service: any;
 
 @Component({
   selector: 'query-component',
@@ -51,28 +52,42 @@ export class QueryComponent {
   pagedItems = [];
   filteredItems = [];
   showSaveModal = false;
-  savedQueryList = JSON.parse(this.officeService.getFromPropertyBag('queries'));
+  savedQueryList = [];
   searchObj = '';
   isAll = false;
   isAPIName = false;
   
-  ngOnInit() {
-    if(!this.savedQueryList)
-  {
-      this.savedQueryList = [];
-  }
-  this.ngZone.run(() => {
-    this.getAllObjects();
-    });
-    
+  ngOnInit() {  
+      this.ngZone.run(() => {
+        this.getAllObjects();
+        WESLI_OAuth_Service.getRoutines(function (response: any, event: any) {
+          this.savedQueryList = response;
+        }.bind(this));
+      });
   }
 
-  async runAll() {
-    
-    for (var i = 0; i < this.savedQueryList.length; i++){
-      console.log(this.savedQueryList[i].query);
-      this.run(this.savedQueryList[i].query);
-    }
+  htmlDecode(input){
+    var e = document.createElement('div');
+    e.innerHTML = input;
+    return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+  }
+
+  async useQuery(docId: string){
+      console.log('Doc Id: ' + docId);
+
+      var routine = null;
+
+      for(var i=0; i<this.savedQueryList.length; i++){
+        if(this.savedQueryList[i].uniqueId == docId){
+            routine = this.savedQueryList[i];
+            console.log('Routing: ' + JSON.stringify(routine));
+            for(var j=0; j<routine.queries.length; j++){
+              console.log('Query: ' + j);
+              this.run(this.htmlDecode(routine.queries[j]));
+            }   
+            break;
+        }   
+      }
   }
 
   async run(soql?:string) {
@@ -99,11 +114,6 @@ export class QueryComponent {
       return str.length == 0 || val.fieldLabel.toLowerCase().indexOf(str) > -1 || val.apiName.toLowerCase().indexOf(str) > -1; 
     }.bind(this))
   }
-
-   clearAllSavedQuery(){
-          this.officeService.saveToPropertyBag('queries', JSON.stringify([]));
-          this.savedQueryList = new Array();
-   }
    
    sortColumn(txt){ 
        this.orderByColumn = txt;
@@ -133,39 +143,6 @@ export class QueryComponent {
        this.updateSOQL();
       });
    } 
-   
- useQuery(unId){
-      for(var i=0; i < this.savedQueryList.length; i++){
-          if(this.savedQueryList[i].uniqueId == unId)
-          {
-              this.SOQL = this.savedQueryList[i].query ;
-              break;
-          }
-      }
-     this.showSaveModal = false;
- }
-
-  removeQuery(unId){
-        
-    var indexToDel = -1;
-    
-    for(var i=0; i < this.savedQueryList.length; i++){
-         if(this.savedQueryList[i].uniqueId == unId)
-         {
-             indexToDel = i ;
-             break;
-         }
-     }
-    
-    if(indexToDel > -1)
-    {
-        this.savedQueryList.splice( this.savedQueryList.indexOf(indexToDel), 1 );
-    }
-    
-    this.officeService.saveToPropertyBag('queries', JSON.stringify(this.savedQueryList));
-    this.showSaveModal = false;
-}
-
 
   groupToPages(){
     this.pagedItems = []; 
@@ -221,8 +198,6 @@ getAllFields() {
     }.bind(this));
   }
 
-
-
   showSavedModal(){
     this.showSaveModal = true;
   }
@@ -231,18 +206,4 @@ getAllFields() {
     return { "fieldLabel": fLabel, "apiName": fAPI, "isSelected": false };
   }
 
-  saveQuery(){
-    
-    if(this.queryName.length > 0)
-    {
-        var storedQuery = {
-           name: this.queryName,
-           query: this.SOQL,
-           uniqueId: new Date().getTime()
-        };
-        this.queryName = '';
-        this.savedQueryList.push(storedQuery);
-        this.officeService.saveToPropertyBag('queries', JSON.stringify(this.savedQueryList));
-    }
-}
 }

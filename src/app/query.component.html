@@ -91,15 +91,9 @@
 					  <label class="col-md-1 control-label" > </label>
 					  <div class="col-md-11">                     
              <button (click)="run()" id="singlebutton" name="singlebutton" class="btn btn-info">Run Query </button>
-             <button *ngIf="savedQueryList.length > 0" (click)="runAll()" id="singlebutton2" name="singlebutton2" class="btn btn-info">Run All </button>
-                          <a href="#"  data-toggle="modal" data-target="#saveQuery" class="btn btn-default"> Save
-                              <span class="glyphicon glyphicon-floppy-save"></span>
-                          </a>
-                          
-                           <a href="#" data-toggle="modal" data-target="#savedQuery" class="btn btn-default"> Stored Query
-                               <span class="glyphicon glyphicon-hdd"></span>
-                          </a>
-                          
+             <a href="#" data-toggle="modal" data-target="#savedQuery" class="btn btn-default"> Routines
+                <span class="glyphicon glyphicon-hdd"></span>
+            </a>          
 					  </div>
           </div>
           
@@ -124,26 +118,6 @@
           </div>
         </div>
 
-        <div id="saveQuery" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="false">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content" >
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">
-                      <span aria-hidden="true">x</span><span class="sr-only">Close</span>
-                  </button>
-                  <h4 class="modal-title" id="errorModelTitle">Enter Query Name</h4>
-                </div>
-                <div class="modal-body" >
-                    <input [(ngModel)]="queryName" id="queryName" name="queryName" type="text" placeholder="Query Name" class="form-control input-md" /> 
-
-                  <a href="#"  class="btn btn-default" (click)="saveQuery()" data-toggle="modal" data-target="#saveQuery"> Save
-                    <span class="glyphicon glyphicon-floppy-save"></span>
-                </a>
-                </div>
-            </div>  
-          </div>
-        </div>
-        
         <div id="savedQuery" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content" >
@@ -155,18 +129,13 @@
                 </div>
                 <div class="modal-body" >
                     <table class="table table-striped table-bordered table-hover table-condensed">
-                        <th>  Query Name  </th>
+                        <th>  Routine </th>
                         <th>  Actions  </th>
                         <tr *ngFor="let row of savedQueryList" >
-                            <td> {{row.name}} </td>
+                            <td> {{row.label}} </td>
                             <td> 
-                                
                                 <a href="#" (click)="useQuery(row.uniqueId)" data-toggle="modal" data-target="#savedQuery" class="btn btn-default btn-xs">
                                     <span class="glyphicon glyphicon-hand-left"></span></a>
-                                
-                                <a href="#" (click)="removeQuery(row.uniqueId)" data-toggle="modal" data-target="#savedQuery" class="btn btn-default btn-xs"> 
-                                    <span class="glyphicon glyphicon-trash"></span></a>
-                                 
                             </td> 
                         </tr>
                     </table> 

@@ -78,14 +78,11 @@ export class DataService {
       }
       return conn.query(qs).then(function (result, err) {
         var n = qs.toUpperCase();
-        var f = n.substring(7, n.indexOf(" FROM ")).replace(/ /g, '').split(',');
-        var o = n.substring(n.indexOf(" FROM ") + 6);
-        if (o.indexOf(' WHERE ') > -1)
-          o = o.substring(0, o.indexOf(" WHERE "));
+        var f = n.substring(7, n.search(/ from /i)).replace(/ /g, '').split(',');
+        var o = n.substring(n.search(/ from /i) + 6);
+        if (o.search(/ where /i) > -1)
+          o = o.substring(0, o.search(/ where /i));
         o = o.trim();
-        console.log(f);
-        console.log('result');
-        console.log(result);
         var table = [];
         table.push(f);
         for(var i=0; i<result.records.length; i++){
@@ -110,9 +107,9 @@ export class DataService {
      var t = val;
      var k = t.shift();
      if(t.length > 0){
-       return this.getValue(rmap[k], t);
+       return this.getValue(rmap[k.toUpperCase()], t);
      }else{
-       return rmap[k];
+       return rmap[k.toUpperCase()];
      }
   }
   getRow(record){
@@ -121,7 +118,8 @@ export class DataService {
       if(typeof record[property] == 'object'){
         arr[property.toUpperCase()] = this.getRow(record[property]);  
       }else{
-        arr[property.toUpperCase()] = record[property];
+        if(typeof record[property] != 'undefined')
+          arr[property.toUpperCase()] = record[property];
       }     
     }
     return arr;

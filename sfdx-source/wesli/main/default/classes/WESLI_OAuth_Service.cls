@@ -1,5 +1,11 @@
 global class WESLI_OAuth_Service {
 
+    @remoteAction
+    global static List<WESLI.WESLIDOC> getRoutines(){
+    
+      return WESLI.getRoutines();
+    }
+    
     @RemoteAction
     global static string getloginUrl(){
         oauth2 oauth2 = new oauth2();

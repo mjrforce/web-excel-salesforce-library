@@ -25,7 +25,17 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
         
-    
+    <style>
+        .weslilogo {
+        display: block;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        background: url({!URLFOR($Resource.WESLI, '/dist/assets/icon-32.png')}) no-repeat;
+        width: 32px; /* Width of new image */
+        height: 32px; /* Height of new image */
+        padding-left: 32px; /* Equal to width of new image */
+      }
+      </style>
 </head>
 
 <body>

@@ -6,6 +6,7 @@ import { QueryComponent } from './query.component';
 import { DataService } from './services/salesforce-data-service';
 import { OfficeDataService } from './services/office-data-service';
 import { OAuthService } from './services/salesforce-oauth-service';
+import { ErrorService} from './services/error-service';
 import { HttpClientModule } from '@angular/common/http';
 import { APP_BASE_HREF } from '@angular/common';
 import { environment } from '../environments/environment';
@@ -14,7 +15,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ExcelService } from './services/excel-service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Query } from './classes/Query';
 import { FilterPipe } from './pipes/filter-pipe';
 
 
@@ -38,8 +38,7 @@ import { FilterPipe } from './pipes/filter-pipe';
     OfficeDataService,
     OAuthService,
     ExcelService,
-    Query,
-
+    ErrorService,
     [{ provide: APP_BASE_HREF, useValue: environment.baseURL }]
   ],
   bootstrap: [AppComponent]

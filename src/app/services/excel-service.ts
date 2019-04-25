@@ -3,6 +3,7 @@ import { Injectable, Inject } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import { DataService } from '../services/salesforce-data-service';
 import { NgZone } from '@angular/core';
+import { ErrorService } from '../services/error-service';
 
 declare const Office: any;
 declare const OfficeExtension: any;
@@ -11,7 +12,7 @@ declare const Excel: any;
 @Injectable({ providedIn: 'root' })
 export class ExcelService {
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private errorService: ErrorService) { }
 
   charToNumber(val: string) {
 
@@ -115,55 +116,13 @@ export class ExcelService {
     }
     return row;
     }
-  async saveToExcel(key: String, value: any) {
-
-    try {
-      await Excel.run(async context => {
-        
-        var sheet = context.workbook.worksheets.getItemOrNullObject(key);
-        await context.sync();
-        if(sheet == null){
-          sheet = context.workbook.worksheets.add(key);
-        }
-        var range = sheet.getRange("A1");
-        range.values = value;
-        await context.sync();
-      });
-    } catch (error) {
-      console.log('Error: ' + error);
-    }
-
-  }
-
-  async getFromExcel(key: string) {
-   console.log('key: ' + key);
-    try {
-      await Excel.run(async context => {
-        var toReturn = [];
-        var sheet = null;
-        try{
-          sheet = context.workbook.worksheets.getItem(key);
-        }catch(error){   
-          sheet = context.workbook.worksheets.add(key);
-        }
-
-        await context.sync();
-        return toReturn;
-
-      });
-    } catch (error) {
-      console.log('Error in getFromExcel');
-      console.log('Error: ' + error);
-    }
-
-  }
 
   async createTable(data: any) {
 
-    try {
+    
       await Excel.run(async context => {
 
-
+      try{
         var rangeString = "A1:";
         var coloffset = 0;
         var rowoffset = 0;
@@ -199,26 +158,22 @@ export class ExcelService {
 
         rangeString = rangeString + 
                       this.numberToChar(data.table[0].length + coloffset) + 
-                      (data.result.records.length + 1 + rowoffset);
+                      (data.table.length + rowoffset);
         
         var sheet = context.workbook.worksheets.getActiveWorksheet();
-        console.log('sheetname: ' + sheetname);
         if (sheetname.length > 0) {
           sheet = context.workbook.worksheets.getItem(sheetname);
         }
         var range = sheet.getRange(rangeString);
         range.values = data.table;
-        console.log('Data Table');
+        console.log('RangeString: ' + rangeString);
+        console.log('Table: ');
         console.log(data.table);
-
-
-        //var table = sheet.tables.add(rangeString, true);
-        //table.name = 'Example';
         await context.sync();
-      });
-    } catch (error) {
-      console.log('Error: ' + error);
-    }
-
+      }catch(error){
+        this.errorService.setError(error);
+      }
+    
+    });
   }
 }

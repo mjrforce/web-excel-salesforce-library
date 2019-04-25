@@ -1,19 +1,11 @@
 import { Component, SystemJsNgModuleLoader } from '@angular/core';
 import { Inject } from '@angular/core';
-import { OAuthService } from './services/salesforce-oauth-service';
 import { DataService } from './services/salesforce-data-service';
-import { OfficeDataService } from './services/office-data-service';
 import { ExcelService } from './services/excel-service';
-
-import { environment } from '../environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
 import { NgZone } from '@angular/core';
-import { QUERIES } from '@angular/core/src/render3/interfaces/view';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { isForInStatement } from 'typescript';
+import { ErrorService} from './services/error-service';
 
-
-declare const Excel: any;
 declare const WESLI_OAuth_Service: any;
 
 @Component({
@@ -25,11 +17,10 @@ declare const WESLI_OAuth_Service: any;
 export class QueryComponent {
 
   constructor(
-    private authService: OAuthService,
     private ngZone: NgZone,
     private dataService: DataService,
-    private officeService: OfficeDataService,
     private excelService: ExcelService,
+    private errorService: ErrorService,
     @Inject(APP_BASE_HREF) private baseHref: string) {
 
   }
@@ -37,23 +28,13 @@ export class QueryComponent {
   objects = [];
   fields = [];
   searchText = '';
-  selectedObject = '';
-  txtSearchRecords = '';
-  queryName = '';
-  SOQL = 'SELECT Name, Title, Phone FROM contact ';
-  output = [];
-  columnLabel = [];
-  msg = '';
-  pageSize = 10 ;
-  currentPage = 0; 
-  orderByColumn = '';
-  reverse = true;
-  apiCount = 0;
-  pagedItems = [];
-  filteredItems = [];
-  showSaveModal = false;
-  savedQueryList = [];
   searchObj = '';
+  selectedObject = '';
+  SOQL = 'SELECT Name, Title, Phone FROM contact ';
+  errormsg = '';
+  apiCount = 0;
+  filteredItems = [];
+  savedQueryList = [];
   isAll = false;
   isAPIName = false;
   
@@ -66,6 +47,20 @@ export class QueryComponent {
       });
   }
 
+  get hasError(): boolean{
+     return this.errorService.getHasError();
+  }
+
+  get errorMsg(): string{
+     return this.errorService.errorMessage;
+ }
+
+  clearError(){
+    this.ngZone.run(() => {
+      this.errorService.clearError();
+    });
+  }
+
   htmlDecode(input){
     var e = document.createElement('div');
     e.innerHTML = input;
@@ -73,17 +68,16 @@ export class QueryComponent {
   }
 
   async useQuery(docId: string){
-      console.log('Doc Id: ' + docId);
-
       var routine = null;
-
       for(var i=0; i<this.savedQueryList.length; i++){
         if(this.savedQueryList[i].uniqueId == docId){
             routine = this.savedQueryList[i];
-            console.log('Routing: ' + JSON.stringify(routine));
             for(var j=0; j<routine.queries.length; j++){
-              console.log('Query: ' + j);
-              this.run(this.htmlDecode(routine.queries[j]));
+              this.run(this.htmlDecode(routine.queries[j])).catch(function(reason){
+                this.ngZone.run(() => {
+                  this.errorService.setError(reason);
+                });
+              }.bind(this));
             }   
             break;
         }   
@@ -91,7 +85,6 @@ export class QueryComponent {
   }
 
   async run(soql?:string) {
-    console.log('running ' + (soql || this.SOQL));
     this.excelService.fixQuery(soql || this.SOQL).then(function (data) {
       this.dataService.query(data).then(function (data) {
         this.excelService.createTable(data);
@@ -115,25 +108,6 @@ export class QueryComponent {
     }.bind(this))
   }
    
-   sortColumn(txt){ 
-       this.orderByColumn = txt;
-       this.reverse = !this.reverse;
-   }
-
-   incr(){
-       if(this.currentPage < this.pagedItems.length)
-       {
-           this.currentPage = this.currentPage+1;
-       } 
-   }
-
-   decr(){
-       if(this.currentPage > 0)
-       {
-           this.currentPage = this.currentPage-1;
-       } 
-   }
-   
    checkUnCheckAll(){
     this.ngZone.run(() => {
        this.fields.forEach(function (item, index) { 
@@ -143,17 +117,6 @@ export class QueryComponent {
        this.updateSOQL();
       });
    } 
-
-  groupToPages(){
-    this.pagedItems = []; 
-    for (var i = 0; i < this.filteredItems.length; i++) {
-        if (i % this.pageSize === 0) {
-            this.pagedItems[Math.floor(i / this.pageSize)] = [ this.filteredItems[i] ];
-        } else {
-            this.pagedItems[Math.floor(i / this.pageSize)].push(this.filteredItems[i]);
-        }
-    }
-  };
 
   updateSOQL(){ 
     this.ngZone.run(() => {
@@ -186,7 +149,7 @@ getAllFields() {
 }
 
   getAllObjects() {
-    this.apiCount = this.apiCount + 1;
+    
     this.objects = [];
     this.dataService.globalDescribe().then(function (data) {
 
@@ -196,10 +159,6 @@ getAllFields() {
         }
       }.bind(this));
     }.bind(this));
-  }
-
-  showSavedModal(){
-    this.showSaveModal = true;
   }
 
   createJSONData(fLabel: string, fAPI: string): any {

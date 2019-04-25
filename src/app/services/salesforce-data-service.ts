@@ -1,9 +1,7 @@
 import { Injectable, Inject, SystemJsNgModuleLoader } from '@angular/core';
 import { OfficeDataService } from './office-data-service';
+import { ErrorService } from '../services/error-service';
 import { APP_BASE_HREF } from '@angular/common';
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { getQueryValue } from '@angular/core/src/view/query';
 
 declare const jsforce: any;
 declare const WESLI_OAuth_Service: any;
@@ -12,7 +10,8 @@ declare const WESLI_OAuth_Service: any;
 export class DataService {
 
   constructor(@Inject(APP_BASE_HREF) private baseHref: string,
-    private officeService: OfficeDataService) { }
+    private officeService: OfficeDataService,
+    private errorService: ErrorService) { }
 
   OauthPromise = new Promise(function (resolve, reject) {
     WESLI_OAuth_Service.getSettings(function (response: any, event: any) {
@@ -76,31 +75,49 @@ export class DataService {
         qs = p[0];
         loc = p[1];
       }
-      return conn.query(qs).then(function (result, err) {
-        var n = qs.toUpperCase();
-        var f = n.substring(7, n.search(/ from /i)).replace(/ /g, '').split(',');
-        var o = n.substring(n.search(/ from /i) + 6);
-        if (o.search(/ where /i) > -1)
-          o = o.substring(0, o.search(/ where /i));
-        o = o.trim();
-        var table = [];
-        table.push(f);
-        for(var i=0; i<result.records.length; i++){
-          var rmap = this.getRow(result.records[i]);
-          var row = [];
-          for(var j = 0; j<f.length; j++){
-            var a = f[j].split('.');  
-            var r = this.getValue(rmap, a);
-            row.push(r);
-          }
-          table.push(row);
-        }
-        var data = { object: o, fieldlist: f, q: qs, result: result, loc: loc, table: table }; 
-        console.log('data: ');
-        console.log(data);       
-        return data;
+      var n = qs.toUpperCase();
+      var f = n.substring(7, n.search(/ from /i)).replace(/ /g, '').split(',');
+      var o = n.substring(n.search(/ from /i) + 6);
+      if (o.search(/ where /i) > -1)
+        o = o.substring(0, o.search(/ where /i));
+      o = o.trim();
+
+      var table = [];
+      table.push(f);
+
+      var data = { object: o, fieldlist: f, q: qs, result: null, loc: loc, table: table };   
+
+      return conn.query(qs).then(function(result, err){
+        return this.processResult(data, result, true, err);
       }.bind(this));
     }.bind(this));
+  }
+
+  async processResult (data, result, isFirst, err) {
+   try{ 
+    for(var i=0; i<result.records.length; i++){
+      var rmap = this.getRow(result.records[i]);
+      var row = [];
+      for(var j = 0; j<data.table[0].length; j++){
+        var a = data.table[0][j].split('.');  
+        var r = this.getValue(rmap, a);
+        row.push(r);
+      }
+      data.table.push(row);
+    }
+    
+    if(result.done == false){
+      return this.getConnection().then(function (conn) { 
+        return conn.queryMore(result.nextRecordsUrl).then(function(result, err){
+          return this.processResult(data, result, false, err);
+        }.bind(this));
+       }.bind(this));
+    }else{
+      return data;
+    }
+  }catch(error){
+    this.errorService.setError(error);
+  }
   }
   
   getValue(rmap, val){
